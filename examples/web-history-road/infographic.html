@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The road the internet took</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+/* Composition: Big Object / story path. Scene: reader hovers over seven floating
+   slab-worlds descending 1969→2022, linked by a dashed road. Iso math (2:1):
+   X = X0 + (x−y)·0.866 ; Y = Y0 + (x+y)·0.5 − z.
+   Slab w=d=200 → top diamond corners rel. center: (0,−100)(173.2,0)(0,100)(−173.2,0),
+   thickness 20. Landmark box w=d=64,H → top (0,−H)(55.4,32−H)(0,64−H)(−55.4,32−H);
+   right face (55.4,32−H)(0,64−H)(0,64)(55.4,32); left face mirrored.
+   Sun upper-right: tops lightest, left faces darkest, everywhere. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#E8EDEF; --ground:#CFD8DB; --ground-2:#B8C2C6; --ground-3:#9AA6AA;
+  --ink:#22333B; --ink-muted:#5D6E75;
+  --chart-1:#D9503F; --chart-1-top:#E58272; --chart-1-dark:#A93A2D;
+  --chart-2:#009B7D; --chart-2-top:#4DB49D; --chart-2-dark:#007259;
+  --chart-3:#4A55C8; --chart-3-top:#7A82D8; --chart-3-dark:#363F9B;
+  --chart-4:#B57300; --chart-4-top:#CC9440; --chart-4-dark:#8A5700;
+  --de-emphasis:#AEB9BD;
+  --font-display:'Fredoka',sans-serif; --font-body:'Nunito Sans',sans-serif;
+}
+
+html, body { background: var(--bg); }
+body { width:1080px; font-family:var(--font-body); color:var(--ink); }
+.canvas { position:relative; width:1080px; height:1920px; overflow:hidden;
+  background: radial-gradient(ellipse 900px 1300px at 50% 42%, #F2F6F7 0%, var(--bg) 72%); }
+.abs { position:absolute; }
+.kicker { font:800 14px/1 var(--font-body); text-transform:uppercase;
+          letter-spacing:.06em; color:var(--ink-muted); }
+h1 { font-family:var(--font-display); font-weight:700; font-size:64px; line-height:1.02; margin:10px 0 12px; }
+.standfirst { font-size:17px; line-height:1.5; color:var(--ink-muted); max-width:560px; }
+
+.stop { width:340px; }
+.stop .year { font-family:var(--font-display); font-weight:700; font-size:34px; }
+.stop .name { font-weight:800; font-size:19px; margin:2px 0 4px; }
+.stop p { font-size:15px; line-height:1.4; color:var(--ink-muted); }
+.stop.right { text-align:right; }
+.footer { font-size:13px; color:var(--ink-muted); text-align:center; width:100%; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- title -->
+  <div class="abs" style="left:64px; top:56px;">
+    <div class="kicker">Seven stops · 1969 → 2022</div>
+    <h1>The road the<br>internet took</h1>
+    <p class="standfirst">Every stop is a tiny world the web once lived in — follow
+    the dashed road downhill from a machine room to everyone's pocket.</p>
+  </div>
+
+  <!-- the scene -->
+  <svg class="abs" style="left:0; top:0;" width="1080" height="1920" viewBox="0 0 1080 1920" font-family="Nunito Sans">
+    <defs>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#4DB49D" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="#4DB49D" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- sky props -->
+    <g fill="#FFFFFF">
+      <ellipse cx="905" cy="180" rx="58" ry="20"/><ellipse cx="948" cy="166" rx="38" ry="15"/>
+      <ellipse cx="120" cy="600" rx="48" ry="16"/>
+      <ellipse cx="1010" cy="900" rx="52" ry="17"/>
+      <ellipse cx="80" cy="1500" rx="44" ry="15"/>
+    </g>
+    <!-- balloon -->
+    <g transform="translate(890 300)">
+      <path d="M0 -34 C22 -34 30 -14 30 0 C30 16 14 28 0 36 C-14 28 -30 16 -30 0 C-30 -14 -22 -34 0 -34 Z" fill="var(--chart-1)"/>
+      <path d="M-10 -33 C-4 -35 4 -35 10 -33 L4 34 L-4 34 Z" fill="var(--chart-1-top)"/>
+      <line x1="-12" y1="30" x2="-7" y2="48" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="12" y1="30" x2="7" y2="48" stroke="var(--ink)" stroke-width="1.5"/>
+      <rect x="-9" y="48" width="18" height="13" rx="2" fill="var(--chart-4)" stroke="var(--ink)" stroke-width="1.5"/>
+    </g>
+    <!-- bird -->
+    <path d="M520 1180 q 8 -8 16 0 q 8 -8 16 0" stroke="var(--ink-muted)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+    <!-- ================= STATION TEMPLATE PIECES (drawn per station) ================ -->
+
+    <!-- ======== S1 · 1969 ARPANET · slab (330,430) ======== -->
+    <ellipse cx="330" cy="562" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(330 430)">
+      <!-- slab sides then top -->
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- mainframe cabinet: teal, w=d=64, H=90, at (-10,-14) -->
+      <g transform="translate(-10 -14)">
+        <polygon points="55.4,-58 0,-26 0,64 55.4,32" fill="var(--chart-2)"/>
+        <polygon points="-55.4,-58 0,-26 0,64 -55.4,32" fill="var(--chart-2-dark)"/>
+        <polygon points="0,-90 55.4,-58 0,-26 -55.4,-58" fill="var(--chart-2-top)"/>
+        <!-- blinkenlights on right face -->
+        <g fill="#FFF8E7"><circle cx="22" cy="-20" r="3"/><circle cx="34" cy="-13" r="3"/><circle cx="22" cy="0" r="3"/></g>
+        <g fill="var(--chart-1-top)"><circle cx="34" cy="7" r="3"/><circle cx="22" cy="20" r="3"/></g>
+        <!-- tape reels on left face -->
+        <g fill="none" stroke="#DCE7E4" stroke-width="2.5">
+          <circle cx="-30" cy="-16" r="8"/><circle cx="-30" cy="10" r="8"/>
+        </g>
+      </g>
+      <!-- start flag -->
+      <g transform="translate(112 -30)">
+        <line x1="0" y1="0" x2="0" y2="-52" stroke="var(--ink)" stroke-width="2.5"/>
+        <polygon points="0,-52 34,-44 0,-36" fill="var(--chart-1)"/>
+      </g>
+      <!-- tree -->
+      <g transform="translate(-118 32)">
+        <rect x="-2.5" y="-8" width="5" height="10" fill="var(--chart-4-dark)"/>
+        <circle cx="0" cy="-18" r="13" fill="var(--chart-2-top)"/>
+      </g>
+    </g>
+    <!-- road S1 -> S2 -->
+    <path d="M330,552 Q 480,650 740,545" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+
+    <!-- ======== S2 · 1989 WWW proposed · slab (740,640) ======== -->
+    <ellipse cx="740" cy="772" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(740 640)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- CERN desk: indigo, w=80 d=50 H=34 at (0,-8) -->
+      <g transform="translate(0 -8)">
+        <!-- corners: B(69.3,40) C(26,65) D(-43.3,25) -->
+        <polygon points="69.3,6 26,31 26,65 69.3,40" fill="var(--chart-3)"/>
+        <polygon points="-43.3,-9 26,31 26,65 -43.3,25" fill="var(--chart-3-dark)"/>
+        <polygon points="0,-34 69.3,6 26,31 -43.3,-9" fill="var(--chart-3-top)"/>
+        <!-- the memo, standing on the desk (billboard) -->
+        <g transform="translate(8 -36)">
+          <path d="M0 0 h24 v30 h-24 z" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M18 0 h6 v6 z" fill="var(--de-emphasis)"/>
+          <g stroke="var(--ink-muted)" stroke-width="1.5">
+            <line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="13" x2="20" y2="13"/>
+            <line x1="4" y1="18" x2="14" y2="18"/>
+          </g>
+        </g>
+        <!-- coffee mug on the desk -->
+        <g transform="translate(-20 -40)">
+          <rect x="-4" y="0" width="9" height="8" rx="1.5" fill="var(--chart-4-top)" stroke="var(--ink)" stroke-width="1.5"/>
+          <path d="M5 2 h3 a2.5 2.5 0 0 1 0 5 h-3" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        </g>
+      </g>
+      <!-- tree -->
+      <g transform="translate(120 26)">
+        <rect x="-2.5" y="-8" width="5" height="10" fill="var(--chart-4-dark)"/>
+        <circle cx="0" cy="-18" r="12" fill="var(--chart-2-top)"/>
+      </g>
+    </g>
+    <path d="M740,760 Q 560,860 330,745" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+
+    <!-- ======== S3 · 1993 Mosaic · slab (330,850) ======== -->
+    <ellipse cx="330" cy="982" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(330 850)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- CRT terminal: gray box w=d=64 H=48 + billboard screen -->
+      <g transform="translate(-6 -12)">
+        <polygon points="55.4,-16 0,16 0,64 55.4,32" fill="var(--ground-2)"/>
+        <polygon points="-55.4,-16 0,16 0,64 -55.4,32" fill="var(--ground-3)"/>
+        <polygon points="0,-48 55.4,-16 0,16 -55.4,-16" fill="#DCE3E6"/>
+        <!-- vent slots on the right face -->
+        <g stroke="#9AA6AA" stroke-width="2">
+          <line x1="16" y1="-4" x2="42" y2="-19"/><line x1="16" y1="4" x2="42" y2="-11"/>
+          <line x1="16" y1="12" x2="42" y2="-3"/>
+        </g>
+        <!-- browser window: the CRT's screen, standing on the box top -->
+        <g transform="translate(-27 -92)">
+          <rect x="0" y="0" width="54" height="44" rx="4" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2.5"/>
+          <rect x="0" y="0" width="54" height="10" rx="4" fill="var(--de-emphasis)"/>
+          <rect x="6" y="16" width="26" height="20" fill="var(--chart-1-top)"/>
+          <g stroke="var(--ink-muted)" stroke-width="1.5">
+            <line x1="37" y1="18" x2="48" y2="18"/><line x1="37" y1="23" x2="48" y2="23"/>
+            <line x1="37" y1="28" x2="48" y2="28"/>
+          </g>
+        </g>
+      </g>
+      <g transform="translate(112 24)">
+        <rect x="-2.5" y="-8" width="5" height="10" fill="var(--chart-4-dark)"/>
+        <circle cx="0" cy="-18" r="12" fill="var(--chart-2-top)"/>
+      </g>
+    </g>
+    <path d="M330,970 Q 520,1070 740,965" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+
+    <!-- ======== S4 · 1998 Google garage · slab (740,1060) ======== -->
+    <ellipse cx="740" cy="1192" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(740 1060)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- garage: amber box w=d=64 H=52, roll door on right face -->
+      <g transform="translate(-8 -12)">
+        <polygon points="55.4,-20 0,12 0,64 55.4,32" fill="var(--chart-4)"/>
+        <polygon points="-55.4,-20 0,12 0,64 -55.4,32" fill="var(--chart-4-dark)"/>
+        <polygon points="0,-52 55.4,-20 0,12 -55.4,-20" fill="var(--chart-4-top)"/>
+        <!-- roll-up door drawn on the right face (iso parallelogram) -->
+        <polygon points="40,-2 12,14 12,50 40,34" fill="#FFF4DC" stroke="var(--chart-4-dark)" stroke-width="1.5"/>
+        <g stroke="var(--chart-4-dark)" stroke-width="1.2">
+          <line x1="38" y1="6" x2="14" y2="20"/><line x1="38" y1="14" x2="14" y2="28"/>
+          <line x1="38" y1="22" x2="14" y2="36"/>
+        </g>
+        <!-- rooftop marker -->
+        <line x1="0" y1="-52" x2="0" y2="-70" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="0" cy="-74" r="5" fill="var(--chart-1)"/>
+      </g>
+      <!-- bicycle-ish prop: two tiny wheels -->
+      <g transform="translate(96 34)" stroke="var(--ink)" stroke-width="2" fill="none">
+        <circle cx="0" cy="0" r="7"/><circle cx="18" cy="-6" r="7"/><line x1="0" y1="0" x2="18" y2="-6"/>
+      </g>
+    </g>
+    <path d="M740,1180 Q 560,1280 330,1175" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+
+    <!-- ======== S5 · 2004 social tower · slab (330,1270) ======== -->
+    <ellipse cx="330" cy="1402" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(330 1270)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- dorm tower: indigo w=d=56 H=95 -->
+      <g transform="translate(-8 -12)">
+        <!-- wc=48.5, half-d screen: C=(0,56) -->
+        <polygon points="48.5,-67 0,-39 0,56 48.5,28" fill="var(--chart-3)"/>
+        <polygon points="-48.5,-67 0,-39 0,56 -48.5,28" fill="var(--chart-3-dark)"/>
+        <polygon points="0,-95 48.5,-67 0,-39 -48.5,-67" fill="var(--chart-3-top)"/>
+        <!-- window grid on right face -->
+        <g fill="#EAF0FF">
+          <polygon points="14,-46 26,-53 26,-41 14,-34"/><polygon points="32,-56 44,-63 44,-51 32,-44"/>
+          <polygon points="14,-16 26,-23 26,-11 14,-4"/><polygon points="32,-26 44,-33 44,-21 32,-14"/>
+          <polygon points="14,14 26,7 26,19 14,26"/><polygon points="32,4 44,-3 44,9 32,16"/>
+        </g>
+        <!-- antenna + notification ping -->
+        <line x1="0" y1="-95" x2="0" y2="-118" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="0" cy="-122" r="4" fill="var(--chart-1)"/>
+        <path d="M8 -126 a 10 10 0 0 1 6 8 M12 -134 a 18 18 0 0 1 9 13" stroke="var(--chart-1)" stroke-width="2" fill="none"/>
+      </g>
+      <!-- two tiny figures chatting -->
+      <g transform="translate(92 30)" fill="var(--ink)">
+        <circle cx="0" cy="-16" r="4.5"/><rect x="-4" y="-12" width="8" height="13" rx="3"/>
+        <circle cx="16" cy="-13" r="4.5"/><rect x="12" y="-9" width="8" height="13" rx="3"/>
+      </g>
+    </g>
+    <path d="M330,1390 Q 520,1490 740,1385" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+
+    <!-- ======== S6 · 2007 iPhone · slab (740,1480) ======== -->
+    <ellipse cx="740" cy="1612" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(740 1480)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- phone obelisk: ink box w=30 d=16 H=105; wc=26, C=(12.1,23), D=(-13.9,8) -->
+      <g transform="translate(-2 -20)">
+        <polygon points="26,-90 12.1,-82 12.1,23 26,15" fill="#3A4C55"/>
+        <polygon points="-13.9,-97 12.1,-82 12.1,23 -13.9,8" fill="var(--ink)"/>
+        <polygon points="0,-105 26,-90 12.1,-82 -13.9,-97" fill="#5D6E75"/>
+        <!-- billboard screen floating before the obelisk -->
+        <g transform="translate(-36 -88)">
+          <rect x="0" y="0" width="30" height="54" rx="6" fill="#FFFFFF" stroke="var(--ink)" stroke-width="2.5"/>
+          <rect x="4" y="7" width="22" height="36" rx="2" fill="var(--chart-2-top)"/>
+          <circle cx="15" cy="48.5" r="2.5" fill="var(--ink-muted)"/>
+        </g>
+        <line x1="-6" y1="-80" x2="-16" y2="-72" stroke="var(--ink)" stroke-width="1.5"/>
+      </g>
+      <g transform="translate(104 28)">
+        <rect x="-2.5" y="-8" width="5" height="10" fill="var(--chart-4-dark)"/>
+        <circle cx="0" cy="-18" r="12" fill="var(--chart-2-top)"/>
+      </g>
+    </g>
+    <path d="M740,1600 Q 640,1680 445,1665" fill="none" stroke="var(--ink-muted)" stroke-width="3" stroke-dasharray="11 9"/>
+    <!-- walking figure on the last road -->
+    <g transform="translate(585 1655)" fill="var(--ink)">
+      <circle cx="0" cy="-20" r="5"/><rect x="-4.5" y="-15" width="9" height="15" rx="3.5"/>
+      <line x1="-3" y1="0" x2="-6" y2="8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="3" y1="0" x2="6" y2="8" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- ======== S7 · 2022 monolith · slab (430,1740) ======== -->
+    <circle cx="424" cy="1660" r="150" fill="url(#glow)"/>
+    <ellipse cx="430" cy="1872" rx="160" ry="22" fill="rgb(34 51 59 / 0.10)"/>
+    <g transform="translate(430 1740)">
+      <polygon points="173.2,0 0,100 0,120 173.2,20" fill="var(--ground-2)"/>
+      <polygon points="-173.2,0 0,100 0,120 -173.2,20" fill="var(--ground-3)"/>
+      <polygon points="0,-100 173.2,0 0,100 -173.2,0" fill="var(--ground)"/>
+      <g stroke="var(--de-emphasis)" stroke-width="1">
+        <line x1="57.8" y1="-66.7" x2="-115.5" y2="33.3"/><line x1="115.5" y1="-33.3" x2="-57.8" y2="66.7"/>
+        <line x1="-57.8" y1="-66.7" x2="115.4" y2="33.3"/><line x1="-115.5" y1="-33.3" x2="57.8" y2="66.7"/>
+      </g>
+      <!-- monolith: teal w=d=54 H=112; wc=46.8, C=(0,54) -->
+      <g transform="translate(-4 -22)">
+        <polygon points="46.8,-85 0,-58 0,54 46.8,27" fill="var(--chart-2)"/>
+        <polygon points="-46.8,-85 0,-58 0,54 -46.8,27" fill="var(--chart-2-dark)"/>
+        <polygon points="0,-112 46.8,-85 0,-58 -46.8,-85" fill="var(--chart-2-top)"/>
+        <!-- cursor blink on right face -->
+        <polygon points="12,-40 30,-50 30,-42 12,-32" fill="#EFFFF9"/>
+        <!-- sparkles -->
+        <g stroke="#FFF8E7" stroke-width="2.5" stroke-linecap="round">
+          <path d="M60 -104 v14 M53 -97 h14"/>
+          <path d="M-62 -70 v10 M-67 -65 h10"/>
+        </g>
+      </g>
+      <!-- the crowd: a small arc of figures facing the monolith (100M in 2 months) -->
+      <g fill="var(--ink)">
+        <circle cx="96" cy="8" r="4"/><rect x="92.5" y="11" width="7" height="10" rx="3"/>
+        <circle cx="118" cy="22" r="4"/><rect x="114.5" y="25" width="7" height="10" rx="3"/>
+        <circle cx="128" cy="44" r="4"/><rect x="124.5" y="47" width="7" height="10" rx="3"/>
+        <circle cx="112" cy="62" r="4"/><rect x="108.5" y="65" width="7" height="10" rx="3"/>
+        <circle cx="88" cy="74" r="4"/><rect x="84.5" y="77" width="7" height="10" rx="3"/>
+      </g>
+    </g>
+  </svg>
+
+  <!-- ============ caption tags (billboards, alternating sides) ============ -->
+  <div class="stop abs" style="left:600px; top:352px;">
+    <div class="year">1969</div>
+    <div class="name">ARPANET says «LO»</div>
+    <p>The first network message was meant to be "LOGIN" — the system crashed two letters in.</p>
+  </div>
+
+  <div class="stop right abs" style="left:64px; top:566px;">
+    <div class="year">1989</div>
+    <div class="name">The Web is proposed</div>
+    <p>Tim Berners-Lee pitches a "mesh" of linked documents at CERN. His boss: "vague, but exciting."</p>
+  </div>
+
+  <div class="stop abs" style="left:600px; top:776px;">
+    <div class="year">1993</div>
+    <div class="name">Mosaic goes visual</div>
+    <p>The first popular graphical browser puts images next to text — the web gets a face.</p>
+  </div>
+
+  <div class="stop right abs" style="left:64px; top:986px;">
+    <div class="year">1998</div>
+    <div class="name">Google is founded</div>
+    <p>Two students organize the web from a garage — search becomes the front door.</p>
+  </div>
+
+  <div class="stop abs" style="left:600px; top:1196px;">
+    <div class="year">2004</div>
+    <div class="name">The social era begins</div>
+    <p>Facebook launches from a dorm room; the web learns your name.</p>
+  </div>
+
+  <div class="stop right abs" style="left:64px; top:1406px;">
+    <div class="year">2007</div>
+    <div class="name">The web goes mobile</div>
+    <p>The iPhone puts the whole internet in a pocket, and the road never looks back.</p>
+  </div>
+
+  <div class="stop abs" style="left:700px; top:1660px; width:330px;">
+    <div class="year">2022</div>
+    <div class="name">Chat with a machine</div>
+    <p>ChatGPT reaches 100 million users in two months — the fastest-adopted app in history at the time. The crowd is still arriving.</p>
+  </div>
+
+  <p class="footer abs" style="left:0; bottom:22px;">well-known public milestones · stops evenly spaced — intervals not to scale · made with epic-infographics</p>
+
+</div>
+</body>
+</html>

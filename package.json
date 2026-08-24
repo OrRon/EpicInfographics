@@ -1,0 +1,14 @@
+{
+  "name": "epic-infographics",
+  "version": "0.1.0",
+  "description": "An agent skill for creating polished, varied infographic images (HTML/CSS rendered to PNG)",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "setup": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

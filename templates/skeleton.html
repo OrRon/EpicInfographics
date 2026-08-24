@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Infographic</title>
+<!-- 1. Replace with the Google Fonts <link> from your design language file -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- FONTS_LINK_HERE -->
+<style>
+/* ============ reset ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+/* ============ tokens ============
+   2. Replace this block with the CSS token block from your design
+      language file. Every color/font/size below must reference a token. */
+:root {
+  --canvas-w: 1080px;   /* match the render preset */
+  --canvas-h: 1080px;   /* for tall/auto renders, remove height constraints below */
+
+  --bg: #ffffff;
+  --surface: #f5f5f5;
+  --ink: #111111;
+  --ink-muted: #666666;
+  --accent-1: #2563eb;
+
+  --font-display: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+
+  --space-1: 8px;  --space-2: 16px; --space-3: 24px;
+  --space-4: 40px; --space-5: 64px;
+  --radius: 0px;
+}
+
+/* ============ canvas ============ */
+html, body { background: var(--bg); }
+body {
+  width: var(--canvas-w);
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+.canvas {
+  width: var(--canvas-w);
+  height: var(--canvas-h);      /* for --height auto: use min-height instead */
+  overflow: hidden;             /* nothing may escape the canvas */
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+  gap: var(--space-4);
+}
+
+/* ============ your layout ============
+   3. Build the composition here. Typical bones:
+      header (kicker + title) -> hero element -> support grid -> footer.
+      Keep one element clearly dominant. Use the style's spacing tokens. */
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- header: kicker + title (+ optional standfirst) -->
+
+  <!-- hero element: the one thing the reader must remember -->
+
+  <!-- support elements: 2-4 varied representations -->
+
+  <!-- footer: source / attribution -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Who's winning streaming — dark glass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Albert+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Composition: Big Object — a constellation of glowing play-button orbs
+   (circle AREA proportional to subscribers) dominates the left ~60%.
+   "Others" orb bleeds off the bottom edge; Kanal+ orb slides behind the
+   glass price panel (boundary crossing). Dense zone: right column.
+   Empty zone: deep space between the title and the price panel. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#0B0E17; --bg-2:#10141F;
+  --glass:rgb(255 255 255 / 0.05); --glass-border:1px solid rgb(255 255 255 / 0.12);
+  --ink:#EDF1FA; --ink-muted:#8B93A7;
+  --accent:#2B8CC4;
+  --chart-1:#2B8CC4; --chart-2:#BF7A20; --chart-3:#12A379;
+  --chart-4:#8B6CF0; --chart-5:#E05590; --de-emphasis:#3A4157;
+  --font-display:'Sora',sans-serif; --font-body:'Albert Sans',sans-serif;
+  --font-data:'IBM Plex Mono',monospace;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:64px;
+  --radius:16px; --radius-sm:8px;
+}
+
+html, body { background: var(--bg); }
+body { width:1920px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas { position:relative; width:1920px; height:1080px; overflow:hidden; background:var(--bg); }
+.abs { position:absolute; }
+
+/* depth: bg -> aurora -> dot grid -> orbs -> glass panels */
+.blob { position:absolute; border-radius:50%; z-index:0; }
+.blob-1 { width:780px; height:780px; left:110px; top:230px;
+  background:radial-gradient(circle, rgb(43 140 196 / 0.17) 0%, transparent 68%); }
+.blob-2 { width:640px; height:640px; left:1430px; top:-260px;
+  background:radial-gradient(circle, rgb(139 108 240 / 0.16) 0%, transparent 68%); }
+.blob-3 { width:560px; height:560px; left:600px; top:880px;
+  background:radial-gradient(circle, rgb(18 163 121 / 0.13) 0%, transparent 68%); }
+.dots { position:absolute; inset:0; z-index:1;
+  background-image:radial-gradient(rgb(255 255 255 / 0.10) 1px, transparent 1.4px);
+  background-size:28px 28px; }
+
+.kicker { font:500 13px/1 var(--font-data); text-transform:uppercase;
+  letter-spacing:.2em; color:var(--accent); }
+.display { font-family:var(--font-display); font-weight:800; letter-spacing:-0.03em; line-height:1; }
+.value { font-family:var(--font-data); font-weight:500; }
+
+.panel { background:var(--glass); border:var(--glass-border); border-radius:var(--radius);
+  backdrop-filter:blur(14px); padding:28px; position:absolute; z-index:3; }
+.scanlines { background:
+  repeating-linear-gradient(0deg, rgb(255 255 255 / 0.04) 0 1px, transparent 1px 4px),
+  var(--glass); }
+
+.section-h { font:600 20px/1.2 var(--font-display); letter-spacing:-0.01em; margin-top:10px; }
+.muted { color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="dots"></div>
+
+  <!-- ============ THE CONSTELLATION (hero) ============
+       area ∝ subscribers  =>  r = 8.4 · √v
+       StreamMax 260 → r=135 · VidPlus 220 → r=125 · NebulaTV 150 → r=103
+       Kanal+ 90 → r=80 · others 120 → r=92 -->
+  <svg class="abs" style="left:0; top:0; z-index:2;" width="1920" height="1080" viewBox="0 0 1920 1080">
+    <defs>
+      <linearGradient id="heroNum" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2B8CC4"/><stop offset="1" stop-color="#8B6CF0"/>
+      </linearGradient>
+    </defs>
+
+    <!-- constellation links (behind orbs) -->
+    <g stroke="rgb(255 255 255 / 0.13)" stroke-width="1">
+      <line x1="500" y1="610" x2="790" y2="720"/>
+      <line x1="500" y1="610" x2="330" y2="850"/>
+      <line x1="500" y1="610" x2="1185" y2="430"/>
+      <line x1="790" y1="720" x2="640" y2="1040"/>
+      <line x1="790" y1="720" x2="1185" y2="430"/>
+    </g>
+
+    <!-- scattered stars -->
+    <g fill="rgb(255 255 255 / 0.45)">
+      <circle cx="900" cy="180" r="2"/><circle cx="1050" cy="300" r="1.5"/>
+      <circle cx="150" cy="430" r="2"/><circle cx="700" cy="250" r="1.5"/>
+      <circle cx="980" cy="560" r="2"/><circle cx="210" cy="620" r="1.5"/>
+      <circle cx="880" cy="940" r="2"/><circle cx="70" cy="900" r="1.5"/>
+      <circle cx="1130" cy="720" r="2"/><circle cx="620" cy="420" r="1.5"/>
+    </g>
+
+    <!-- orbit ring around the leader -->
+    <circle cx="500" cy="610" r="164" fill="none" stroke="rgb(255 255 255 / 0.18)"
+            stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round"/>
+
+    <!-- StreamMax — THE hero mark: double glow -->
+    <g style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55)) drop-shadow(0 0 40px rgb(43 140 196 / 0.55));">
+      <circle cx="500" cy="610" r="135" fill="var(--chart-1)" fill-opacity="0.16"
+              stroke="var(--chart-1)" stroke-width="2.5"/>
+      <path d="M488 494 L488 530 L520 512 Z" fill="var(--chart-1)"/>
+    </g>
+    <text x="500" y="638" text-anchor="middle" class="display" font-family="Sora"
+          font-weight="800" font-size="64" letter-spacing="-0.03em" fill="url(#heroNum)">260M</text>
+    <text x="500" y="674" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+          font-size="20" letter-spacing="0.08em" fill="var(--ink)">STREAMMAX</text>
+    <text x="500" y="702" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="12" letter-spacing="0.18em" fill="var(--ink-muted)">SUBSCRIBERS</text>
+
+    <!-- VidPlus -->
+    <g style="filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55));">
+      <circle cx="790" cy="720" r="125" fill="var(--chart-2)" fill-opacity="0.16"
+              stroke="var(--chart-2)" stroke-width="2.5"/>
+      <path d="M779 619 L779 651 L807 635 Z" fill="var(--chart-2)"/>
+    </g>
+    <text x="790" y="748" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="40" fill="var(--ink)">220M</text>
+    <text x="790" y="778" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+          font-size="17" letter-spacing="0.08em" fill="var(--ink)">VIDPLUS</text>
+
+    <!-- NebulaTV -->
+    <g style="filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55));">
+      <circle cx="330" cy="850" r="103" fill="var(--chart-3)" fill-opacity="0.16"
+              stroke="var(--chart-3)" stroke-width="2.5"/>
+      <path d="M321 767 L321 793 L344 780 Z" fill="var(--chart-3)"/>
+    </g>
+    <text x="330" y="862" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="33" fill="var(--ink)">150M</text>
+    <text x="330" y="890" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+          font-size="15" letter-spacing="0.08em" fill="var(--ink)">NEBULATV</text>
+
+    <!-- Kanal+ (slides behind the price panel) -->
+    <g style="filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55));">
+      <circle cx="1185" cy="430" r="80" fill="var(--chart-4)" fill-opacity="0.16"
+              stroke="var(--chart-4)" stroke-width="2.5"/>
+      <path d="M1177 371 L1177 393 L1196 382 Z" fill="var(--chart-4)"/>
+    </g>
+    <text x="1185" y="440" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="27" fill="var(--ink)">90M</text>
+    <text x="1185" y="466" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+          font-size="13" letter-spacing="0.08em" fill="var(--ink)">KANAL+</text>
+
+    <!-- Others (bleeds off the bottom edge) -->
+    <g style="filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55));">
+      <circle cx="640" cy="1040" r="92" fill="var(--chart-5)" fill-opacity="0.16"
+              stroke="var(--chart-5)" stroke-width="2.5"/>
+      <path d="M631 963 L631 987 L652 975 Z" fill="var(--chart-5)"/>
+    </g>
+    <text x="640" y="1012" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="29" fill="var(--ink)">120M</text>
+    <text x="640" y="1040" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+          font-size="14" letter-spacing="0.08em" fill="var(--ink)">OTHERS</text>
+  </svg>
+
+  <!-- ============ header ============ -->
+  <div class="abs" style="left:64px; top:52px; z-index:3; width:640px;">
+    <div class="kicker">// streaming wars · fictional market · 2026</div>
+    <h1 class="display" style="font-size:76px; margin-top:18px;">Who's winning<br>streaming?</h1>
+    <p style="font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:20px; max-width:480px;">
+      Four fictional giants and a long tail of services, drawn to scale by
+      paid subscribers. The winners charge more, sell ads — and stack up
+      in your living room.</p>
+  </div>
+
+  <!-- vertical scale caption on the left edge -->
+  <div class="abs value" style="left:18px; top:430px; z-index:3; writing-mode:vertical-rl;
+       transform:rotate(180deg); font-size:11px; letter-spacing:0.18em; color:var(--ink-muted);">
+    CIRCLE AREA ∝ PAID SUBSCRIBERS (MILLIONS)</div>
+
+  <!-- ============ price panel (scanline device) ============ -->
+  <div class="panel scanlines" style="left:1220px; top:64px; width:636px; height:372px;">
+    <div class="kicker">avg subscription price · 2019–2026</div>
+    <div class="section-h">The price of watching has doubled</div>
+    <!-- scale: $0–20 over 200px plot => y = 220 − 10·v ; x_i = 52 + i·65.43
+         9→130 · 10→120 · 11→110 · 12.5→95 · 14→80 · 15.5→65 · 16.5→55 · 18→40 -->
+    <svg viewBox="0 0 580 250" width="580" height="250" style="margin-top:14px;">
+      <g stroke="rgb(255 255 255 / 0.07)" stroke-width="1">
+        <line x1="52" y1="20" x2="576" y2="20"/>
+        <line x1="52" y1="120" x2="576" y2="120"/>
+      </g>
+      <line x1="52" y1="220" x2="576" y2="220" stroke="rgb(255 255 255 / 0.18)" stroke-width="1"/>
+      <g font-family="IBM Plex Mono" font-weight="500" font-size="12" fill="var(--ink-muted)" text-anchor="end">
+        <text x="42" y="24">$20</text><text x="42" y="124">$10</text><text x="42" y="224">$0</text>
+      </g>
+      <g font-family="IBM Plex Mono" font-weight="500" font-size="12" fill="var(--ink-muted)" text-anchor="middle">
+        <text x="52" y="242">2019</text><text x="248" y="242">2022</text><text x="510" y="242">2026</text>
+      </g>
+      <path d="M52 220 L52 130 L117.4 120 L182.9 110 L248.3 95 L313.7 80 L379.1 65 L444.6 55 L510 40 L510 220 Z"
+            fill="var(--chart-1)" fill-opacity="0.12"/>
+      <polyline points="52,130 117.4,120 182.9,110 248.3,95 313.7,80 379.1,65 444.6,55 510,40"
+            fill="none" stroke="var(--chart-1)" stroke-width="2.5" stroke-linejoin="round"
+            stroke-linecap="round" style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55));"/>
+      <circle cx="52" cy="130" r="4" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2"/>
+      <text x="60" y="152" font-family="IBM Plex Mono" font-weight="500" font-size="13"
+            fill="var(--ink-muted)">$9</text>
+      <circle cx="510" cy="40" r="5.5" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2.5"/>
+      <text x="522" y="45" font-family="IBM Plex Mono" font-weight="500" font-size="15"
+            fill="var(--ink)">$18</text>
+      <text x="444.6" y="34" text-anchor="end" font-family="Albert Sans" font-weight="700"
+            font-size="14" fill="var(--ink)">2× the 2019 price</text>
+    </svg>
+  </div>
+
+  <!-- ============ ad-tier panel (waffle) ============ -->
+  <div class="panel" style="left:1220px; top:460px; width:636px; height:300px;">
+    <div class="kicker">ad-supported tiers</div>
+    <div style="display:flex; gap:44px; margin-top:18px; align-items:flex-start;">
+      <div style="width:250px;">
+        <div class="display" style="font-size:82px;">41%</div>
+        <p style="font:400 16px/1.45 var(--font-body); color:var(--ink-muted); margin-top:14px;">
+          of subscribers now watch with ads — the ad-free promise is
+          quietly expiring.</p>
+      </div>
+      <div>
+        <!-- waffle: 100 cells, 41 filled bottom-up (4 full rows + 1) -->
+        <svg viewBox="0 0 196 196" width="196" height="196">
+          <defs><g id="wr">
+            <rect x="0" width="16" height="16" rx="3"/><rect x="20" width="16" height="16" rx="3"/>
+            <rect x="40" width="16" height="16" rx="3"/><rect x="60" width="16" height="16" rx="3"/>
+            <rect x="80" width="16" height="16" rx="3"/><rect x="100" width="16" height="16" rx="3"/>
+            <rect x="120" width="16" height="16" rx="3"/><rect x="140" width="16" height="16" rx="3"/>
+            <rect x="160" width="16" height="16" rx="3"/><rect x="180" width="16" height="16" rx="3"/>
+          </g></defs>
+          <g fill="var(--de-emphasis)" opacity="0.5">
+            <use href="#wr" y="0"/><use href="#wr" y="20"/><use href="#wr" y="40"/>
+            <use href="#wr" y="60"/><use href="#wr" y="80"/><use href="#wr" y="100"/>
+          </g>
+          <g fill="var(--chart-1)" style="filter:drop-shadow(0 0 10px rgb(43 140 196 / 0.45));">
+            <rect x="0" y="100" width="16" height="16" rx="3"/>
+            <use href="#wr" y="120"/><use href="#wr" y="140"/>
+            <use href="#wr" y="160"/><use href="#wr" y="180"/>
+          </g>
+        </svg>
+        <div class="value" style="font-size:11px; letter-spacing:0.14em; color:var(--ink-muted); margin-top:12px;">
+          1 SQUARE = 1% OF SUBSCRIBERS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ stacking block (pictogram, no panel) ============ -->
+  <div class="abs" style="left:1220px; top:794px; width:636px; z-index:3;">
+    <div class="kicker">subscription stacking</div>
+    <div style="display:flex; gap:26px; align-items:flex-end; margin-top:16px;">
+      <div class="display" style="font-size:82px;">3.4</div>
+      <p style="font:400 16px/1.4 var(--font-body); color:var(--ink-muted); padding-bottom:12px; max-width:300px;">
+        services per household,<br>on average</p>
+    </div>
+    <!-- 4 screens, 3 full + 40% of the 4th (clip at 3·114 + 0.4·90 = 378) -->
+    <svg viewBox="0 0 440 66" width="440" height="66" style="margin-top:14px;">
+      <defs>
+        <rect id="scr" width="90" height="60" rx="9" y="3"/>
+        <path id="ply" d="M37 22 L59 33 L37 44 Z"/>
+        <clipPath id="svcClip"><rect x="0" y="0" width="378" height="66"/></clipPath>
+      </defs>
+      <g fill="none" stroke="var(--de-emphasis)" stroke-width="2">
+        <use href="#scr" x="0"/><use href="#scr" x="114"/><use href="#scr" x="228"/><use href="#scr" x="342"/>
+      </g>
+      <g fill="var(--de-emphasis)">
+        <use href="#ply" x="0"/><use href="#ply" x="114"/><use href="#ply" x="228"/><use href="#ply" x="342"/>
+      </g>
+      <g clip-path="url(#svcClip)" style="filter:drop-shadow(0 0 10px rgb(43 140 196 / 0.45));">
+        <g fill="var(--chart-1)">
+          <use href="#scr" x="0"/><use href="#scr" x="114"/><use href="#scr" x="228"/><use href="#scr" x="342"/>
+        </g>
+        <g fill="var(--bg)">
+          <use href="#ply" x="0"/><use href="#ply" x="114"/><use href="#ply" x="228"/><use href="#ply" x="342"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============ terminal footer ============ -->
+  <div class="abs value" style="right:64px; bottom:28px; z-index:3; font-size:13px; color:var(--ink-muted);">
+    // figures: fictional market — illustrative demo data · made with epic-infographics</div>
+
+</div>
+</body>
+</html>

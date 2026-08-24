@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The anatomy of a perfect margherita — hand-drawn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,500;0,700;0,800;1,500&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Composition: BIG OBJECT — one oversized drawn margherita (top view) dominates and
+   bleeds off the right edge; the six parts are pinned to it with doodle arrows.
+   A magnifier bubble bottom-left zooms the cornicione cross-section (crumb).
+   Dense zone: left column (dough / build ratio). Empty zone: gap between the
+   column and the pizza + the quiet crust ring. Crossing boundaries: the pizza
+   bleed, the zoom dashes, the char aside sitting on the rim. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#FDFBF4; --surface:#F4EFDF; --surface-2:#E9E2CC;
+  --ink:#2E2A25; --ink-muted:#7A7365;
+  --chart-1:#E4573D; --chart-2:#3E7CC1; --chart-3:#57A15A; --chart-4:#9268B8;
+  --de-emphasis:#C9C2AE;
+  --font-display:'Shantell Sans',cursive; --font-body:'Shantell Sans',cursive;
+  --font-aside:'Caveat',cursive;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:64px;
+}
+
+html, body { background: var(--bg); }
+body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--ink); }
+
+.canvas { position:relative; width:1080px; height:1080px; overflow:hidden; background:var(--bg); }
+.abs { position:absolute; }
+
+/* film grain over everything */
+.grain { position:absolute; inset:0; pointer-events:none; z-index:50;
+  opacity:.4; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0.6 0.6 0 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E"); }
+
+.lbl { font:700 21px/1.1 var(--font-body); color:var(--ink); z-index:9; }
+.aside { font-family:var(--font-aside); font-weight:600; font-size:24px; line-height:1.05; color:var(--ink); z-index:9; }
+.kicker { font:700 14px/1 var(--font-body); letter-spacing:2px; text-transform:uppercase; color:var(--ink); }
+.stat-big { font:800 32px/1 var(--font-display); color:var(--ink); }
+.stat-sub { font:500 17px/1.25 var(--font-body); color:var(--ink); }
+.cap { font:500 14px/1.3 var(--font-body); color:var(--ink-muted); }
+
+.tape { position:absolute; background:var(--surface-2); opacity:.6; z-index:12;
+  clip-path:polygon(0% 12%, 4% 0%, 50% 6%, 96% 0%, 100% 14%, 97% 50%, 100% 88%, 95% 100%, 48% 94%, 5% 100%, 0% 86%, 3% 50%); }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- shared hand-drawn filters (must be in DOM, not display:none) -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="wobble">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4"/>
+    </filter>
+    <filter id="rough">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5"/>
+    </filter>
+  </svg>
+
+  <!-- giant quiet tinted circle behind the pizza (non-uniform background) -->
+  <svg class="abs" style="left:330px; top:220px; z-index:1;" width="750" height="860" viewBox="0 0 750 860">
+    <circle cx="480" cy="480" r="460" fill="var(--surface)" opacity=".55" filter="url(#rough)"/>
+  </svg>
+
+  <!-- title -->
+  <div class="abs" style="left:48px; top:44px; z-index:9; width:640px;">
+    <div style="font:700 26px/1.2 var(--font-body);">the anatomy of a</div>
+    <div style="font:800 52px/1.05 var(--font-display);">perfect margherita</div>
+  </div>
+  <div class="aside abs" style="left:48px; top:180px; transform:rotate(-0.8deg);">so few ingredients — nowhere to hide</div>
+
+  <!-- flame doodle between title and bake note -->
+  <svg class="abs" style="left:640px; top:52px; z-index:9;" width="56" height="88" viewBox="0 0 56 88">
+    <path d="M28 6 Q44 28 46 48 Q47 72 28 80 Q9 72 10 48 Q12 30 21 20 Q19 34 28 41 Q38 30 28 6 Z"
+          fill="var(--chart-1)" opacity=".85" transform="translate(2.5 2)" filter="url(#rough)"/>
+    <path d="M28 6 Q44 28 46 48 Q47 72 28 80 Q9 72 10 48 Q12 30 21 20 Q19 34 28 41 Q38 30 28 6 Z"
+          fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+  </svg>
+
+  <!-- bake note, washi-taped, top right -->
+  <div class="abs" style="left:690px; top:36px; width:356px; height:178px; z-index:5; transform:rotate(1.5deg);">
+    <div style="position:absolute; inset:0; background:var(--surface);
+                clip-path:polygon(1% 4%, 52% 0%, 99% 3%, 100% 95%, 47% 100%, 0% 97%);"></div>
+    <div style="position:relative; padding:18px 22px 0;">
+      <div class="kicker">the bake</div>
+      <div style="display:flex; align-items:flex-end; gap:18px; margin-top:8px;">
+        <div style="display:flex; align-items:baseline; gap:6px;">
+          <span style="font:800 84px/0.95 var(--font-display);">90</span>
+          <span style="font:700 26px/1 var(--font-body);">sec</span>
+        </div>
+        <div style="padding-bottom:8px;">
+          <div style="font:800 34px/1 var(--font-display);">450&thinsp;&deg;C</div>
+          <div class="stat-sub" style="margin-top:4px;">wood-fired oven</div>
+        </div>
+      </div>
+    </div>
+    <!-- crayon circle around the 90 sec -->
+    <svg style="position:absolute; left:2px; top:34px; pointer-events:none;" width="220" height="126" viewBox="0 0 220 126">
+      <ellipse cx="104" cy="64" rx="98" ry="54" fill="none" stroke="var(--chart-1)" stroke-width="4.5" filter="url(#wobble)"/>
+    </svg>
+    <!-- wobbly ink outline so the note reads as a card -->
+    <svg style="position:absolute; inset:0; pointer-events:none;" width="356" height="178" viewBox="0 0 356 178">
+      <path d="M4 8 L186 3 L352 7 L350 170 L172 175 L5 171 Z" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    </svg>
+    <div class="tape" style="left:-18px; top:-10px; width:96px; height:30px; transform:rotate(-5deg);"></div>
+    <div class="tape" style="right:-14px; bottom:-8px; width:92px; height:28px; transform:rotate(4deg);"></div>
+  </div>
+
+  <!-- ===== THE PIZZA (big object, bleeds right edge) ===== -->
+  <svg class="abs" style="left:420px; top:310px; z-index:2;" width="660" height="770" viewBox="0 0 660 770">
+    <defs>
+      <g id="cheese1">
+        <path d="M-8 -42 Q28 -50 44 -22 Q58 4 38 26 Q16 46 -16 38 Q-46 28 -44 -4 Q-42 -34 -8 -42 Z"
+              fill="var(--surface)" opacity=".92" transform="translate(3 2)" filter="url(#rough)"/>
+        <path d="M-8 -42 Q28 -50 44 -22 Q58 4 38 26 Q16 46 -16 38 Q-46 28 -44 -4 Q-42 -34 -8 -42 Z"
+              fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+      </g>
+      <g id="cheese2">
+        <path d="M0 -38 Q26 -44 40 -20 Q52 2 34 18 Q46 32 22 40 Q-6 47 -26 32 Q-44 16 -36 -8 Q-28 -34 0 -38 Z"
+              fill="var(--surface)" opacity=".92" transform="translate(3 2)" filter="url(#rough)"/>
+        <path d="M0 -38 Q26 -44 40 -20 Q52 2 34 18 Q46 32 22 40 Q-6 47 -26 32 Q-44 16 -36 -8 Q-28 -34 0 -38 Z"
+              fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+      </g>
+      <g id="leaf">
+        <path d="M2 2 Q16 -16 34 -8 Q50 -1 36 12 Q20 24 2 2 Z"
+              fill="var(--chart-3)" opacity=".85" transform="translate(2.5 2)" filter="url(#rough)"/>
+        <path d="M2 2 Q16 -16 34 -8 Q50 -1 36 12 Q20 24 2 2 Z"
+              fill="none" stroke="var(--ink)" stroke-width="2.2" filter="url(#wobble)"/>
+        <path d="M6 2 Q20 0 33 1" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
+      </g>
+      <path id="charblob" d="M0 -10 Q10 -12 14 -4 Q18 6 8 10 Q-4 14 -10 6 Q-14 -4 -6 -9 Z"/>
+    </defs>
+
+    <!-- crust: crayon fill offset from ink outline -->
+    <circle cx="373" cy="373" r="345" fill="var(--surface-2)" opacity=".85" filter="url(#rough)"/>
+    <circle cx="370" cy="370" r="345" fill="none" stroke="var(--ink)" stroke-width="3.5" filter="url(#wobble)"/>
+    <!-- sauce -->
+    <circle cx="367" cy="372" r="278" fill="var(--chart-1)" opacity=".85" filter="url(#rough)"/>
+    <circle cx="370" cy="370" r="278" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+
+    <!-- fior di latte blobs -->
+    <use href="#cheese1" transform="translate(430 185) rotate(15)"/>
+    <use href="#cheese2" transform="translate(340 220) rotate(140) scale(0.9)"/>
+    <use href="#cheese1" transform="translate(255 300) rotate(75) scale(1.05)"/>
+    <use href="#cheese2" transform="translate(390 335) rotate(-30)"/>
+    <use href="#cheese1" transform="translate(505 425) rotate(200) scale(0.95)"/>
+    <use href="#cheese2" transform="translate(300 465) rotate(50)"/>
+    <use href="#cheese1" transform="translate(420 535) rotate(255) scale(0.9)"/>
+    <use href="#cheese2" transform="translate(245 585) rotate(-70) scale(0.85)"/>
+
+    <!-- basil leaves -->
+    <use href="#leaf" transform="translate(340 158) rotate(-15) scale(1.2)"/>
+    <use href="#leaf" transform="translate(505 230) rotate(30) scale(1.15)"/>
+    <use href="#leaf" transform="translate(243 398) rotate(160) scale(1.2)"/>
+    <use href="#leaf" transform="translate(452 482) rotate(200) scale(1.1)"/>
+    <use href="#leaf" transform="translate(325 332) rotate(80)"/>
+
+    <!-- char spots on the cornicione: varied size + darkness, with companion specks -->
+    <g fill="var(--ink)">
+      <use href="#charblob" transform="translate(424 63) scale(1.4)" opacity=".5"/>
+      <use href="#charblob" transform="translate(452 78) scale(0.5)" opacity=".38"/>
+      <use href="#charblob" transform="translate(591 149) rotate(40) scale(1.0)" opacity=".38"/>
+      <use href="#charblob" transform="translate(640 316) rotate(80) scale(1.3)" opacity=".5"/>
+      <use href="#charblob" transform="translate(648 348) rotate(30) scale(0.5)" opacity=".35"/>
+      <use href="#charblob" transform="translate(628 502) rotate(120) scale(0.9)" opacity=".42"/>
+      <use href="#charblob" transform="translate(526 640) rotate(200) scale(1.5)" opacity=".52"/>
+      <use href="#charblob" transform="translate(494 662) rotate(90) scale(0.55)" opacity=".36"/>
+      <use href="#charblob" transform="translate(316 677) rotate(20) scale(1.0)" opacity=".4"/>
+      <use href="#charblob" transform="translate(114 549) rotate(60) scale(1.2)" opacity=".5"/>
+      <use href="#charblob" transform="translate(146 576) rotate(190) scale(0.5)" opacity=".35"/>
+      <use href="#charblob" transform="translate(58 370) rotate(150) scale(0.9)" opacity=".38"/>
+      <use href="#charblob" transform="translate(214 100) rotate(240) scale(1.1)" opacity=".46"/>
+    </g>
+  </svg>
+
+  <!-- part labels around the pizza -->
+  <div class="lbl abs" style="left:553px; top:232px; transform:rotate(-1deg);">sauce</div>
+  <div class="lbl abs" style="left:745px; top:232px; transform:rotate(0.8deg);">char spots</div>
+  <div class="lbl abs" style="left:940px; top:232px; transform:rotate(-1.2deg);">basil</div>
+  <div class="lbl abs" style="left:560px; top:1034px; transform:rotate(0.9deg);">cheese</div>
+  <div class="lbl abs" style="left:128px; top:826px; transform:rotate(-1deg);">cornicione</div>
+  <div class="lbl abs" style="left:56px; top:988px; transform:rotate(1.1deg);">crumb</div>
+
+  <div class="aside abs" style="left:858px; top:314px; width:180px; font-size:23px; transform:rotate(-2deg);">char = flavor,<br>not a mistake!</div>
+  <div class="aside abs" style="left:40px; top:888px; width:200px; font-size:22px; transform:rotate(-2deg);">wet dough bakes<br>into airy crumb</div>
+
+  <!-- ===== LEFT COLUMN ===== -->
+
+  <!-- dough zone -->
+  <div class="abs" style="left:48px; top:236px; z-index:9;">
+    <div style="font:700 24px/1 var(--font-display);">the dough</div>
+  </div>
+
+  <!-- measuring cup, water at 65%: interior y 21..141 (h 120) -> level y = 141 - 0.65*120 = 63 -->
+  <svg class="abs" style="left:48px; top:296px; z-index:9;" width="130" height="152" viewBox="0 0 130 152">
+    <defs>
+      <clipPath id="cupClip"><path d="M25 21 L37 130 Q39 141 51 141 L87 141 Q99 141 101 130 L113 21 Z"/></clipPath>
+    </defs>
+    <g clip-path="url(#cupClip)">
+      <path d="M14 66 Q34 58 54 66 T94 66 T134 66 L134 152 L14 152 Z" fill="var(--chart-2)" opacity=".85" filter="url(#rough)"/>
+      <path d="M14 64 Q34 56 54 64 T94 64 T134 64" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    </g>
+    <path d="M22 18 L34 132 Q36 144 50 144 L88 144 Q102 144 104 132 L116 18"
+          fill="none" stroke="var(--ink)" stroke-width="3" filter="url(#wobble)"/>
+    <path d="M103 62 h9 M105 96 h9" stroke="var(--ink)" stroke-width="2" filter="url(#wobble)"/>
+  </svg>
+  <div class="abs" style="left:198px; top:304px; z-index:9;">
+    <div style="font:800 44px/1 var(--font-display);">65%</div>
+    <div style="font:700 18px/1 var(--font-body); margin-top:8px;">hydration</div>
+    <div class="cap" style="margin-top:6px; width:190px;">water vs flour, by weight</div>
+  </div>
+
+  <!-- ferment -->
+  <svg class="abs" style="left:52px; top:462px; z-index:9;" width="44" height="44" viewBox="0 0 44 44">
+    <g stroke="var(--chart-2)" stroke-width="3" stroke-linecap="round" fill="none" filter="url(#wobble)">
+      <path d="M22 3 V41 M5.5 12.5 L38.5 31.5 M38.5 12.5 L5.5 31.5"/>
+      <path d="M17 8 L22 12 L27 8 M17 36 L22 32 L27 36"/>
+    </g>
+  </svg>
+  <div class="abs" style="left:112px; top:458px; z-index:9;">
+    <div class="stat-big">48&ndash;72&thinsp;h</div>
+    <div class="stat-sub" style="margin-top:5px;">cold ferment, in the fridge</div>
+  </div>
+
+  <!-- dough ball -->
+  <svg class="abs" style="left:52px; top:540px; z-index:9;" width="50" height="46" viewBox="0 0 50 46">
+    <path d="M4 30 Q2 12 20 6 Q40 0 46 16 Q50 32 36 38 Q16 44 4 30 Z"
+          fill="var(--surface-2)" opacity=".9" transform="translate(2.5 2)" filter="url(#rough)"/>
+    <path d="M4 30 Q2 12 20 6 Q40 0 46 16 Q50 32 36 38 Q16 44 4 30 Z"
+          fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    <g fill="var(--ink-muted)"><circle cx="18" cy="18" r="1.6"/><circle cx="30" cy="26" r="1.6"/><circle cx="25" cy="14" r="1.3"/></g>
+  </svg>
+  <div class="abs" style="left:112px; top:536px; z-index:9;">
+    <div class="stat-big">250&thinsp;g</div>
+    <div class="stat-sub" style="margin-top:5px;">per dough ball</div>
+  </div>
+
+  <!-- build ratio -->
+  <div class="abs" style="left:48px; top:624px; z-index:9;">
+    <div style="font:700 24px/1 var(--font-display);">the build, by weight</div>
+  </div>
+  <!-- stacked bar: 340px total -> crust 55% = 187, sauce 20% = 68, cheese 20% = 68, basil+oil 5% = 17 -->
+  <div class="abs" style="left:48px; top:678px; z-index:9; transform:rotate(0.7deg);">
+    <svg width="380" height="58" viewBox="0 0 380 58" font-family="Shantell Sans">
+      <g opacity=".85" filter="url(#rough)">
+        <rect x="4.5" y="10" width="187" height="34" fill="var(--surface-2)"/>
+        <rect x="191.5" y="10" width="68" height="34" fill="var(--chart-1)"/>
+        <rect x="259.5" y="10" width="68" height="34" fill="var(--surface)"/>
+        <rect x="327.5" y="10" width="17" height="34" fill="var(--chart-3)"/>
+      </g>
+      <g fill="none" stroke="var(--ink)" filter="url(#wobble)">
+        <path d="M2 8 H342 V42 H2 Z" stroke-width="3"/>
+        <path d="M189 8 V42 M257 8 V42 M325 8 V42" stroke-width="2.5"/>
+      </g>
+      <g font-size="16" font-weight="700" text-anchor="middle">
+        <text x="95" y="31" fill="var(--ink)">55%</text>
+        <text x="223" y="31" fill="var(--bg)">20%</text>
+        <text x="291" y="31" fill="var(--ink)">20%</text>
+      </g>
+    </svg>
+  </div>
+  <!-- legend -->
+  <div class="abs" style="left:48px; top:744px; z-index:9;">
+    <svg width="400" height="80" viewBox="0 0 400 80" font-family="Shantell Sans" font-size="17" font-weight="500">
+      <g opacity=".9" filter="url(#rough)">
+        <rect x="2" y="5" width="15" height="15" fill="var(--surface-2)"/>
+        <rect x="220" y="5" width="15" height="15" fill="var(--chart-1)"/>
+        <rect x="2" y="43" width="15" height="15" fill="var(--surface)"/>
+        <rect x="220" y="43" width="15" height="15" fill="var(--chart-3)"/>
+      </g>
+      <g fill="none" stroke="var(--ink)" stroke-width="2" filter="url(#wobble)">
+        <path d="M1 4 h17 v17 h-17 Z M219 4 h17 v17 h-17 Z M1 42 h17 v17 h-17 Z M219 42 h17 v17 h-17 Z"/>
+      </g>
+      <g fill="var(--ink)">
+        <text x="28" y="19">crust &mdash; 55%</text>
+        <text x="246" y="19">sauce &mdash; 20%</text>
+        <text x="28" y="57">fior di latte &mdash; 20%</text>
+        <text x="246" y="57">basil + oil &mdash; 5%</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ===== ZOOM BUBBLE: cornicione cross-section ===== -->
+  <svg class="abs" style="left:195px; top:848px; z-index:5;" width="220" height="230" viewBox="0 0 220 230">
+    <circle cx="105" cy="112" r="96" fill="var(--bg)" stroke="none"/>
+    <!-- cut face of the cornicione -->
+    <path d="M30 152 Q35 72 105 64 Q175 72 180 152 Z"
+          fill="var(--surface-2)" opacity=".9" transform="translate(3 2)" filter="url(#rough)"/>
+    <path d="M30 152 Q35 72 105 64 Q175 72 180 152 Z"
+          fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    <path d="M26 152 H184" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    <!-- char dashes on the crust top -->
+    <g stroke="var(--ink)" stroke-width="3" opacity=".55" stroke-linecap="round" fill="none" filter="url(#wobble)">
+      <path d="M62 82 q8 -5 16 -7 M120 66 q9 1 17 5 M158 96 q5 6 8 13"/>
+    </g>
+    <!-- crumb holes -->
+    <g fill="var(--bg)" stroke="var(--ink)" stroke-width="1.8" filter="url(#wobble)">
+      <ellipse cx="72" cy="118" rx="11" ry="8"/>
+      <ellipse cx="106" cy="100" rx="14" ry="10"/>
+      <ellipse cx="140" cy="122" rx="9" ry="7"/>
+      <ellipse cx="88" cy="138" rx="7" ry="5"/>
+      <ellipse cx="128" cy="140" rx="6" ry="5"/>
+      <ellipse cx="58" cy="140" rx="5" ry="4"/>
+      <ellipse cx="115" cy="122" rx="5" ry="4"/>
+    </g>
+    <!-- bubble ring -->
+    <circle cx="105" cy="112" r="96" fill="none" stroke="var(--ink)" stroke-width="3.5" filter="url(#wobble)"/>
+  </svg>
+  <div class="tape" style="left:348px; top:852px; width:84px; height:26px; transform:rotate(6deg);"></div>
+
+  <!-- ===== annotation layer: arrows, underlines, dashes, scribbles ===== -->
+  <svg class="abs" style="left:0; top:0; z-index:8; pointer-events:none;" width="1080" height="1080" viewBox="0 0 1080 1080">
+    <g fill="none" stroke-linecap="round" filter="url(#wobble)">
+      <!-- underlines -->
+      <path d="M258 142 Q400 151 540 138" stroke="var(--chart-1)" stroke-width="6"/>
+      <path d="M48 272 Q100 277 170 271" stroke="var(--chart-2)" stroke-width="5"/>
+      <path d="M48 660 Q150 666 292 659" stroke="var(--chart-1)" stroke-width="5"/>
+      <!-- doodle arrows (ink) -->
+      <g stroke="var(--ink)" stroke-width="3">
+        <path d="M596 262 Q640 360 692 458 M692 458 l-13 -5 M692 458 l-2 -15"/>
+        <path d="M800 266 Q840 310 866 382 M866 382 l-14 -4 M866 382 l-3 -15"/>
+        <path d="M975 266 Q1010 420 932 524 M932 524 l3 -16 M932 524 l14 -7"/>
+        <path d="M615 1030 Q606 960 652 908 M652 908 l-15 2 M652 908 l-5 15"/>
+        <path d="M262 843 Q288 846 298 864 M298 864 l-11 -5 M298 864 l-3 -13"/>
+        <path d="M142 998 Q180 988 232 968 M232 968 l-14 -2 M232 968 l-8 12"/>
+      </g>
+      <!-- zoom dashes from bubble to rim -->
+      <g stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="8 7">
+        <path d="M378 895 L480 852 M392 1012 L512 918"/>
+      </g>
+      <!-- margin scribbles: little sparks -->
+      <g stroke-width="2.5">
+        <path d="M400 190 l0 -18 M391 181 l18 0 M394 175 l12 12 M406 175 l-12 12" stroke="var(--chart-1)"/>
+        <path d="M648 176 l0 -14 M641 169 l14 0" stroke="var(--chart-2)"/>
+        <path d="M424 612 l0 -16 M416 604 l16 0 M419 599 l10 10" stroke="var(--chart-3)"/>
+      </g>
+    </g>
+  </svg>
+
+  <!-- footer -->
+  <p class="cap abs" style="left:48px; top:1048px; z-index:9; font-size:13px;">one cook's opinion &mdash; illustrative</p>
+
+  <div class="grain"></div>
+</div>
+</body>
+</html>

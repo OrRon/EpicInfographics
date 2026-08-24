@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Attention spotlight — dark glass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Albert+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Composition: DIAGONAL DRIVE — three acts of spotlight step down-right in
+   three beats (2004 upper-left, 2012 centre, 2023 lower-right on the stage
+   floor). Scene: the reader sits in the dark of a theatre, behind silhouetted
+   seat backs and heads, looking past 77 footlights at the stage. A lighting
+   truss bleeds both edges at the top; Act I's pool bleeds the left edge; a
+   glass tag crosses beam III; the seats bleed the bottom.
+   Dense zone: the stage / bottom third. Empty zone: deep darkness mid-right.
+
+   POOL MATH (truthful geometry — area ∝ seconds):
+     ellipse with constant aspect ry = 0.38·rx  ⇒  area = π·0.38·rx²  ∝ rx²
+     so rx = k·√seconds with k = 16 px:
+       2004: √150 = 12.2474 → rx = 195.96 ≈ 196.0 · ry = 0.38·196.0 = 74.5
+       2012: √75  =  8.6603 → rx = 138.56 ≈ 138.6 · ry = 0.38·138.6 = 52.7
+       2023: √47  =  6.8557 → rx = 109.69 ≈ 109.7 · ry = 0.38·109.7 = 41.7
+     check: 196.0²/109.7² = 38416/12034 = 3.19 = 150/47 ✓
+             138.6²/196.0² = 19210/38416 = 0.50 = 75/150 ✓
+   Beam mouths land at ±0.92·rx on each pool: ±180.3 / ±127.5 / ±100.9. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#0B0E17; --bg-2:#10141F;
+  --glass:rgb(255 255 255 / 0.05); --glass-border:1px solid rgb(255 255 255 / 0.12);
+  --ink:#EDF1FA; --ink-muted:#8B93A7;
+  --accent:#2B8CC4;
+  --chart-1:#2B8CC4; --chart-2:#BF7A20; --chart-3:#12A379;
+  --chart-4:#8B6CF0; --chart-5:#E05590; --de-emphasis:#3A4157;
+  --font-display:'Sora',sans-serif; --font-body:'Albert Sans',sans-serif;
+  --font-data:'IBM Plex Mono',monospace;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:64px;
+  --radius:16px; --radius-sm:8px;
+}
+
+html, body { background: var(--bg); }
+body { width:1080px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--bg); }
+.abs { position:absolute; }
+
+/* depth order: bg -> aurora blobs -> dot grid -> scene svg -> glass tags/text */
+.blob { position:absolute; border-radius:50%; pointer-events:none; z-index:0; }
+.blob-violet { width:680px; height:680px; left:-200px; top:-220px;
+  background:radial-gradient(circle, rgb(139 108 240 / 0.16) 0%, transparent 65%); }
+.blob-blue { width:760px; height:760px; right:-280px; top:430px;
+  background:radial-gradient(circle, rgb(43 140 196 / 0.14) 0%, transparent 65%); }
+.blob-emerald { width:640px; height:640px; left:-170px; bottom:-190px;
+  background:radial-gradient(circle, rgb(18 163 121 / 0.15) 0%, transparent 65%); }
+
+.dotgrid { position:absolute; inset:0; pointer-events:none; z-index:1;
+  background-image:radial-gradient(rgb(255 255 255 / 0.10) 1px, transparent 1.4px);
+  background-size:28px 28px; }
+
+.kicker { font:500 13px/1 var(--font-data); text-transform:uppercase;
+  letter-spacing:.2em; color:var(--accent); }
+.display { font-family:var(--font-display); font-weight:800;
+  letter-spacing:-0.03em; line-height:1; }
+.value { font-family:var(--font-data); font-weight:500; }
+
+.hero-num {
+  font-family:var(--font-display); font-weight:800; letter-spacing:-0.03em;
+  line-height:1; font-size:150px;
+  background:linear-gradient(100deg, var(--chart-3) 10%, var(--accent) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter: drop-shadow(0 0 12px rgb(18 163 121 / 0.55))
+          drop-shadow(0 0 40px rgb(43 140 196 / 0.45));
+}
+
+.tag { position:absolute; z-index:3; background:var(--glass);
+  border:var(--glass-border); border-radius:var(--radius-sm);
+  backdrop-filter:blur(14px); padding:14px 16px; overflow:hidden; }
+.tag::after { content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(to bottom,
+    rgb(255 255 255 / 0.04) 0 1px, transparent 1px 4px); }
+.tag .kicker { font-size:12px; }
+.dot { display:inline-block; width:9px; height:9px; border-radius:2px;
+  margin-right:9px; vertical-align:0; }
+.tag p { font:400 14px/1.45 var(--font-body); color:var(--ink-muted); margin-top:8px; }
+.tag p b { color:var(--ink); font-weight:700; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="blob blob-violet"></div>
+  <div class="blob blob-blue"></div>
+  <div class="blob blob-emerald"></div>
+  <div class="dotgrid"></div>
+
+  <!-- ================= THE THEATRE (scene svg) ================= -->
+  <svg class="abs" style="left:0; top:0; z-index:2;" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <circle id="blb" cx="0" cy="1641" r="3.1"/>
+    </defs>
+
+    <!-- scattered dust-stars in the dark -->
+    <g fill="rgb(237 241 250 / 0.40)">
+      <circle cx="920" cy="560" r="2"/><circle cx="1010" cy="760" r="1.5"/>
+      <circle cx="860" cy="880" r="1.8"/><circle cx="120" cy="960" r="1.6"/>
+      <circle cx="990" cy="1060" r="2"/><circle cx="70" cy="1180" r="1.5"/>
+      <circle cx="945" cy="1310" r="1.7"/><circle cx="180" cy="530" r="1.5"/>
+    </g>
+
+    <!-- lighting truss: bleeds both edges -->
+    <g>
+      <line x1="-20" y1="414" x2="1100" y2="414" stroke="rgb(255 255 255 / 0.20)" stroke-width="2"/>
+      <line x1="-20" y1="442" x2="1100" y2="442" stroke="rgb(255 255 255 / 0.20)" stroke-width="2"/>
+      <polyline fill="none" stroke="rgb(255 255 255 / 0.12)" stroke-width="1.5"
+        points="-20,442 8,414 36,442 64,414 92,442 120,414 148,442 176,414 204,442 232,414
+                260,442 288,414 316,442 344,414 372,442 400,414 428,442 456,414 484,442 512,414
+                540,442 568,414 596,442 624,414 652,442 680,414 708,442 736,414 764,442 792,414
+                820,442 848,414 876,442 904,414 932,442 960,414 988,442 1016,414 1044,442 1072,414 1100,442"/>
+    </g>
+
+    <!-- ============ BEAMS (flat tints, no gradients) ============
+         mouths at ±0.92·rx: pool1 185±180.3 · pool2 585±127.5 · pool3 720±100.9 -->
+    <polygon points="233,500 267,500 365.3,780 4.7,780" fill="var(--chart-1)" opacity="0.10"/>
+    <polygon points="243,500 257,500 275,780 95,780"    fill="var(--chart-1)" opacity="0.10"/>
+    <polygon points="543,500 577,500 712.5,1110 457.5,1110" fill="var(--chart-2)" opacity="0.10"/>
+    <polygon points="551,500 569,500 649,1110 521,1110"     fill="var(--chart-2)" opacity="0.09"/>
+    <polygon points="833,500 867,500 820.9,1505 619.1,1505" fill="var(--chart-3)" opacity="0.13"/>
+    <polygon points="841,500 859,500 770,1505 670,1505"     fill="var(--chart-3)" opacity="0.11"/>
+
+    <!-- dust motes drifting in the beams -->
+    <g fill="rgb(237 241 250 / 0.5)">
+      <circle cx="238" cy="565" r="2"/><circle cx="256" cy="622" r="1.4"/>
+      <circle cx="214" cy="668" r="2.2"/><circle cx="245" cy="708" r="1.4"/>
+      <circle cx="196" cy="742" r="1.8"/>
+      <circle cx="566" cy="640" r="1.6"/><circle cx="552" cy="770" r="2"/>
+      <circle cx="588" cy="890" r="1.5"/><circle cx="570" cy="1010" r="1.9"/>
+      <circle cx="846" cy="600" r="1.8"/><circle cx="852" cy="760" r="1.4"/>
+      <circle cx="828" cy="930" r="2"/><circle cx="812" cy="1080" r="1.5"/>
+      <circle cx="788" cy="1290" r="1.9"/><circle cx="756" cy="1420" r="1.4"/>
+    </g>
+
+    <!-- ============ FIXTURES on the truss (aimed at their pools) ============ -->
+    <!-- angles: atan2 toward pool centres: -11.1° / +2.2° / -7.0° -->
+    <g stroke="rgb(255 255 255 / 0.22)" fill="#141927">
+      <g transform="translate(250 446) rotate(-11.1)">
+        <path d="M-12 2 v-8 h24 v8" fill="none"/>
+        <rect x="-15" y="2" width="30" height="46" rx="5"/>
+        <rect x="-18" y="46" width="36" height="9" rx="3" fill="var(--chart-1)" stroke="none"
+              style="filter:drop-shadow(0 0 10px rgb(43 140 196 / 0.6))"/>
+      </g>
+      <g transform="translate(560 446) rotate(2.2)">
+        <path d="M-12 2 v-8 h24 v8" fill="none"/>
+        <rect x="-15" y="2" width="30" height="46" rx="5"/>
+        <rect x="-18" y="46" width="36" height="9" rx="3" fill="var(--chart-2)" stroke="none"
+              style="filter:drop-shadow(0 0 10px rgb(191 122 32 / 0.6))"/>
+      </g>
+      <g transform="translate(850 446) rotate(-7)">
+        <path d="M-12 2 v-8 h24 v8" fill="none"/>
+        <rect x="-15" y="2" width="30" height="46" rx="5"/>
+        <rect x="-18" y="46" width="36" height="9" rx="3" fill="var(--chart-3)" stroke="none"
+              style="filter:drop-shadow(0 0 10px rgb(18 163 121 / 0.6))"/>
+      </g>
+    </g>
+
+    <!-- ghost stage lines under the past acts -->
+    <line x1="0" y1="864" x2="445" y2="864" stroke="rgb(255 255 255 / 0.07)" stroke-width="1.5"/>
+    <line x1="305" y1="1173" x2="865" y2="1173" stroke="rgb(255 255 255 / 0.07)" stroke-width="1.5"/>
+
+    <!-- ============ ACT I · 2004 — 150 s (rx 196.0 / ry 74.5) ============ -->
+    <g style="filter:drop-shadow(0 0 14px rgb(43 140 196 / 0.45))">
+      <ellipse cx="185" cy="780" rx="196" ry="74.5" fill="var(--chart-1)" fill-opacity="0.30"
+               stroke="var(--chart-1)" stroke-opacity="0.8" stroke-width="2"/>
+      <ellipse cx="185" cy="780" rx="122" ry="46.3" fill="var(--chart-1)" fill-opacity="0.22"/>
+    </g>
+    <text x="185" y="796" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="46" fill="var(--ink)">150<tspan font-size="30">s</tspan></text>
+
+    <!-- ============ ACT II · 2012 — 75 s (rx 138.6 / ry 52.7) ============ -->
+    <g style="filter:drop-shadow(0 0 14px rgb(191 122 32 / 0.45))">
+      <ellipse cx="585" cy="1110" rx="138.6" ry="52.7" fill="var(--chart-2)" fill-opacity="0.30"
+               stroke="var(--chart-2)" stroke-opacity="0.8" stroke-width="2"/>
+      <ellipse cx="585" cy="1110" rx="86" ry="32.7" fill="var(--chart-2)" fill-opacity="0.22"/>
+    </g>
+    <text x="585" y="1123" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="36" fill="var(--ink)">75<tspan font-size="24">s</tspan></text>
+
+    <!-- ============ THE INTERRUPTION (staged on beam III) ============ -->
+    <!-- a ping hits the beam; the dashed detour is the ≈23 min wander back -->
+    <g stroke="var(--chart-5)" fill="none">
+      <circle cx="835" cy="1152" r="6" fill="var(--chart-5)" stroke="none"
+              style="filter:drop-shadow(0 0 10px rgb(224 85 144 / 0.7))"/>
+      <path d="M848 1139 a18 18 0 0 1 5 13" stroke-width="2" opacity="0.85"/>
+      <path d="M856 1131 a30 30 0 0 1 8 21" stroke-width="2" opacity="0.55"/>
+      <path d="M864 1123 a42 42 0 0 1 11 29" stroke-width="2" opacity="0.32"/>
+    </g>
+    <text x="866" y="1196" font-family="IBM Plex Mono" font-weight="500" font-size="11"
+          letter-spacing="2" fill="var(--ink-muted)">INTERRUPTION</text>
+    <path d="M835 1152 C 640 1195, 445 1280, 430 1370 C 421 1420, 490 1448, 596 1458"
+          fill="none" stroke="var(--chart-5)" stroke-width="2" stroke-dasharray="5 7"
+          opacity="0.7" stroke-linecap="round"/>
+    <polygon points="596,1451 611,1458 596,1465" fill="var(--chart-5)" opacity="0.8"/>
+    <text x="250" y="1240" font-family="IBM Plex Mono" font-weight="500" font-size="22"
+          fill="var(--ink)">&#8776;23 MIN</text>
+    <text x="250" y="1266" font-family="Albert Sans" font-size="14" fill="var(--ink-muted)">to fully find the beam again</text>
+    <text x="250" y="1286" font-family="Albert Sans" font-size="14" fill="var(--ink-muted)">after one interruption</text>
+
+    <!-- ============ ACT III · 2023 — 47 s (rx 109.7 / ry 41.7) — HERO ============ -->
+    <g style="filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.6)) drop-shadow(0 0 40px rgb(18 163 121 / 0.45))">
+      <ellipse cx="720" cy="1505" rx="109.7" ry="41.7" fill="var(--chart-3)" fill-opacity="0.34"
+               stroke="var(--chart-3)" stroke-opacity="0.9" stroke-width="2"/>
+      <ellipse cx="720" cy="1505" rx="68" ry="25.9" fill="var(--chart-3)" fill-opacity="0.24"/>
+    </g>
+    <!-- the reader, alone in what's left of the light -->
+    <ellipse cx="722" cy="1516" rx="30" ry="6" fill="rgb(0 0 0 / 0.4)"/>
+    <g fill="#060910">
+      <circle cx="722" cy="1400" r="12.5"/>
+      <path d="M722 1414 c-13 0 -21 9 -22.5 23 l-4 36 c-0.6 6 8 7.4 9 1.4 l5.5 -30 l1 60 l-8 54
+               c-0.9 6 8.2 7.6 9.4 1.6 l9.6 -47 l9.6 47 c1.2 6 10.3 4.4 9.4 -1.6 l-8 -54 l1 -60
+               l5.5 30 c1 6 9.6 4.6 9 -1.4 l-4 -36 c-1.5 -14 -9.5 -23 -22.5 -23 z"/>
+    </g>
+    <!-- leader from the hero number to its pool -->
+    <line x1="404" y1="1436" x2="597" y2="1508" stroke="rgb(255 255 255 / 0.25)" stroke-width="1"/>
+    <circle cx="597" cy="1508" r="2.5" fill="var(--chart-3)"/>
+
+    <!-- leader lines into the act tags -->
+    <line x1="381" y1="756" x2="428" y2="742" stroke="rgb(255 255 255 / 0.25)" stroke-width="1"/>
+    <circle cx="381" cy="756" r="2.5" fill="var(--chart-1)"/>
+    <line x1="722" y1="1082" x2="768" y2="1062" stroke="rgb(255 255 255 / 0.25)" stroke-width="1"/>
+    <circle cx="722" cy="1082" r="2.5" fill="var(--chart-2)"/>
+
+    <!-- faint plank seams where the light reaches the floor -->
+    <g stroke="rgb(255 255 255 / 0.05)" stroke-width="1">
+      <line x1="645" y1="1472" x2="640" y2="1560"/>
+      <line x1="702" y1="1478" x2="700" y2="1572"/>
+      <line x1="760" y1="1476" x2="763" y2="1568"/>
+      <line x1="815" y1="1468" x2="822" y2="1552"/>
+    </g>
+
+    <!-- ============ STAGE LIP + 77 FOOTLIGHTS (one per email check) ============ -->
+    <line x1="0" y1="1622" x2="1080" y2="1622" stroke="rgb(255 255 255 / 0.14)" stroke-width="1.5"/>
+    <!-- 77 bulbs: x = 46 + 13k, k = 0..76 (last = 1034) -->
+    <g fill="var(--chart-2)" style="filter:drop-shadow(0 0 6px rgb(191 122 32 / 0.55))">
+      <use href="#blb" x="46"/><use href="#blb" x="59"/><use href="#blb" x="72"/><use href="#blb" x="85"/><use href="#blb" x="98"/><use href="#blb" x="111"/><use href="#blb" x="124"/><use href="#blb" x="137"/><use href="#blb" x="150"/><use href="#blb" x="163"/>
+      <use href="#blb" x="176"/><use href="#blb" x="189"/><use href="#blb" x="202"/><use href="#blb" x="215"/><use href="#blb" x="228"/><use href="#blb" x="241"/><use href="#blb" x="254"/><use href="#blb" x="267"/><use href="#blb" x="280"/><use href="#blb" x="293"/>
+      <use href="#blb" x="306"/><use href="#blb" x="319"/><use href="#blb" x="332"/><use href="#blb" x="345"/><use href="#blb" x="358"/><use href="#blb" x="371"/><use href="#blb" x="384"/><use href="#blb" x="397"/><use href="#blb" x="410"/><use href="#blb" x="423"/>
+      <use href="#blb" x="436"/><use href="#blb" x="449"/><use href="#blb" x="462"/><use href="#blb" x="475"/><use href="#blb" x="488"/><use href="#blb" x="501"/><use href="#blb" x="514"/><use href="#blb" x="527"/><use href="#blb" x="540"/><use href="#blb" x="553"/>
+      <use href="#blb" x="566"/><use href="#blb" x="579"/><use href="#blb" x="592"/><use href="#blb" x="605"/><use href="#blb" x="618"/><use href="#blb" x="631"/><use href="#blb" x="644"/><use href="#blb" x="657"/><use href="#blb" x="670"/><use href="#blb" x="683"/>
+      <use href="#blb" x="696"/><use href="#blb" x="709"/><use href="#blb" x="722"/><use href="#blb" x="735"/><use href="#blb" x="748"/><use href="#blb" x="761"/><use href="#blb" x="774"/><use href="#blb" x="787"/><use href="#blb" x="800"/><use href="#blb" x="813"/>
+      <use href="#blb" x="826"/><use href="#blb" x="839"/><use href="#blb" x="852"/><use href="#blb" x="865"/><use href="#blb" x="878"/><use href="#blb" x="891"/><use href="#blb" x="904"/><use href="#blb" x="917"/><use href="#blb" x="930"/><use href="#blb" x="943"/>
+      <use href="#blb" x="956"/><use href="#blb" x="969"/><use href="#blb" x="982"/><use href="#blb" x="995"/><use href="#blb" x="1008"/><use href="#blb" x="1021"/><use href="#blb" x="1034"/>
+    </g>
+    <text x="540" y="1678" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+          font-size="12.5" letter-spacing="1.8" fill="var(--ink-muted)">77 FOOTLIGHTS &#183; ONE PER EMAIL CHECK &#183; KNOWLEDGE WORKERS: &#8776;77&#215;/DAY</text>
+
+    <!-- ============ THE AUDIENCE (foreground silhouettes, bleed bottom) ============ -->
+    <!-- far row of seat backs -->
+    <g fill="#0A0D15" stroke="rgb(255 255 255 / 0.10)" stroke-width="1">
+      <rect x="-34" y="1706" width="150" height="140" rx="22"/>
+      <rect x="132" y="1706" width="150" height="140" rx="22"/>
+      <rect x="298" y="1706" width="150" height="140" rx="22"/>
+      <rect x="464" y="1706" width="150" height="140" rx="22"/>
+      <rect x="630" y="1706" width="150" height="140" rx="22"/>
+      <rect x="796" y="1706" width="150" height="140" rx="22"/>
+      <rect x="962" y="1706" width="150" height="140" rx="22"/>
+    </g>
+    <!-- two heads between the rows -->
+    <g fill="#05080F" stroke="rgb(255 255 255 / 0.07)" stroke-width="1">
+      <circle cx="255" cy="1782" r="40"/>
+      <ellipse cx="255" cy="1848" rx="60" ry="30"/>
+      <circle cx="745" cy="1790" r="44"/>
+      <ellipse cx="745" cy="1860" rx="64" ry="32"/>
+    </g>
+    <!-- near row of seat backs -->
+    <g fill="#070A11" stroke="rgb(255 255 255 / 0.08)" stroke-width="1">
+      <rect x="-66" y="1790" width="196" height="160" rx="26"/>
+      <rect x="148" y="1790" width="196" height="160" rx="26"/>
+      <rect x="362" y="1790" width="196" height="160" rx="26"/>
+      <rect x="576" y="1790" width="196" height="160" rx="26"/>
+      <rect x="790" y="1790" width="196" height="160" rx="26"/>
+      <rect x="1004" y="1790" width="196" height="160" rx="26"/>
+    </g>
+  </svg>
+
+  <!-- ================= header ================= -->
+  <div class="abs" style="left:64px; top:66px; z-index:3; width:640px;">
+    <div class="kicker">// unbroken attention on a screen &#183; 2004 &#8594; 2023</div>
+    <h1 class="display" style="font-size:70px; margin-top:18px;">The spotlight<br>is shrinking</h1>
+    <p style="font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:18px; max-width:470px;">
+      Take a seat in the dark of your own attention. Three acts across two
+      decades &#8212; each pool of light is how long focus holds on one screen,
+      drawn to true scale.</p>
+  </div>
+
+  <!-- rotated scale caption, right edge -->
+  <div class="abs value" style="left:1046px; top:640px; z-index:3; writing-mode:vertical-rl;
+       transform:rotate(180deg); font-size:11px; letter-spacing:0.18em; color:var(--ink-muted);">
+    POOL AREA &#8733; SECONDS OF UNBROKEN FOCUS</div>
+
+  <!-- ================= act tags (glass chips with leader lines) ================= -->
+  <div class="tag" style="left:430px; top:706px; width:238px;">
+    <div class="kicker" style="color:var(--ink-muted);"><span class="dot" style="background:var(--chart-1);"></span>ACT I &#183; 2004</div>
+    <p><b>Two and a half minutes</b> of unbroken focus on one screen.</p>
+  </div>
+  <div class="tag" style="left:770px; top:1022px; width:238px;">
+    <div class="kicker" style="color:var(--ink-muted);"><span class="dot" style="background:var(--chart-2);"></span>ACT II &#183; 2012</div>
+    <p><b>Seventy-five seconds.</b> The pool has halved in eight years.</p>
+  </div>
+
+  <!-- ================= hero cluster ================= -->
+  <div class="abs" style="left:64px; top:1312px; z-index:3; width:420px;">
+    <div class="kicker" style="color:var(--ink-muted);"><span class="dot" style="background:var(--chart-3);"></span>ACT III &#183; 2023 &#183; TONIGHT</div>
+    <div class="hero-num" style="margin-top:16px;">47<span style="font-size:96px;">s</span></div>
+    <div style="font:700 21px/1.3 var(--font-body); margin-top:12px;">seconds of unbroken focus</div>
+    <p style="font:400 15px/1.5 var(--font-body); color:var(--ink-muted); margin-top:8px; max-width:330px;">
+      Less than a third of the 2004 pool. The stage is still lit &#8212; barely.</p>
+  </div>
+
+  <!-- terminal footer -->
+  <p class="abs value" style="left:40px; bottom:22px; z-index:3; font-size:13px; color:var(--ink-muted);">
+    // research: Gloria Mark, UC Irvine &#8212; commonly cited figures</p>
+
+</div>
+</body>
+</html>

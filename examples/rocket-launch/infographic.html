@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Orbital launch — blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Composition: BIG OBJECT — a line-drawn two-stage rocket dominates the left,
+   propellant mass as a section cut-fill (hatch = ~90% of stack height).
+   Right: time-proportional ascent spine, liftoff at the bottom, orbit at top.
+   Dense zone: bottom (pad, thrust bar, title block). Empty zone: the coast
+   between T+210 and T+480. Crossings: exhaust plume through the bottom frame,
+   trajectory centerline off the right edge. */
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+img, svg { display:block; max-width:100%; }
+
+:root {
+  --bg:#123A66; --bg-2:#0D3054;
+  --line:#D8E8F8; --line-soft:rgb(216 232 248 / 0.45);
+  --ink:#EAF2FB; --ink-muted:#9FB8D4;
+  --chart-1:#3E9BD6; --chart-2:#B8860B; --chart-3:#C75B9B; --chart-4:#6F9436;
+  --de-emphasis:#2A537F;
+  --font-display:'Saira Condensed',sans-serif; --font-body:'IBM Plex Mono',monospace;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:56px;
+  --radius:0;
+}
+
+html, body { background:var(--bg); }
+body { width:1080px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas {
+  position:relative; width:1080px; height:1920px; overflow:hidden;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 900px 1100px at 50% 28%, rgb(216 232 248 / 0.05), transparent 70%),
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size:auto, 40px 40px, 40px 40px;
+}
+
+.abs { position:absolute; }
+.display { font-family:var(--font-display); font-weight:700; text-transform:uppercase;
+           letter-spacing:.04em; line-height:.95; }
+.kicker { font:600 14px/1.4 var(--font-body); letter-spacing:.22em;
+          text-transform:uppercase; color:var(--ink-muted); }
+.event-name { font:600 24px/26px var(--font-display); text-transform:uppercase;
+              letter-spacing:.05em; color:var(--ink); }
+.event-desc { font:400 13px/1.5 var(--font-body); color:var(--ink-muted); margin-top:6px; }
+
+/* title block */
+.tblock { border:2px solid var(--line); background:var(--bg-2); padding:3px; }
+.tblock-inner { border:1px solid var(--line-soft); display:grid;
+                grid-template-columns:1.55fr 1fr 0.62fr; }
+.tcell { border:0.5px solid var(--line-soft); padding:7px 10px 8px; }
+.tcell .lab { font:500 10px/1 var(--font-body); letter-spacing:.14em;
+              color:var(--ink-muted); text-transform:uppercase; }
+.tcell .val { font:600 13px/1.35 var(--font-body); color:var(--ink);
+              text-transform:uppercase; margin-top:5px; }
+.span2 { grid-column:span 2; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- ============ all linework in one canvas-space SVG ============ -->
+  <svg class="abs" style="left:0; top:0;" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <pattern id="hp1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="1.8" height="7" fill="var(--chart-1)"/>
+      </pattern>
+      <!-- vehicle silhouette: hull + three engine bells (for the section cut-fill) -->
+      <clipPath id="vehicle">
+        <path d="M290,430 Q352,470 352,610 L352,1490 L336,1526 L244,1526 L228,1490 L228,610 Q228,470 290,430 Z"/>
+        <path d="M250,1526 C244,1548 240,1562 236,1578 L276,1578 C274,1562 270,1548 266,1526 Z"/>
+        <path d="M278,1526 C272,1548 268,1562 264,1578 L316,1578 C312,1562 308,1548 302,1526 Z"/>
+        <path d="M314,1526 C310,1548 306,1562 304,1578 L344,1578 C340,1562 336,1548 330,1526 Z"/>
+      </clipPath>
+    </defs>
+
+    <!-- double-rule border frame -->
+    <rect x="12" y="12" width="1056" height="1896" fill="none" stroke="var(--line)" stroke-width="2"/>
+    <rect x="18" y="18" width="1044" height="1884" fill="none" stroke="var(--line-soft)" stroke-width="1"/>
+
+    <!-- registration crosses (3 corners) -->
+    <g stroke="var(--line-soft)" stroke-width="1">
+      <path d="M32,40 h16 M40,32 v16"/>
+      <path d="M1032,40 h16 M1040,32 v16"/>
+      <path d="M32,1880 h16 M40,1872 v16"/>
+    </g>
+
+    <!-- T+0 datum (pad level) + ground hatching, left of the flame -->
+    <line x1="64" y1="1580" x2="592" y2="1580" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="8 6"/>
+    <g stroke="var(--line-soft)" stroke-width="1">
+      <line x1="80" y1="1582" x2="71" y2="1592"/><line x1="96" y1="1582" x2="87" y2="1592"/>
+      <line x1="112" y1="1582" x2="103" y2="1592"/><line x1="128" y1="1582" x2="119" y2="1592"/>
+      <line x1="144" y1="1582" x2="135" y2="1592"/><line x1="160" y1="1582" x2="151" y2="1592"/>
+      <line x1="176" y1="1582" x2="167" y2="1592"/><line x1="192" y1="1582" x2="183" y2="1592"/>
+      <line x1="208" y1="1582" x2="199" y2="1592"/><line x1="224" y1="1582" x2="215" y2="1592"/>
+    </g>
+
+    <!-- ascent trajectory centerline: nose -> off the right edge (crosses the frame) -->
+    <path d="M290,430 C430,320 700,200 1080,180" fill="none" stroke="var(--line-soft)"
+          stroke-width="1.5" stroke-dasharray="14 5 3 5"/>
+
+    <!-- stage-1 flyback arc, back to the pad datum (value ≈ 8 min) -->
+    <path d="M228,935 C118,1110 100,1360 150,1556" fill="none" stroke="var(--line-soft)"
+          stroke-width="1.5" stroke-dasharray="7 6"/>
+    <path d="M152,1574 L144,1560 L156,1558 Z" fill="var(--line-soft)"/>
+
+    <!-- event leader lines to the drawn parts (dot at the part) -->
+    <g stroke="var(--line-soft)" stroke-width="1">
+      <line x1="594" y1="1099" x2="357" y2="690"/>
+      <line x1="594" y1="1236" x2="357" y2="875"/>
+    </g>
+    <circle cx="357" cy="690" r="4" fill="var(--line)"/>
+    <circle cx="357" cy="875" r="4" fill="var(--line)"/>
+
+    <!-- overall dimension: liftoff -> orbit = 480 s -->
+    <g stroke="var(--line)" stroke-width="1">
+      <line x1="1032" y1="486" x2="1032" y2="1574"/>
+      <line x1="1022" y1="480" x2="1042" y2="480"/>
+      <line x1="1022" y1="1580" x2="1042" y2="1580"/>
+    </g>
+    <path d="M1032,481 L1027,493 L1037,493 Z" fill="var(--line)"/>
+    <path d="M1032,1579 L1027,1567 L1037,1567 Z" fill="var(--line)"/>
+    <rect x="1004" y="1016" width="56" height="26" fill="var(--bg)"/>
+    <text x="1032" y="1034" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)">480 S</text>
+
+    <!-- time spine, ticks every 60 s, proportional: y = 1580 - t/480*1100 -->
+    <line x1="600" y1="466" x2="600" y2="1580" stroke="var(--line-soft)" stroke-width="2"/>
+    <g stroke="var(--line-soft)" stroke-width="1">
+      <line x1="590" y1="1442.5" x2="600" y2="1442.5"/>
+      <line x1="590" y1="1305"   x2="600" y2="1305"/>
+      <line x1="590" y1="1167.5" x2="600" y2="1167.5"/>
+      <line x1="590" y1="1030"   x2="600" y2="1030"/>
+      <line x1="590" y1="892.5"  x2="600" y2="892.5"/>
+      <line x1="590" y1="755"    x2="600" y2="755"/>
+      <line x1="590" y1="617.5"  x2="600" y2="617.5"/>
+    </g>
+
+    <!-- ====== THE VEHICLE ====== -->
+    <!-- propellant section cut-fill: ~90% of the stack height (430..1580 = 1150px; 10% => top at 545) -->
+    <g clip-path="url(#vehicle)">
+      <rect x="220" y="545" width="140" height="1035" fill="var(--chart-1)" opacity="0.12"/>
+      <rect x="220" y="545" width="140" height="1035" fill="url(#hp1)" opacity="0.8"/>
+    </g>
+    <!-- propellant mass line + label -->
+    <line x1="232" y1="545" x2="348" y2="545" stroke="var(--chart-1)" stroke-width="2.5"/>
+    <line x1="66" y1="545" x2="232" y2="545" stroke="var(--chart-1)" stroke-width="1" stroke-dasharray="5 5"/>
+    <text x="66" y="516" font-size="13" font-weight="600" fill="var(--ink)">PROPELLANT</text>
+    <text x="66" y="536" font-size="12" fill="var(--ink-muted)">&#8776;90% OF LIFTOFF MASS</text>
+
+    <!-- dry mass callout on the un-hatched tip -->
+    <circle cx="333" cy="486" r="4" fill="var(--line)"/>
+    <line x1="333" y1="486" x2="396" y2="466" stroke="var(--line-soft)" stroke-width="1"/>
+    <text x="402" y="460" font-size="12" fill="var(--ink-muted)">DRY MASS + PAYLOAD</text>
+    <text x="402" y="478" font-size="12" fill="var(--ink-muted)">&#8776; 10%</text>
+
+    <!-- hull outline -->
+    <path d="M290,430 Q352,470 352,610 L352,1490 L336,1526 L244,1526 L228,1490 L228,610 Q228,470 290,430 Z"
+          fill="none" stroke="var(--line)" stroke-width="2.5"/>
+    <!-- fairing base + interstage separation planes -->
+    <line x1="228" y1="690" x2="352" y2="690" stroke="var(--line)" stroke-width="1.25"/>
+    <line x1="228" y1="870" x2="352" y2="870" stroke="var(--line)" stroke-width="1.25"/>
+    <line x1="228" y1="878" x2="352" y2="878" stroke="var(--line)" stroke-width="1.25"/>
+    <!-- tank dome detail arcs -->
+    <path d="M228,948 Q290,908 352,948" fill="none" stroke="var(--line-soft)" stroke-width="1.25"/>
+    <path d="M228,1372 Q290,1332 352,1372" fill="none" stroke="var(--line-soft)" stroke-width="1.25"/>
+    <!-- grid fins -->
+    <rect x="212" y="886" width="16" height="36" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+    <rect x="352" y="886" width="16" height="36" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+    <!-- engine bells -->
+    <g fill="none" stroke="var(--line)" stroke-width="2">
+      <path d="M250,1526 C244,1548 240,1562 236,1578 L276,1578 C274,1562 270,1548 266,1526"/>
+      <path d="M314,1526 C310,1548 306,1562 304,1578 L344,1578 C340,1562 336,1548 330,1526"/>
+      <path d="M278,1526 C272,1548 268,1562 264,1578 L316,1578 C312,1562 308,1548 302,1526"/>
+    </g>
+
+    <!-- stage labels, knocked out of the hatch -->
+    <rect x="256" y="766" width="68" height="22" fill="var(--bg)"/>
+    <text x="290" y="782" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">STAGE 2</text>
+    <rect x="256" y="1166" width="68" height="22" fill="var(--bg)"/>
+    <text x="290" y="1182" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">STAGE 1</text>
+
+    <!-- exhaust plume: crosses the bottom border frame -->
+    <g fill="none" stroke="var(--line-soft)" stroke-width="1.5">
+      <path d="M246,1584 C236,1690 252,1800 290,1916 C328,1800 344,1690 334,1584"/>
+      <path d="M262,1584 C258,1652 268,1722 290,1792 C312,1722 322,1652 318,1584"/>
+    </g>
+    <g fill="none" stroke="var(--line-soft)" stroke-width="1">
+      <path d="M290,1650 l8,11 l-8,11 l-8,-11 z"/>
+      <path d="M290,1722 l6,9 l-6,9 l-6,-9 z"/>
+      <path d="M290,1782 l5,7 l-5,7 l-5,-7 z"/>
+    </g>
+
+    <!-- flyback label -->
+    <text x="66" y="1616" font-size="13" font-weight="600" fill="var(--ink)">STAGE 1 FLYBACK</text>
+    <text x="66" y="1636" font-size="12" fill="var(--ink-muted)">&#8776; 8 MIN TO LANDING</text>
+
+    <!-- event nodes (squares, chart-1) + T+ labels -->
+    <g>
+      <rect x="587" y="467" width="26" height="26" fill="none" stroke="var(--chart-1)" stroke-width="1"/>
+      <rect x="592" y="472" width="16" height="16" fill="var(--chart-1)" stroke="var(--line)" stroke-width="2"/>
+      <rect x="593" y="1092" width="14" height="14" fill="var(--chart-1)" stroke="var(--line)" stroke-width="2"/>
+      <rect x="593" y="1229" width="14" height="14" fill="var(--chart-1)" stroke="var(--line)" stroke-width="2"/>
+      <rect x="593" y="1408" width="14" height="14" fill="var(--chart-1)" stroke="var(--line)" stroke-width="2"/>
+      <rect x="593" y="1573" width="14" height="14" fill="var(--chart-1)" stroke="var(--line)" stroke-width="2"/>
+    </g>
+    <g font-size="15" font-weight="600" fill="var(--ink)" text-anchor="end">
+      <text x="580" y="485">T+480</text>
+      <text x="584" y="1104">T+210</text>
+      <text x="584" y="1241">T+150</text>
+      <text x="584" y="1420">T+72</text>
+      <text x="584" y="1585">T+0</text>
+    </g>
+
+    <!-- revision cloud around MAX-Q (the highlighted fact) -->
+    <path d="M610,1392
+             a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0
+             a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0
+             a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0
+             a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0 a13.5,13.5 0 0 1 27,0
+             a13,13 0 0 1 0,26 a13,13 0 0 1 0,26 a13,13 0 0 1 0,26
+             a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0
+             a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0
+             a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0
+             a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0 a13.5,13.5 0 0 1 -27,0
+             a13,13 0 0 1 0,-26 a13,13 0 0 1 0,-26 a13,13 0 0 1 0,-26 Z"
+          fill="none" stroke="var(--chart-3)" stroke-width="1.75"/>
+    <rect x="862" y="1370" width="60" height="20" fill="var(--bg-2)" stroke="var(--chart-3)" stroke-width="1"/>
+    <text x="892" y="1384" text-anchor="middle" font-size="11" font-weight="600" fill="var(--chart-3)">REV A</text>
+  </svg>
+
+  <!-- ============ header ============ -->
+  <div class="abs" style="left:64px; top:56px; width:520px;">
+    <div class="kicker">FIG. 01 &#183; TWO-STAGE FLIGHT PROFILE</div>
+    <h1 class="display" style="font-size:72px; margin-top:14px;">Orbital launch<br>stage by stage</h1>
+    <p style="font:400 15px/1.5 var(--font-body); color:var(--ink-muted); margin-top:14px;">
+      480 seconds from the pad to orbit</p>
+  </div>
+
+  <!-- ============ events (top = node_y - 13) ============ -->
+  <div class="abs" style="left:622px; top:467px; width:400px;">
+    <div class="event-name">Engine cutoff &#183; orbit</div>
+    <div class="event-desc">stage 2 shuts down at orbital velocity</div>
+    <div class="display" style="margin-top:16px; font-size:116px; letter-spacing:0;">
+      <span style="font-size:56px; vertical-align:26px;">&#8776;</span>28,000</div>
+    <div class="display" style="font-size:29px; font-weight:600; letter-spacing:.06em; margin-top:8px;">
+      km/h &#8212; orbital velocity</div>
+    <p style="font:italic 400 13px/1.5 var(--font-body); color:var(--ink-muted); margin-top:8px;">
+      fast enough to keep falling around Earth</p>
+  </div>
+
+  <div class="abs" style="left:622px; top:1086px; width:400px;">
+    <div class="event-name">Fairing jettison</div>
+    <div class="event-desc">protective nose shroud splits and falls away</div>
+  </div>
+
+  <div class="abs" style="left:622px; top:1223px; width:400px;">
+    <div class="event-name">Stage separation</div>
+    <div class="event-desc">spent booster drops away for flyback</div>
+  </div>
+
+  <div class="abs" style="left:622px; top:1402px; width:400px;">
+    <div class="event-name">Max-Q</div>
+    <div class="event-desc">peak aerodynamic stress on the vehicle</div>
+  </div>
+
+  <div class="abs" style="left:622px; top:1567px; width:400px;">
+    <div class="event-name">Liftoff</div>
+    <div class="event-desc">full thrust; the vehicle clears the pad</div>
+  </div>
+
+  <!-- ============ thrust share bar ============ -->
+  <div class="abs" style="left:622px; top:1642px; width:410px;">
+    <div style="font:600 13px/1 var(--font-body); letter-spacing:.16em; color:var(--ink-muted);">
+      SHARE OF TOTAL THRUST</div>
+    <!-- 402px track: stage 1 = 0.85*400 = 340px, stage 2 = 60px, 2px bg gap -->
+    <svg width="410" height="62" viewBox="0 0 410 62">
+      <defs>
+        <pattern id="hpb" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="1.8" height="7" fill="var(--chart-1)"/>
+        </pattern>
+      </defs>
+      <rect x="1" y="12" width="340" height="22" fill="url(#hpb)"/>
+      <rect x="341" y="11" width="3" height="24" fill="var(--bg)"/>
+      <rect x="344" y="12" width="57" height="22" fill="var(--chart-2)" opacity="0.85"/>
+      <rect x="1" y="12" width="400" height="22" fill="none" stroke="var(--line)" stroke-width="2"/>
+      <text x="1" y="56" font-size="13" fill="var(--ink)">STAGE 1 &#183; &#8776;85%</text>
+      <text x="401" y="56" font-size="13" fill="var(--ink)" text-anchor="end">STAGE 2 &#183; &#8776;15%</text>
+    </svg>
+  </div>
+
+  <!-- ============ title block (the footer device) ============ -->
+  <div class="abs tblock" style="right:19px; bottom:19px; width:440px;">
+    <div class="tblock-inner">
+      <div class="tcell span2"><div class="lab">Title</div><div class="val">Orbital launch sequence</div></div>
+      <div class="tcell"><div class="lab">DWG No</div><div class="val">RL-480</div></div>
+      <div class="tcell"><div class="lab">Scale</div><div class="val">Time-proportional</div></div>
+      <div class="tcell"><div class="lab">Date</div><div class="val">2026-08-23</div></div>
+      <div class="tcell"><div class="lab">Rev</div><div class="val">A</div></div>
+      <div class="tcell span2"><div class="lab">Note</div><div class="val">Typical 2-stage profile &#8212; illustrative</div></div>
+      <div class="tcell"><div class="lab">Drawn with</div><div class="val">Epic&#8209;Infographics</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

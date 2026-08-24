@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Launch funnel — dark glass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Albert+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Composition: BIG OBJECT — a luminous beam-funnel dominates the left ~60%
+   of the canvas and bleeds off the TOP edge; it narrows into a single
+   retained star. Dense zone: right column (labels + meter panel).
+   Empty zone: bottom-left depth. Metaphor: launch light narrowing through
+   darkness to one star — the beam IS the funnel chart.
+
+   FUNNEL MATH (truthful geometry, scale: 1px = 140 users, centered x=320):
+     Visitors  84,000 / 140 = 600.00px  -> x 20.00 .. 620.00
+     Signups   12,600 / 140 =  90.00px  -> x 275.00 .. 365.00
+     Activated  6,900 / 140 =  49.29px  -> x 295.36 .. 344.64
+     Paying     2,100 / 140 =  15.00px  -> x 312.50 .. 327.50
+     Retained   1,600 / 140 =  11.43px  -> x 314.29 .. 325.71
+   SVG sits at top:-40px, so svgY = canvasY + 40. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#0B0E17; --bg-2:#10141F;
+  --glass:rgb(255 255 255 / 0.05); --glass-border:1px solid rgb(255 255 255 / 0.12);
+  --ink:#EDF1FA; --ink-muted:#8B93A7;
+  --accent:#2B8CC4;
+  --chart-1:#2B8CC4; --chart-2:#BF7A20; --chart-3:#12A379;
+  --chart-4:#8B6CF0; --chart-5:#E05590; --de-emphasis:#3A4157;
+  --font-display:'Sora',sans-serif; --font-body:'Albert Sans',sans-serif;
+  --font-data:'IBM Plex Mono',monospace;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:64px;
+  --radius:16px; --radius-sm:8px;
+}
+
+html, body { background: var(--bg); }
+body { width:1080px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas { position:relative; width:1080px; height:1080px; overflow:hidden; background:var(--bg); }
+.abs { position:absolute; }
+
+/* depth order: bg -> aurora blobs -> dot grid -> glass panels -> marks -> glows */
+.blob { position:absolute; border-radius:50%; pointer-events:none; }
+.blob-violet { width:680px; height:680px; left:-180px; top:-240px;
+  background:radial-gradient(circle, rgb(139 108 240 / 0.17) 0%, transparent 65%); }
+.blob-blue { width:760px; height:760px; right:-240px; top:60px;
+  background:radial-gradient(circle, rgb(43 140 196 / 0.15) 0%, transparent 65%); }
+.blob-emerald { width:560px; height:560px; left:60px; bottom:-300px;
+  background:radial-gradient(circle, rgb(18 163 121 / 0.14) 0%, transparent 65%); }
+
+.dotgrid { position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(rgb(255 255 255 / 0.10) 1px, transparent 1.4px);
+  background-size:28px 28px; }
+
+.kicker { font:500 13px/1 var(--font-data); text-transform:uppercase;
+  letter-spacing:.2em; color:var(--accent); }
+.display { font-family:var(--font-display); font-weight:800;
+  letter-spacing:-0.03em; line-height:1; }
+
+.hero-num {
+  font-family:var(--font-display); font-weight:800; letter-spacing:-0.03em;
+  line-height:1; font-size:140px;
+  background:linear-gradient(100deg, var(--accent) 10%, var(--chart-4) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter: drop-shadow(0 0 12px rgb(43 140 196 / 0.55))
+          drop-shadow(0 0 40px rgb(139 108 240 / 0.45));
+}
+
+.panel { background:var(--glass); border:var(--glass-border);
+  border-radius:var(--radius); backdrop-filter:blur(14px); padding:28px;
+  position:relative; overflow:hidden; }
+.scanlines::after { content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(to bottom,
+    rgb(255 255 255 / 0.04) 0 1px, transparent 1px 4px); }
+
+.value { font-family:var(--font-data); font-weight:500; }
+
+.meter-row { margin-top:var(--space-2); }
+.meter-head { display:flex; justify-content:space-between; align-items:baseline; }
+.meter-label { font:500 14px/1.3 var(--font-body); color:var(--ink-muted); }
+.meter-val { font:500 18px/1 var(--font-data); color:var(--ink-muted); }
+.meter-track { margin-top:7px; height:10px; border-radius:5px;
+  background:rgb(255 255 255 / 0.08); position:relative; }
+.meter-fill { position:absolute; left:0; top:0; height:10px; border-radius:5px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="blob blob-violet"></div>
+  <div class="blob blob-blue"></div>
+  <div class="blob blob-emerald"></div>
+  <div class="dotgrid"></div>
+
+  <!-- THE BEAM FUNNEL (big object; bleeds off the top edge) -->
+  <svg class="abs" style="left:0; top:-40px;" width="720" height="1160" viewBox="0 0 720 1160">
+
+    <!-- stage bands: width = users / 140 (see math in head comment) -->
+    <g>
+      <!-- Visitors 84,000 -> 600px -->
+      <rect x="20" y="0" width="600" height="180" fill="var(--chart-1)"
+            style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55))"/>
+      <!-- conn 600 -> 90 -->
+      <polygon points="20,180 620,180 365,255 275,255" fill="var(--chart-2)" opacity="0.28"/>
+      <!-- Signups 12,600 -> 90px -->
+      <rect x="275" y="255" width="90" height="75" fill="var(--chart-2)"
+            style="filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55))"/>
+      <!-- conn 90 -> 49.29 -->
+      <polygon points="275,330 365,330 344.64,405 295.36,405" fill="var(--chart-3)" opacity="0.28"/>
+      <!-- Activated 6,900 -> 49.29px -->
+      <rect x="295.36" y="405" width="49.29" height="75" fill="var(--chart-3)"
+            style="filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55))"/>
+      <!-- conn 49.29 -> 15 -->
+      <polygon points="295.36,480 344.64,480 327.5,555 312.5,555" fill="var(--chart-4)" opacity="0.28"/>
+      <!-- Paying 2,100 -> 15px -->
+      <rect x="312.5" y="555" width="15" height="75" fill="var(--chart-4)"
+            style="filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55))"/>
+      <!-- conn 15 -> 11.43 -->
+      <polygon points="312.5,630 327.5,630 325.71,705 314.29,705" fill="var(--chart-5)" opacity="0.28"/>
+      <!-- Retained 1,600 -> 11.43px -->
+      <rect x="314.29" y="705" width="11.43" height="175" fill="var(--chart-5)"
+            style="filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55))"/>
+      <!-- beam tip converging to the star -->
+      <polygon points="314.29,880 325.71,880 320,910" fill="var(--chart-5)" opacity="0.5"/>
+    </g>
+
+    <!-- the retained star (echoes the hero; single strong glow) -->
+    <g style="filter:drop-shadow(0 0 10px rgb(224 85 144 / 0.8)) drop-shadow(0 0 30px rgb(224 85 144 / 0.5))">
+      <line x1="320" y1="896" x2="320" y2="940" stroke="var(--chart-5)" stroke-width="1.5"/>
+      <line x1="298" y1="918" x2="342" y2="918" stroke="var(--chart-5)" stroke-width="1.5"/>
+      <circle cx="320" cy="918" r="6" fill="var(--chart-5)"/>
+      <circle cx="320" cy="918" r="2.5" fill="var(--ink)"/>
+    </g>
+
+    <!-- drop-off particles drifting out of each contraction (the leavers) -->
+    <g fill="var(--de-emphasis)">
+      <circle cx="150" cy="230" r="3.2" opacity="0.75"/>
+      <circle cx="112" cy="252" r="2.6" opacity="0.55"/>
+      <circle cx="78"  cy="282" r="2.2" opacity="0.4"/>
+      <circle cx="52"  cy="318" r="1.8" opacity="0.28"/>
+      <circle cx="176" cy="268" r="2.4" opacity="0.5"/>
+      <circle cx="205" cy="300" r="1.8" opacity="0.35"/>
+      <circle cx="238" cy="382" r="2.6" opacity="0.6"/>
+      <circle cx="210" cy="412" r="2.0" opacity="0.4"/>
+      <circle cx="185" cy="448" r="1.6" opacity="0.28"/>
+      <circle cx="262" cy="532" r="2.4" opacity="0.55"/>
+      <circle cx="236" cy="566" r="1.9" opacity="0.38"/>
+      <circle cx="214" cy="602" r="1.5" opacity="0.26"/>
+      <circle cx="284" cy="682" r="1.9" opacity="0.45"/>
+      <circle cx="266" cy="716" r="1.5" opacity="0.28"/>
+    </g>
+
+    <!-- stage-to-stage multipliers beside each contraction (instrument style) -->
+    <g font-family="'IBM Plex Mono',monospace" font-size="14" font-weight="500"
+       fill="var(--ink-muted)" text-anchor="end">
+      <text x="128" y="223">&#215;0.15</text>
+      <text x="258" y="373">&#215;0.55</text>
+      <text x="282" y="523">&#215;0.30</text>
+      <text x="296" y="673">&#215;0.76</text>
+    </g>
+
+    <!-- Visitors label lives inside the widest band -->
+    <g text-anchor="middle">
+      <text x="320" y="102" font-family="'IBM Plex Mono',monospace" font-size="13"
+            font-weight="500" letter-spacing="3.2" fill="rgb(237 241 250 / 0.85)">VISITORS</text>
+      <text x="320" y="142" font-family="'Sora',sans-serif" font-size="34"
+            font-weight="800" letter-spacing="-0.5" fill="var(--ink)">84,000</text>
+    </g>
+
+    <!-- leader lines + labels, right side -->
+    <g stroke="rgb(255 255 255 / 0.25)" stroke-width="1">
+      <line x1="369" y1="292" x2="410" y2="292"/>
+      <line x1="349" y1="442" x2="410" y2="442"/>
+      <line x1="332" y1="592" x2="410" y2="592"/>
+      <line x1="330" y1="792" x2="410" y2="792"/>
+    </g>
+    <g>
+      <circle cx="369" cy="292" r="2.5" fill="var(--chart-2)"/>
+      <circle cx="349" cy="442" r="2.5" fill="var(--chart-3)"/>
+      <circle cx="332" cy="592" r="2.5" fill="var(--chart-4)"/>
+      <circle cx="330" cy="792" r="2.5" fill="var(--chart-5)"/>
+    </g>
+
+    <g font-family="'Albert Sans',sans-serif">
+      <!-- Signups -->
+      <text x="420" y="284" font-size="16" font-weight="700" fill="var(--ink)">Signups</text>
+      <text x="420" y="310" font-family="'IBM Plex Mono',monospace" font-size="21"
+            font-weight="500" fill="var(--ink)">12,600</text>
+      <text x="420" y="331" font-size="13" fill="var(--ink-muted)">15% of visitors</text>
+      <!-- Activated -->
+      <text x="420" y="434" font-size="16" font-weight="700" fill="var(--ink)">Activated</text>
+      <text x="420" y="460" font-family="'IBM Plex Mono',monospace" font-size="21"
+            font-weight="500" fill="var(--ink)">6,900</text>
+      <text x="420" y="481" font-size="13" fill="var(--ink-muted)">55% of signups</text>
+      <!-- Paying -->
+      <text x="420" y="584" font-size="16" font-weight="700" fill="var(--ink)">Paying</text>
+      <text x="420" y="610" font-family="'IBM Plex Mono',monospace" font-size="21"
+            font-weight="500" fill="var(--ink)">2,100</text>
+      <text x="420" y="631" font-size="13" fill="var(--ink-muted)">30% of activated</text>
+      <!-- Retained -->
+      <text x="420" y="784" font-size="16" font-weight="700" fill="var(--ink)">Retained, month 6</text>
+      <text x="420" y="810" font-family="'IBM Plex Mono',monospace" font-size="21"
+            font-weight="500" fill="var(--ink)">1,600</text>
+      <text x="420" y="831" font-size="13" fill="var(--ink-muted)">76% of paying</text>
+    </g>
+  </svg>
+
+  <!-- HERO cluster, top right -->
+  <div class="abs" style="left:640px; top:70px; width:400px;">
+    <div class="kicker">// signup funnel &#183; launch &#8594; month six</div>
+    <div class="hero-num" style="margin-top:26px;">1,600</div>
+    <div style="font:700 20px/1.3 var(--font-body); margin-top:14px;">
+      people still with us at month six</div>
+    <p style="font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:14px; max-width:360px;">
+      84,000 landed during launch. The beam is drawn to true scale &#8212;
+      width is headcount &#8212; so every narrowing is a real drop-off.</p>
+  </div>
+
+  <!-- conversion meters: the same four rates, read as a gauge bank -->
+  <div class="panel scanlines abs" style="left:640px; top:596px; width:400px;">
+    <div class="kicker" style="color:var(--ink-muted);">who makes the next stage</div>
+
+    <!-- fills: rate x 344px inner width -> 51.6 / 189.2 / 103.2 / 261.4 -->
+    <div class="meter-row" style="margin-top:22px;">
+      <div class="meter-head"><span class="meter-label">Visitors &#8594; Signups</span>
+        <span class="meter-val">15%</span></div>
+      <div class="meter-track"><div class="meter-fill" style="width:51.6px; background:var(--chart-2);"></div></div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-head"><span class="meter-label">Signups &#8594; Activated</span>
+        <span class="meter-val">55%</span></div>
+      <div class="meter-track"><div class="meter-fill" style="width:189.2px; background:var(--chart-3);"></div></div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-head"><span class="meter-label">Activated &#8594; Paying</span>
+        <span class="meter-val">30%</span></div>
+      <div class="meter-track"><div class="meter-fill" style="width:103.2px; background:var(--chart-4);"></div></div>
+    </div>
+    <div class="meter-row">
+      <div class="meter-head"><span class="meter-label" style="color:var(--ink); font-weight:700;">Paying &#8594; Retained</span>
+        <span class="meter-val" style="color:var(--ink);">76%</span></div>
+      <div class="meter-track"><div class="meter-fill"
+        style="width:261.4px; background:var(--chart-5); box-shadow:0 0 12px rgb(224 85 144 / 0.55);"></div></div>
+      <p style="font:400 13px/1.4 var(--font-body); color:var(--ink-muted); margin-top:8px;">
+        the funnel's strongest wall &#8212;<br>once they pay, they stay</p>
+    </div>
+  </div>
+
+  <!-- terminal footer -->
+  <p class="abs value" style="left:40px; bottom:26px; font-size:13px; color:var(--ink-muted);">
+    // fictional demo data &#8212; made with epic-infographics</p>
+
+</div>
+</body>
+</html>

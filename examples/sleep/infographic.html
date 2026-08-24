@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The case for sleep — editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Composition: Editorial spread — thin left rail anchored by a towering
+   rotated "7–9" numeral (the hero), 2/3 content column right; full-width
+   pull-quote + charticle bands below. Crossing: the sleep-stage donut ring
+   crosses the column rule. Dense zone: the shortfall block; empty zone:
+   top-right starfield. Metaphor: the moon — the stage donut is a night ring
+   with an engraved crescent in its hole; beds carry the 1-in-3 count. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#FAF7F2; --surface:#F1ECE2; --surface-2:#E3DCCC;
+  --ink:#20242C; --ink-muted:#6B6F76;
+  --accent:#A32035;
+  --chart-1:#A32035; --chart-2:#0D7F63; --chart-3:#B07C1F; --chart-4:#20242C;
+  --de-emphasis:#C6BFB0;
+  --font-display:'Fraunces',serif; --font-body:'Libre Franklin',sans-serif;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:48px; --space-5:72px;
+  --radius:0;
+  --rule-hair:1px solid var(--ink); --rule-heavy:3px solid var(--ink);
+}
+
+html, body { background: var(--bg); }
+body { width:1080px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas {
+  position:relative; width:1080px; height:1920px; overflow:hidden;
+  background: radial-gradient(ellipse 1000px 900px at 40% 16%, #FDFBF6 0%, var(--bg) 66%);
+}
+
+.abs { position:absolute; }
+.display { font-family:var(--font-display); font-weight:900; line-height:.95; letter-spacing:-0.015em; }
+.standfirst { font:italic 400 25px/1.45 var(--font-display); }
+.kicker { font:600 15px/1 var(--font-body); text-transform:uppercase; letter-spacing:.1em; color:var(--ink-muted); }
+.caption { font:400 13px/1.45 var(--font-body); color:var(--ink-muted); }
+
+/* whisper of print grain over everything */
+.grain { position:absolute; inset:0; pointer-events:none; z-index:50;
+  opacity:.3; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0.6 0.6 0 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.28'/%3E%3C/svg%3E"); }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- background: giant ghosted crescent + engraved stars -->
+  <svg class="abs" style="left:0; top:0;" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <mask id="cutmoon">
+        <rect width="1080" height="1920" fill="#fff"/>
+        <circle cx="676" cy="556" r="322" fill="#000"/>
+      </mask>
+      <path id="star" d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z"/>
+    </defs>
+    <circle cx="770" cy="650" r="330" fill="var(--surface)" mask="url(#cutmoon)"/>
+    <g fill="var(--ink)">
+      <use href="#star" transform="translate(836 196) scale(1.2)" opacity=".45"/>
+      <use href="#star" transform="translate(936 258) scale(0.8)" opacity=".4"/>
+      <use href="#star" transform="translate(884 338) scale(1.0)" opacity=".45"/>
+      <use href="#star" transform="translate(986 176) scale(0.65)" opacity=".35"/>
+      <use href="#star" transform="translate(792 300) scale(0.6)" opacity=".35"/>
+      <use href="#star" transform="translate(152 1252) scale(0.8)" opacity=".4"/>
+      <use href="#star" transform="translate(262 1292) scale(0.6)" opacity=".35"/>
+    </g>
+  </svg>
+
+  <!-- folio line -->
+  <div class="abs" style="left:72px; top:64px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:10px 2px; display:flex; justify-content:space-between;">
+    <span class="kicker" style="color:var(--ink);">Health &middot; A Nightly Briefing</span>
+    <span class="kicker" style="color:var(--ink);">No. 07</span>
+  </div>
+
+  <!-- title -->
+  <h1 class="display abs" style="left:72px; top:140px; font-size:96px;">The case for sleep</h1>
+
+  <!-- standfirst with oxblood drop cap (the one decorative oxblood) -->
+  <div class="standfirst abs" style="left:72px; top:274px; width:660px;">
+    <span style="float:left; font:900 112px/0.82 var(--font-display); color:var(--accent); padding:10px 14px 0 0; font-style:normal;">S</span>
+    leep is the body&rsquo;s nightly maintenance shift &mdash; memory, mood, and
+    metabolism all clock in. Yet a third of adults run short of the minimum.
+  </div>
+
+  <!-- heavy rule under the title block -->
+  <div class="abs" style="left:72px; top:436px; width:936px; border-top:var(--rule-heavy);"></div>
+
+  <!-- column rule of the editorial spread -->
+  <div class="abs" style="left:402px; top:476px; width:1px; height:840px; background:var(--ink);"></div>
+
+  <!-- HERO: towering rotated numeral in the left rail -->
+  <div class="abs" style="left:206px; top:896px; width:0; height:0;">
+    <div style="position:absolute; transform:translate(-50%,-50%) rotate(-90deg); text-align:center; white-space:nowrap;">
+      <div class="display" style="font-size:320px; line-height:.8;">7&ndash;9</div>
+      <div class="kicker" style="color:var(--ink); margin-top:26px; letter-spacing:.24em;">Hours of sleep a night &mdash; what every adult needs</div>
+    </div>
+  </div>
+
+  <!-- stage donut: the moon ring -->
+  <div class="kicker abs" style="left:440px; top:466px;">One night, three kinds of sleep</div>
+  <svg class="abs" style="left:340px; top:500px;" width="668" height="420" viewBox="0 0 668 420" font-family="Libre Franklin">
+    <!-- donut math: center (160,200), r=110, C = 2*pi*110 = 691.15
+         light 50%: dash = 0.50*691.15 - 3 = 342.58, start 12 o'clock -> rotate(-90)
+         REM  25%: dash = 0.25*691.15 - 3 = 169.79, start -90 + 0.50*360 = 90
+         deep 25%: dash = 169.79,               start -90 + 0.75*360 = 180 -->
+    <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-1)" stroke-width="24"
+            stroke-dasharray="342.58 691.15" transform="rotate(-90 160 200)"/>
+    <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-2)" stroke-width="24"
+            stroke-dasharray="169.79 691.15" transform="rotate(90 160 200)"/>
+    <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-3)" stroke-width="24"
+            stroke-dasharray="169.79 691.15" transform="rotate(180 160 200)"/>
+
+    <!-- engraved crescent moon in the hole -->
+    <path d="M176 142 A44 44 0 1 0 176 220 A34 34 0 1 1 176 142 Z"
+          fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/>
+    <g stroke="var(--ink)" stroke-width="1.4" opacity=".55">
+      <line x1="146" y1="168" x2="156" y2="168"/>
+      <line x1="141" y1="182" x2="153" y2="182"/>
+      <line x1="143" y1="196" x2="154" y2="196"/>
+    </g>
+    <use href="#star" transform="translate(196 238) scale(0.5)" fill="var(--ink)" opacity=".5"/>
+    <text x="160" y="270" text-anchor="middle" font-size="13" fill="var(--ink-muted)">one night&rsquo;s sleep</text>
+
+    <!-- direct labels with leaders (mandatory, CVD-safe) -->
+    <!-- deep: outer midpoint of top-left quadrant = (160-90.5, 200-90.5) = (69.5,109.5) -->
+    <g stroke="var(--ink)" stroke-width="1.2" fill="none">
+      <polyline points="72,106 112,56"/>
+      <polyline points="72,294 112,344"/>
+      <line x1="292" y1="200" x2="316" y2="200"/>
+    </g>
+    <g font-size="16" font-weight="600" fill="var(--ink)">
+      <rect x="118" y="40" width="11" height="11" fill="var(--chart-3)"/>
+      <text x="136" y="50">Deep &mdash; ~25%</text>
+      <rect x="118" y="341" width="11" height="11" fill="var(--chart-2)"/>
+      <text x="136" y="351">REM &mdash; ~25%</text>
+      <rect x="324" y="192" width="11" height="11" fill="var(--chart-1)"/>
+      <text x="342" y="202">Light sleep &mdash; ~50%</text>
+    </g>
+    <text x="342" y="222" font-size="13" fill="var(--ink-muted)">half the night is light sleep</text>
+  </svg>
+
+  <!-- the shortfall -->
+  <div class="kicker abs" style="left:440px; top:952px;">The shortfall</div>
+  <div class="abs" style="left:440px; top:984px; width:568px; display:flex; align-items:center; gap:24px;">
+    <div class="display" style="font-size:118px; white-space:nowrap;">1<span style="font:italic 400 46px var(--font-display); letter-spacing:0;"> in </span>3</div>
+    <div style="font:600 22px/1.35 var(--font-body); max-width:260px;">adults report sleeping less than 7&nbsp;hours</div>
+  </div>
+  <!-- pictogram: 3 beds, 1 marked (fill = the short sleeper) -->
+  <svg class="abs" style="left:440px; top:1128px;" width="558" height="110" viewBox="0 0 558 110">
+    <defs>
+      <g id="bedframe" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
+        <line x1="10" y1="12" x2="10" y2="66"/>
+        <line x1="160" y1="36" x2="160" y2="66"/>
+        <line x1="10" y1="54" x2="160" y2="54"/>
+        <path d="M20 54 v-8 q0 -8 8 -8 h16 q8 0 8 8 v8"/>
+        <circle cx="36" cy="29" r="9"/>
+      </g>
+      <path id="blanket" d="M56 54 Q66 28 88 36 Q124 48 158 46 L158 54 Z"/>
+    </defs>
+    <!-- the one in three -->
+    <use href="#blanket" x="0" fill="var(--chart-1)" stroke="var(--ink)" stroke-width="2.5"/>
+    <use href="#bedframe" x="0"/>
+    <text x="85" y="90" text-anchor="middle" font-family="Libre Franklin" font-size="13" fill="var(--ink-muted)">under 7 h</text>
+    <!-- the two in the 7-9 range -->
+    <use href="#blanket" x="194" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5"/>
+    <use href="#bedframe" x="194"/>
+    <use href="#blanket" x="388" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5"/>
+    <use href="#bedframe" x="388"/>
+  </svg>
+
+  <!-- pull-quote: the all-nighter fact -->
+  <div class="abs" style="left:72px; top:1352px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:44px 0;">
+    <div class="display abs" style="left:8px; top:22px; font-size:120px; line-height:1;">&ldquo;</div>
+    <div style="font:italic 400 31px/1.45 var(--font-display); width:700px; margin:0 auto; text-align:center;">
+      After a night without sleep, reaction times are comparable to a
+      <strong style="font-style:normal; font-weight:900;">0.10% blood-alcohol level</strong>.
+    </div>
+  </div>
+
+  <!-- charticle: what actually helps -->
+  <div class="kicker abs" style="left:72px; top:1576px;">What actually helps</div>
+  <div class="abs" style="left:72px; top:1604px; width:936px;">
+    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="20" cy="20" r="15"/><path d="M20 20 V10 M20 20 L28 24"/>
+      </svg>
+      <div style="font:600 21px/1 var(--font-body);">A consistent schedule</div>
+      <div style="margin-left:auto; font:400 16px/1 var(--font-body); color:var(--ink-muted);">same bedtime, same wake time, every day</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
+        <rect x="6" y="5" width="28" height="30"/>
+        <path d="M25 13 A8 8 0 1 0 25 27 A6.2 6.2 0 1 1 25 13 Z"/>
+      </svg>
+      <div style="font:600 21px/1 var(--font-body);">A cool, dark room</div>
+      <div style="margin-left:auto; font:400 16px/1 var(--font-body); color:var(--ink-muted);">low light, low temperature</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); height:68px;">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
+        <rect x="12" y="4" width="16" height="32"/><path d="M17 31 H23"/><path d="M8 36 L32 4"/>
+      </svg>
+      <div style="font:600 21px/1 var(--font-body);">Screens off before bed</div>
+      <div style="margin-left:auto; font:400 16px/1 var(--font-body); color:var(--ink-muted);">put them away a full hour early</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="abs caption" style="left:72px; top:1856px; width:936px; display:flex; justify-content:space-between;">
+    <span>Sources: commonly cited figures (CDC et al.) &mdash; illustrative</span>
+    <span>made with epic-infographics</span>
+  </div>
+
+  <div class="grain"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The world's tallest buildings — blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   COMPOSITION: Specimen sheet (skyline lineup variant).
+   Six line-drawn elevations on ONE shared baseline, each labeled
+   like a parts catalog; the Burj Khalifa breaks the grid (tallest,
+   hero dimension + revision-cloud callouts). Dense zone: skyline +
+   ground band. Empty zone: upper-middle sky.
+
+   TRUE SHARED SCALE — the arithmetic (one factor for everything):
+     scale s = 1.4 px per metre, baseline y = 1480
+     Burj Khalifa      828 m x 1.4 = 1159.2 px -> top y = 1480 - 1159.2 = 320.8
+     Merdeka 118       679 m x 1.4 =  950.6 px -> top y = 1480 -  950.6 = 529.4
+     Shanghai Tower    632 m x 1.4 =  884.8 px -> top y = 1480 -  884.8 = 595.2
+     Abraj Al-Bait     601 m x 1.4 =  841.4 px -> top y = 1480 -  841.4 = 638.6
+     Lotte World Tower 555 m x 1.4 =  777.0 px -> top y = 1480 -  777.0 = 703.0
+     Eiffel Tower      330 m x 1.4 =  462.0 px -> top y = 1480 -  462.0 = 1018.0
+     check: 1159.2 / 462.0 = 828 / 330 = 2.509...  (true ratio preserved)
+   The dashed brass datum line sits at y = 1018.0 (the Eiffel's tip).
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#123A66; --bg-2:#0D3054;
+  --line:#D8E8F8; --line-soft:rgb(216 232 248 / 0.45);
+  --ink:#EAF2FB; --ink-muted:#9FB8D4;
+  --chart-1:#3E9BD6; --chart-2:#B8860B; --chart-3:#C75B9B; --chart-4:#6F9436;
+  --de-emphasis:#2A537F;
+  --font-display:'Saira Condensed',sans-serif; --font-body:'IBM Plex Mono',monospace;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:56px;
+  --radius:0;
+}
+
+html, body { background: var(--bg); }
+body { width:1240px; font-family:var(--font-body); color:var(--ink); }
+
+.canvas {
+  position:relative; width:1240px; height:1754px; overflow:hidden;
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px),
+    radial-gradient(ellipse 1500px 1900px at 45% 28%, #16416F 0%, var(--bg) 62%);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* double-rule border frame */
+.frame-outer { position:absolute; inset:12px; border:2px solid var(--line); pointer-events:none; z-index:20; }
+.frame-inner { position:absolute; inset:17px; border:1px solid var(--line-soft); pointer-events:none; z-index:20; }
+
+.abs { position:absolute; }
+.display { font-family:var(--font-display); font-weight:700; text-transform:uppercase;
+           letter-spacing:.04em; line-height:.95; }
+
+/* title, top-right */
+.masthead { position:absolute; right:60px; top:46px; text-align:right; z-index:10; }
+.masthead .kicker { font:500 15px/1 var(--font-body); letter-spacing:.22em; color:var(--ink-muted); }
+.masthead h1 { font-size:88px; margin-top:14px; color:var(--ink); }
+.masthead .standfirst { font:italic 400 15px/1.5 var(--font-body); color:var(--ink-muted); margin-top:14px; }
+
+/* ground hatch under the baseline */
+.ground-hatch { position:absolute; left:40px; right:40px; top:1481px; height:14px; z-index:4;
+  background: repeating-linear-gradient(45deg, var(--line-soft) 0 1px, transparent 1px 9px); }
+
+/* notes, bottom-left */
+.notes { position:absolute; left:48px; top:1576px; z-index:10;
+  background:var(--bg); border:1px solid var(--line-soft); padding:10px 16px 12px;
+  font:400 13px/1.65 var(--font-body); color:var(--ink-muted); }
+.notes strong { color:var(--ink); font-weight:600; }
+
+/* title block, bottom-right — the stamp */
+.titleblock { position:absolute; left:820px; top:1558px; width:380px; z-index:10;
+  background:var(--bg-2); border:2px solid var(--line); transform:rotate(-0.6deg); }
+.titleblock .inner { border:1px solid var(--line-soft); margin:3px; }
+.titleblock .row { display:flex; border-bottom:1px solid var(--line-soft); }
+.titleblock .row:last-child { border-bottom:none; }
+.titleblock .cell { padding:6px 10px 7px; flex:1; }
+.titleblock .cell + .cell { border-left:1px solid var(--line-soft); }
+.titleblock .lbl { font:500 9px/1 var(--font-body); letter-spacing:.18em; color:var(--ink-muted); }
+.titleblock .val { font:600 13px/1.2 var(--font-body); color:var(--ink); margin-top:4px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- ============ masthead ============ -->
+  <div class="masthead">
+    <div class="kicker">DWG · COMPARATIVE ELEVATION — ONE SHARED SCALE</div>
+    <h1 class="display">The world's<br>tallest buildings</h1>
+    <div class="standfirst">five record towers drawn at true height —<br>the Eiffel Tower stands in for scale</div>
+  </div>
+
+  <!-- ============ the drawing ============ -->
+  <svg class="abs" style="left:0; top:0; z-index:5;" width="1240" height="1754" viewBox="0 0 1240 1754"
+       font-family="IBM Plex Mono, monospace">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+              orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="var(--line)"/>
+      </marker>
+    </defs>
+
+    <!-- registration crosses (3 corners) -->
+    <g stroke="var(--line-soft)" stroke-width="1">
+      <path d="M30 20 v20 M20 30 h20"/>
+      <path d="M1210 20 v20 M1200 30 h20"/>
+      <path d="M30 1714 v20 M20 1724 h20"/>
+    </g>
+
+    <!-- Eiffel datum line: y = 1480 - 330*1.4 = 1018.0 · crosses the inner frame -->
+    <line x1="20" y1="1018" x2="1220" y2="1018" stroke="var(--chart-2)"
+          stroke-width="2" stroke-dasharray="14 8"/>
+
+    <!-- ============ BURJ KHALIFA · 828 m · top y 320.8 ============ -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M135 1480 V1310 H150 V1150 H160 V1000 H170 V860 H178 V730
+        H186 V610 H193 V505 H199 V425 H204 V372 H216 V425 H221 V505 H227 V610 H234 V730
+        H242 V860 H250 V1000 H260 V1150 H270 V1310 H285 V1480"/>
+      <line x1="210" y1="372" x2="210" y2="320.8" stroke-width="2.5"/>
+      <g stroke-width="1.25">
+        <line x1="186" y1="730" x2="186" y2="1480"/>
+        <line x1="234" y1="730" x2="234" y2="1480"/>
+        <line x1="210" y1="372" x2="210" y2="1480"/>
+        <line x1="162" y1="1150" x2="162" y2="1480"/>
+        <line x1="258" y1="1150" x2="258" y2="1480"/>
+      </g>
+    </g>
+
+    <!-- ============ MERDEKA 118 · 679 m · top y 529.4 ============ -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M370 1480 L386 950 L404 780 L412 753 L428 753 L436 780
+        L454 950 L470 1480"/>
+      <line x1="420" y1="753" x2="420" y2="529.4" stroke-width="2.5"/>
+      <line x1="414" y1="600" x2="426" y2="600" stroke-width="1.25"/>
+      <g stroke-width="1.25">
+        <line x1="378" y1="1250" x2="430" y2="790"/>
+        <line x1="462" y1="1250" x2="410" y2="790"/>
+        <line x1="420" y1="753" x2="420" y2="1480"/>
+      </g>
+    </g>
+
+    <!-- ============ SHANGHAI TOWER · 632 m · top y 595.2 ============ -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M555 1480 C572 1150 581 820 588 622 L636 595.2
+        C648 860 659 1190 665 1480"/>
+      <path stroke-width="1.25" d="M574 1360 C634 1120 566 860 612 648"/>
+    </g>
+
+    <!-- ============ ABRAJ AL-BAIT · 601 m · top y 638.6 ============ -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M730 1480 V1000 H762 V800 H752 V712 L800 664 L848 712
+        V800 H838 V1000 H870 V1480"/>
+      <line x1="800" y1="664" x2="800" y2="649" stroke-width="2.5"/>
+      <circle cx="800" cy="644.2" r="5.6" stroke-width="1.5"/>
+      <line x1="752" y1="800" x2="848" y2="800" stroke-width="1.25"/>
+      <circle cx="800" cy="756" r="30" stroke-width="1.5"/>
+      <g stroke-width="1.25">
+        <line x1="800" y1="756" x2="800" y2="734"/>
+        <line x1="800" y1="756" x2="815" y2="762"/>
+        <line x1="745" y1="1000" x2="745" y2="1480"/>
+        <line x1="855" y1="1000" x2="855" y2="1480"/>
+        <line x1="730" y1="1090" x2="870" y2="1090"/>
+        <line x1="730" y1="1180" x2="870" y2="1180"/>
+        <line x1="730" y1="1270" x2="870" y2="1270"/>
+        <line x1="730" y1="1360" x2="870" y2="1360"/>
+      </g>
+    </g>
+
+    <!-- ============ LOTTE WORLD TOWER · 555 m · top y 703.0 ============ -->
+    <!-- quad top: 0.25*712 + 0.5*693 + 0.25*714 = 703.0 at t=0.5 -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M930 1480 C944 1150 952 880 956 712 Q973 693 990 714
+        C994 890 1010 1160 1020 1480"/>
+      <path stroke-width="1.25" d="M966 722 C964 1000 966 1250 968 1480"/>
+      <path stroke-width="1.25" d="M982 726 C986 1000 992 1250 996 1480"/>
+    </g>
+
+    <!-- ============ EIFFEL TOWER · 330 m (ref) · top y 1018.0 ============ -->
+    <g stroke="var(--line)" fill="none">
+      <path stroke-width="2.5" d="M1040 1480 C1064 1330 1092 1200 1106 1098 L1113 1030"/>
+      <path stroke-width="2.5" d="M1200 1480 C1176 1330 1148 1200 1134 1098 L1127 1030"/>
+      <path stroke-width="2.5" d="M1113 1030 H1127 M1120 1030 V1018"/>
+      <path stroke-width="2.5" d="M1064 1480 A56 56 0 0 1 1176 1480"/>
+      <g stroke-width="1.25">
+        <path d="M1078 1480 C1094 1370 1104 1260 1110 1160"/>
+        <path d="M1162 1480 C1146 1370 1136 1260 1130 1160"/>
+        <line x1="1050" y1="1396" x2="1190" y2="1396"/>
+        <line x1="1056" y1="1404" x2="1184" y2="1404"/>
+        <line x1="1076" y1="1315" x2="1164" y2="1315"/>
+        <line x1="1080" y1="1323" x2="1160" y2="1323"/>
+        <line x1="1102" y1="1093" x2="1138" y2="1093"/>
+        <line x1="1104" y1="1100" x2="1136" y2="1100"/>
+        <line x1="1090" y1="1315" x2="1112" y2="1230"/>
+        <line x1="1150" y1="1315" x2="1128" y2="1230"/>
+        <line x1="1096" y1="1230" x2="1116" y2="1160"/>
+        <line x1="1144" y1="1230" x2="1124" y2="1160"/>
+      </g>
+    </g>
+
+    <!-- ============ baseline ============ -->
+    <line x1="40" y1="1480" x2="1200" y2="1480" stroke="var(--line)" stroke-width="2.5"/>
+
+    <!-- ============ master dimension: 828 m, ground -> Burj tip ============ -->
+    <line x1="74" y1="320.8" x2="204" y2="320.8" stroke="var(--line-soft)" stroke-width="1"/>
+    <line x1="64" y1="326" x2="64" y2="1475" stroke="var(--line)" stroke-width="1"
+          marker-start="url(#arr)" marker-end="url(#arr)"/>
+    <rect x="46" y="838" width="36" height="124" fill="var(--bg)" stroke="var(--line-soft)" stroke-width="1"/>
+    <text transform="rotate(-90 64 900)" x="64" y="905" text-anchor="middle"
+          font-size="15" font-weight="600" fill="var(--ink)">828 m</text>
+
+    <!-- hero: 828 m callout off the spire -->
+    <line x1="220" y1="326" x2="294" y2="326" stroke="var(--line-soft)" stroke-width="1"/>
+    <text x="300" y="358" font-family="Saira Condensed, sans-serif" font-weight="700"
+          font-size="96" fill="var(--ink)" letter-spacing="2">828<tspan font-size="52" dx="8">m</tspan></text>
+    <text x="302" y="398" font-size="16" font-weight="600" fill="var(--ink)" letter-spacing="2">163 FLOORS</text>
+
+    <!-- revision cloud: elevator facts (Burj Khalifa) -->
+    <g>
+      <path fill="var(--bg-2)" stroke="var(--line)" stroke-width="1.5" d="M480 380
+        a14 14 0 0 1 28 0 a14 14 0 0 1 28 0 a14 14 0 0 1 28 0 a14 14 0 0 1 28 0
+        a14 14 0 0 1 28 0 a14 14 0 0 1 28 0 a14 14 0 0 1 28 0 a14 14 0 0 1 28 0
+        a14 14 0 0 1 28 0
+        a12.5 12.5 0 0 1 0 25 a12.5 12.5 0 0 1 0 25 a12.5 12.5 0 0 1 0 25 a12.5 12.5 0 0 1 0 25
+        a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0
+        a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0 a14 14 0 0 1 -28 0
+        a14 14 0 0 1 -28 0
+        a12.5 12.5 0 0 1 0 -25 a12.5 12.5 0 0 1 0 -25 a12.5 12.5 0 0 1 0 -25 a12.5 12.5 0 0 1 0 -25 Z"/>
+      <text x="606" y="414" text-anchor="middle" font-size="12" fill="var(--ink-muted)"
+            letter-spacing="2">BURJ KHALIFA — LIFT SYSTEM</text>
+      <text x="606" y="440" text-anchor="middle" font-size="18" font-weight="600"
+            fill="var(--ink)" letter-spacing="1">57 ELEVATORS</text>
+      <text x="606" y="463" text-anchor="middle" font-size="14" fill="var(--ink-muted)">top speed 10 m/s</text>
+      <g transform="rotate(2 716 369)">
+        <rect x="688" y="358" width="56" height="22" fill="var(--bg-2)" stroke="var(--line)" stroke-width="1"/>
+        <text x="716" y="373" text-anchor="middle" font-size="12" font-weight="600"
+              fill="var(--ink)" letter-spacing="1.5">REV A</text>
+      </g>
+      <line x1="484" y1="452" x2="231" y2="558" stroke="var(--line)" stroke-width="1"/>
+      <circle cx="227" cy="560" r="4" fill="var(--line)"/>
+    </g>
+
+    <!-- ============ tip height labels (knockouts) ============ -->
+    <g font-size="15" font-weight="600" fill="var(--ink)">
+      <rect x="384" y="486" width="72" height="27" fill="var(--bg)" stroke="var(--line-soft)" stroke-width="1"/>
+      <text x="420" y="505" text-anchor="middle">679 m</text>
+      <rect x="574" y="552" width="72" height="27" fill="var(--bg)" stroke="var(--line-soft)" stroke-width="1"/>
+      <text x="610" y="571" text-anchor="middle">632 m</text>
+      <rect x="764" y="596" width="72" height="27" fill="var(--bg)" stroke="var(--line-soft)" stroke-width="1"/>
+      <text x="800" y="615" text-anchor="middle">601 m</text>
+      <rect x="939" y="660" width="72" height="27" fill="var(--bg)" stroke="var(--line-soft)" stroke-width="1"/>
+      <text x="975" y="679" text-anchor="middle">555 m</text>
+    </g>
+
+    <!-- datum label, above the brass line at right -->
+    <g>
+      <rect x="1030" y="964" width="172" height="46" fill="var(--bg)" stroke="var(--chart-2)" stroke-width="1"/>
+      <text x="1116" y="983" text-anchor="middle" font-size="13" font-weight="600"
+            fill="var(--ink)">EIFFEL TOWER · 330 m</text>
+      <text x="1116" y="1001" text-anchor="middle" font-size="12" font-style="italic"
+            fill="var(--ink-muted)">shown for scale</text>
+    </g>
+
+    <!-- ============ specimen labels below the baseline ============ -->
+    <g text-anchor="middle">
+      <g font-size="14" font-weight="600" fill="var(--ink)" letter-spacing="1">
+        <text x="210" y="1518">BURJ KHALIFA</text>
+        <text x="420" y="1518">MERDEKA 118</text>
+        <text x="610" y="1518">SHANGHAI TOWER</text>
+        <text x="800" y="1518">ABRAJ AL-BAIT</text>
+        <text x="968" y="1518">LOTTE WORLD TOWER</text>
+        <text x="1132" y="1518">EIFFEL TOWER</text>
+      </g>
+      <g font-size="12" fill="var(--ink-muted)" letter-spacing="1">
+        <text x="210" y="1540">N° 01</text>
+        <text x="420" y="1540">N° 02</text>
+        <text x="610" y="1540">N° 03</text>
+        <text x="800" y="1540">N° 04</text>
+        <text x="968" y="1540">N° 05</text>
+        <text x="1132" y="1540">REF — FOR SCALE</text>
+      </g>
+    </g>
+  </svg>
+
+  <div class="ground-hatch"></div>
+
+  <!-- ============ notes ============ -->
+  <div class="notes">
+    <strong>NOTES —</strong><br>
+    1. ALL SIX ELEVATIONS SHARE ONE VERTICAL SCALE (1 m = 1.4 px).<br>
+    2. BURJ KHALIFA: 828 m ÷ 330 m ≈ <strong>2.5 ×</strong> THE EIFFEL TOWER.
+  </div>
+
+  <!-- ============ title block ============ -->
+  <div class="titleblock">
+    <div class="inner">
+      <div class="row"><div class="cell">
+        <div class="lbl">TITLE</div>
+        <div class="val">THE WORLD'S TALLEST BUILDINGS</div>
+      </div></div>
+      <div class="row">
+        <div class="cell"><div class="lbl">DWG NO</div><div class="val">TB-0828</div></div>
+        <div class="cell"><div class="lbl">SHEET</div><div class="val">1 / 1</div></div>
+      </div>
+      <div class="row">
+        <div class="cell"><div class="lbl">SCALE</div><div class="val">1 m = 1.4 px</div></div>
+        <div class="cell"><div class="lbl">DATE</div><div class="val">2026-08-23</div></div>
+      </div>
+      <div class="row"><div class="cell">
+        <div class="lbl">SOURCE</div>
+        <div class="val">HEIGHTS: PUBLIC RECORDS</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="frame-outer"></div>
+  <div class="frame-inner"></div>
+</div>
+</body>
+</html>
