@@ -37,8 +37,11 @@ jobs:
         run: node scripts/render.mjs ../../examples/streaming-wars/infographic.html /tmp/example.png --preset wide
       - name: Assert non-trivial output
         run: |
-          for f in /tmp/skeleton.png /tmp/example.png; do
-            size=$(stat -c%s "$f")
-            echo "$f: $size bytes"
-            [ "$size" -gt 20000 ] || { echo "::error::$f suspiciously small"; exit 1; }
-          done
+          # The skeleton is near-empty boilerplate (~18KB locally); the example is a full scene.
+          check() {
+            size=$(stat -c%s "$1")
+            echo "$1: $size bytes (min $2)"
+            [ "$size" -gt "$2" ] || { echo "::error::$1 suspiciously small"; exit 1; }
+          }
+          check /tmp/skeleton.png 5000
+          check /tmp/example.png 100000
