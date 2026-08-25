@@ -1,0 +1,15 @@
+{
+  "name": "epic-infographics",
+  "metadata": {
+    "description": "Create polished, scene-first infographic images from data, facts, or a topic — social graphics, stats posters, story/reel visuals, print one-pagers, link-preview banners — as a self-contained HTML/CSS+SVG page rendered to PNG. Ten fully-specified design languages, six canvas presets from square social to A4 print, computed-never-eyeballed chart geometry, colorblind-validated palettes, and a mandatory render–review–fix loop."
+  },
+  "owner": {
+    "name": "Or Ron"
+  },
+  "plugins": [
+    {
+      "name": "epic-infographics",
+      "source": "./"
+    }
+  ]
+}

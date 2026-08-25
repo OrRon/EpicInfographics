@@ -1,0 +1,9 @@
+{
+  "name": "epic-infographics",
+  "plugins": [
+    {
+      "name": "epic-infographics",
+      "source": "./"
+    }
+  ]
+}

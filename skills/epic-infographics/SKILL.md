@@ -52,7 +52,8 @@ completely — palette hexes, fonts, geometry, signature devices, do/don'ts.
 
 - User asked for a vibe → match it (technical → `blueprint`, dramatic/tech →
   `dark-glass`, literary → `editorial`, warm/craft → `retro-print`,
-  friendly → `hand-drawn`).
+  friendly → `hand-drawn`, nature/science/anatomy → `naturalist-plate`,
+  systems/places/playful-spatial → `isometric-world`).
 - No preference → pick by subject matter, favoring the scene-native styles
   above.
 - **High slop-risk styles** — `swiss`, `corporate-clean`, `neo-brutalist` —

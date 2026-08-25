@@ -1,0 +1,24 @@
+{
+  "name": "epic-infographics",
+  "description": "Create polished, scene-first infographic images from data, facts, or a topic — social graphics, stats posters, story/reel visuals, print one-pagers, link-preview banners — as a self-contained HTML/CSS+SVG page rendered to PNG. Ten fully-specified design languages (blueprint, dark-glass, naturalist-plate, isometric-world, retro-print, editorial, hand-drawn, swiss, corporate-clean, neo-brutalist), six canvas presets from square social to A4 print, a rich data vocabulary, computed-never-eyeballed chart geometry, colorblind-validated palettes, and a mandatory render–review–fix loop where the agent inspects its own PNG before delivering.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Or Ron",
+    "url": "https://github.com/OrRon"
+  },
+  "homepage": "https://github.com/OrRon/EpicInfographics",
+  "repository": "https://github.com/OrRon/EpicInfographics",
+  "license": "MIT",
+  "keywords": [
+    "infographic",
+    "data-visualization",
+    "design",
+    "svg",
+    "html",
+    "png",
+    "poster",
+    "social-graphics",
+    "charts",
+    "playwright"
+  ]
+}

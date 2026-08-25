@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/validate.mjs
+
+  render:
+    name: Headless render smoke test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skills/epic-infographics
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: skills/epic-infographics/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Render the skeleton template
+        run: node scripts/render.mjs templates/skeleton.html /tmp/skeleton.png --preset square
+      - name: Render a shipped example
+        run: node scripts/render.mjs ../../examples/streaming-wars/infographic.html /tmp/example.png --preset wide
+      - name: Assert non-trivial output
+        run: |
+          for f in /tmp/skeleton.png /tmp/example.png; do
+            size=$(stat -c%s "$f")
+            echo "$f: $size bytes"
+            [ "$size" -gt 20000 ] || { echo "::error::$f suspiciously small"; exit 1; }
+          done
