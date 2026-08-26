@@ -40,7 +40,10 @@ jobs:
           node scripts/check.mjs templates/skeleton.html --preset square
           node scripts/check.mjs ../../examples/streaming-wars/infographic.html --preset wide
       - name: Animate a shipped example (frame scrub + ffmpeg)
-        run: node scripts/animate.mjs ../../examples/launch-funnel/infographic.html /tmp/example.mp4 --preset square --fps 10 --hold 0
+        run: |
+          # ffmpeg is no longer preinstalled on the ubuntu runner images
+          command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; }
+          node scripts/animate.mjs ../../examples/launch-funnel/infographic.html /tmp/example.mp4 --preset square --fps 10 --hold 0
       - name: Assert non-trivial output
         run: |
           # The skeleton is near-empty boilerplate (~18KB locally); the example is a full scene.
