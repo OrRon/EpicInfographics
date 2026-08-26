@@ -190,3 +190,23 @@ Style: isometric-world · Canvas: story
 - 2007 The iPhone puts the web in every pocket
 - 2022 ChatGPT reaches 100M users in 2 months
 - Well-known public milestones
+
+## 19. visit-mars — "sell a trip to Mars like a national park" ✅ rendered
+
+Style: park-poster · Canvas: story
+
+- Olympus Mons 21.9 km high (~2.5× Everest's 8.8 km)
+- Valles Marineris ~4,000 km long, up to 7 km deep
+- Gravity 0.38 g · sol 24 h 39 m · average −63 °C
+- ≈225M km from Earth · ≈7 months transfer · moons Phobos & Deimos
+- NASA Mars fact sheet figures, rounded
+
+## 20. wind-turbine — "slice a wind turbine open like a DK cross-section" ✅ rendered
+
+Style: cutaway · Canvas: a4
+
+- Rated ≈4 MW · ≈3,000 homes at EU-average use
+- Hub ≈100 m · rotor ≈130 m · each blade ≈63 m · tips up to ~290 km/h
+- Gearbox steps ~15 rpm up ~100× to ~1,500 rpm
+- Cuts in ~11 km/h wind, shuts down ~90 km/h
+- Typical onshore machine — figures rounded

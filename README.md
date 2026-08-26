@@ -51,8 +51,8 @@ can follow without needing taste of its own:
 
 ## The gallery
 
-Eleven briefs, ten design languages, six canvas formats. Click any image
-for its brief and HTML source.
+Thirteen briefs, twelve design languages, six canvas formats. Click any
+image for its brief and HTML source.
 
 <table>
 <tr>
@@ -73,7 +73,12 @@ for its brief and HTML source.
 <tr>
 <td align="center" width="33%"><a href="examples/remote-vs-office-worlds/"><img src="examples/remote-vs-office-worlds/infographic.png"></a><br><b>Two tiny worlds of work</b><br><sub>isometric-world · wide</sub></td>
 <td align="center" width="33%"><a href="examples/web-history-road/"><img src="examples/web-history-road/infographic.png"></a><br><b>The road the internet took</b><br><sub>isometric-world · story</sub></td>
+<td align="center" width="33%"><a href="examples/visit-mars/"><img src="examples/visit-mars/infographic.png"></a><br><b>Visit Mars</b><br><sub>park-poster · story</sub></td>
+</tr>
+<tr>
+<td align="center" width="33%"><a href="examples/wind-turbine/"><img src="examples/wind-turbine/infographic.png"></a><br><b>Inside a wind turbine</b><br><sub>cutaway · a4</sub></td>
 <td align="center" width="33%"><br><b>Your brief here</b><br><sub>the skill made all of these;<br>test briefs in <a href="examples/briefs.md">examples/briefs.md</a></sub></td>
+<td align="center" width="33%"></td>
 </tr>
 </table>
 
@@ -93,6 +98,8 @@ the dark ones.
 | **retro-print** | mid-century poster: four inks, misregistration, film grain, arc text |
 | **editorial** | magazine feature: Fraunces at huge sizes, drop caps, charticles |
 | **hand-drawn** | marker sketchbook: wobble-filtered linework, washi tape, doodle arrows |
+| **park-poster** | WPA screen-print vista: layered flat planes, title band, a tiny figure for scale |
+| **cutaway** | DK-style cross-section: sliced machines, numbered callouts, detail lenses, tiny people |
 
 | High slop-risk (explicit request only) | |
 |---|---|
@@ -168,10 +175,12 @@ turn this data into a poster for the office printer  [paste a table]
 a fun square social graphic about how sourdough works, hand-drawn style
 ```
 
-The agent finds the story, picks a visual metaphor that can carry real
-data, chooses a canvas and a design language, composes the scene, builds
-it, renders it, and reviews its own PNG against the checklist before
-handing it over. There are usually one or two self-correction loops you
+The agent first pins down who the graphic is for and what it needs to do,
+gathers the data, then pitches you two or three story angles as a
+multiple-choice question. Once you pick one, it selects a visual metaphor
+that can carry real data, chooses a canvas and a design language, composes
+the scene, builds it, renders it, and reviews its own PNG against the
+checklist before handing it over. There are usually one or two self-correction loops you
 never see.
 
 ## How it holds quality
@@ -184,6 +193,10 @@ never see.
   values are labeled as such in the footer of every example.
 - Color is validated. Every palette, light and dark, passes lightness,
   chroma, contrast and colorblind-separation checks before it ships.
+- Layout is verified by machine before any render. A preflight script loads
+  the page headless, measures the real glyph geometry, and refuses to
+  continue while text collides with other text, gets clipped, leaves the
+  canvas, or falls below readable size.
 - The render-review-fix loop is mandatory: at least one pass, with a
   checklist that treats "could be a dashboard template" as a hard fail.
 
@@ -199,6 +212,7 @@ skills/epic-infographics/
     charts.md                   inline-SVG recipes with the math written out
     design-languages/           one complete spec per style (+ _template.md)
   templates/skeleton.html       canvas boilerplate
+  scripts/check.mjs             preflight gate: collisions, clipping, sizes, hero
   scripts/render.mjs            HTML -> PNG · 6 presets · font-safe · retina
 examples/                       brief + HTML + PNG for every gallery image
 .claude-plugin/ .codex-plugin/  plugin + marketplace manifests

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Visit Mars — park poster</title>
+<!-- Composition pattern: Big Object vista (park-poster layered planes).
+     Reader is standing on a Martian overlook at golden hour. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Jost:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+
+:root {
+  --bg:#F2E4C0; --surface:#F8EFD8; --surface-2:#E5D5AC;
+  --ink:#262E22; --ink-muted:#5C6353;
+  --chart-1:#BF4F26; --chart-2:#177A5B; --chart-3:#9E750F; --chart-4:#1D6396;
+  --de-emphasis:#C8B98F;
+  --font-display:'Oswald',sans-serif; --font-body:'Jost',sans-serif;
+  --space-1:8px; --space-2:16px; --space-3:24px; --space-4:40px; --space-5:64px;
+}
+
+html, body { background: var(--bg); }
+body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
+.canvas { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+
+.scene { position: absolute; inset: 0; }
+.poster-frame { position: absolute; inset: 20px; border: 12px solid var(--ink); pointer-events: none; z-index: 40; }
+
+.label { position: absolute; z-index: 20; }
+.kicker { font: 500 15px/1 var(--font-body); text-transform: uppercase; letter-spacing: .2em; }
+.caption { font: 400 13px/1.4 var(--font-body); color: var(--ink-muted); }
+.elev { font: 600 26px/1 var(--font-display); letter-spacing: .06em; }
+.elev-sub { font: 400 14px/1.35 var(--font-body); color: var(--ink); }
+
+/* visitor conditions, carved into the dark overlook like a trail sign */
+.stats { position: absolute; left: 84px; right: 84px; top: 1490px; z-index: 25;
+         display: flex; justify-content: space-between; }
+.stat { text-align: center; width: 290px; }
+.stat .num { font: 600 40px/1 var(--font-display); letter-spacing: .04em; color: var(--surface); }
+.stat .lbl { font: 500 13px/1.3 var(--font-body); text-transform: uppercase;
+             letter-spacing: .13em; color: var(--surface-2); margin-top: 7px; }
+
+/* title band */
+.band { position: absolute; left: 32px; right: 32px; bottom: 66px; height: 216px;
+        background: var(--chart-1); z-index: 30; text-align: center; color: var(--surface); }
+.band .kicker { color: var(--surface); opacity: .85; margin-top: 20px; }
+.band h1 { font: 600 112px/1 var(--font-display); letter-spacing: .18em;
+           text-transform: uppercase; margin-top: 8px; text-indent: .18em; }
+.band .rule { width: 560px; height: 2px; background: var(--surface); margin: 12px auto 8px; }
+.band .sub { font: 500 16px/1 var(--font-body); letter-spacing: .12em; text-transform: uppercase; }
+.footer { position: absolute; left: 32px; right: 32px; bottom: 32px; height: 34px; z-index: 35;
+          background: var(--ink); color: var(--surface-2); display: flex;
+          align-items: center; justify-content: center;
+          font: 400 12px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- ============ the vista ============ -->
+  <svg class="scene" width="1080" height="1920" viewBox="0 0 1080 1920" aria-label="Martian vista">
+    <!-- banded sky: flat tint steps of golden hour over cream -->
+    <rect x="0" y="0" width="1080" height="330" fill="#E3CD9A"/>
+    <rect x="0" y="330" width="1080" height="330" fill="#EAD8AC"/>
+    <rect x="0" y="660" width="1080" height="330" fill="#EEDFB7"/>
+    <!-- cream band continues via canvas bg -->
+
+    <!-- sun disc with concentric tint rings -->
+    <circle cx="790" cy="300" r="128" fill="#DDC489"/>
+    <circle cx="790" cy="300" r="98"  fill="#CBAC55"/>
+    <circle cx="790" cy="300" r="66"  fill="#9E750F"/>
+
+    <!-- Earth, far away -->
+    <circle cx="196" cy="210" r="9" fill="#177A5B"/>
+    <!-- transfer trajectory: dashed arc from Earth, descending behind Olympus -->
+    <path d="M 205,214 C 420,330 700,600 980,1000" fill="none"
+          stroke="#262E22" stroke-width="2.5" stroke-dasharray="2 11" stroke-linecap="round"/>
+    <!-- tiny transfer ship on the arc -->
+    <g transform="translate(516,448) rotate(42)">
+      <path d="M 0,0 L 26,6 L 0,12 L 5,6 Z" fill="#262E22"/>
+    </g>
+
+    <!-- the two moons -->
+    <circle cx="352" cy="332" r="11" fill="#5C6353"/>
+    <circle cx="442" cy="276" r="6.5" fill="#5C6353"/>
+
+    <!-- far atmospheric haze range (lake tint, farthest plane);
+         base runs down behind the mid ridge so the planes stack -->
+    <path d="M 0,1440 L 0,1150 L 130,1096 L 300,1168 L 470,1110 L 640,1176 L 830,1122 L 1080,1180 L 1080,1440 Z"
+          fill="#B7C2B9"/>
+
+    <!-- HERO: comparative skyline — Olympus Mons at true 2.5x Everest.
+         Baseline y=1250 · 1 km = 31 px  →  Olympus 21.9 km = 679 px (peak 571)
+                                            Everest  8.8 km = 273 px (peak 977) -->
+    <g id="skyline" data-hero>
+      <!-- Olympus Mons: wide shield profile with summit caldera, bleeding off
+           the right edge; slopes continue down behind the mid ridge -->
+      <path d="M 5,1440
+               L 470,660 L 545,584 L 596,571 L 618,584 L 634,571 L 700,592 L 800,668
+               L 1080,1052 L 1080,1440 Z" fill="#BF4F26"/>
+      <!-- caldera notch shadow -->
+      <path d="M 596,571 L 618,584 L 634,571 L 626,590 L 604,590 Z" fill="#96401E"/>
+      <!-- Everest, for scale, nearer plane (lake ink, paper gap stroke);
+           same hidden baseline as Olympus so the height ratio stays true -->
+      <path d="M 150,1440 L 300,1064 L 332,1108 L 372,977 L 416,1084 L 448,1052 L 573,1440 Z"
+            fill="#1D6396" stroke="#F2E4C0" stroke-width="3"/>
+      <!-- dashed line: where Everest tops out on Olympus's slope -->
+      <line x1="372" y1="977" x2="880" y2="977" stroke="#262E22" stroke-width="2" stroke-dasharray="7 7"/>
+    </g>
+
+    <!-- mid ridge (clay tint) with off-register print copy -->
+    <path d="M 0,1466 L 0,1372 L 170,1322 L 358,1388 L 540,1330 L 736,1398 L 900,1344 L 1080,1400 L 1080,1466 Z"
+          fill="#D89B77" transform="translate(4,3)" opacity=".55"/>
+    <path d="M 0,1466 L 0,1372 L 170,1322 L 358,1388 L 540,1330 L 736,1398 L 900,1344 L 1080,1400 L 1080,1466 Z"
+          fill="#CE8158"/>
+
+    <!-- foreground overlook: solid ink silhouette down to the band -->
+    <path d="M 0,1920 L 0,1430 L 120,1408 L 250,1444 L 330,1418 L 470,1462
+             L 620,1436 L 780,1472 L 900,1450 L 1010,1478 L 1080,1460 L 1080,1920 Z"
+          fill="#262E22"/>
+
+    <!-- the scale figure: an astronaut on the overlook rim, gazing at Olympus -->
+    <g transform="translate(118,1360)" fill="#262E22">
+      <circle cx="15" cy="9" r="9"/>
+      <rect x="0" y="10" width="9" height="16" rx="3"/>          <!-- backpack -->
+      <path d="M 7,17 L 24,17 L 26,34 L 22,34 L 22,26 L 10,26 L 10,34 L 6,34 Z"/>
+      <path d="M 8,33 L 14,33 L 14,48 L 9,48 Z"/>
+      <path d="M 17,33 L 23,33 L 23,48 L 18,48 Z"/>
+      <circle cx="19.5" cy="8" r="3.5" fill="#F8EFD8"/>          <!-- visor -->
+    </g>
+
+    <!-- grain overlay -->
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15 0 0 0 0 0.13 0 0 0 0 0.09 0 0 0 0.5 0"/>
+    </filter>
+    <rect width="1080" height="1920" filter="url(#grain)" opacity="0.22"/>
+  </svg>
+
+  <!-- Valles Marineris: a rift in the dark overlook, running off the right frame -->
+  <svg style="position:absolute; left:460px; top:1560px; z-index:26;" width="588" height="74" viewBox="0 0 588 74">
+    <polygon points="0,30 96,14 210,34 322,10 432,30 522,16 588,26 588,52 508,62 398,44 286,66 172,42 84,58 0,48"
+             fill="#96401E"/>
+    <polygon points="60,34 160,26 280,42 396,26 500,40 588,34 588,44 480,50 360,38 240,54 130,38 60,42"
+             fill="#5E2110"/>
+  </svg>
+
+  <!-- ============ labels ============ -->
+  <div class="label" style="left:224px; top:170px; width:240px;">
+    <div class="kicker" style="color:#177A5B;">Earth</div>
+    <div class="caption">225M km behind you —<br>about 7 months out</div>
+  </div>
+
+  <div class="label caption" style="left:318px; top:356px;">Phobos</div>
+  <div class="label caption" style="left:462px; top:262px;">Deimos</div>
+
+  <!-- Olympus label, pinned near the summit -->
+  <div class="label" style="left:660px; top:470px; width:330px;">
+    <div class="elev">OLYMPUS MONS · 21.9 KM</div>
+    <div class="elev-sub">the tallest mountain in the solar system —
+      a shield so wide its slopes cross the horizon</div>
+  </div>
+
+  <!-- Everest label + the comparison line caption -->
+  <div class="label" style="left:96px; top:886px; width:220px;">
+    <div class="elev" style="color:#1D6396;">EVEREST · 8.8 KM</div>
+    <div class="elev-sub">the tallest back home</div>
+  </div>
+  <div class="label caption" style="left:560px; top:944px; color:#F8EFD8;">
+    Everest tops out barely a third of the way up
+  </div>
+
+  <!-- Valles Marineris label, over the canyon crack -->
+  <div class="label" style="left:528px; top:1588px; z-index:33;">
+    <div class="kicker" style="color:#F8EFD8;">Valles Marineris · 4,000 km long · 7 km deep</div>
+  </div>
+
+  <!-- visitor conditions -->
+  <div class="stats">
+    <div class="stat"><div class="num">0.38 g</div><div class="lbl">Gravity — pack light legs</div></div>
+    <div class="stat"><div class="num">24 h 39 m</div><div class="lbl">One sol — longer sunsets</div></div>
+    <div class="stat"><div class="num">−63 °C</div><div class="lbl">Average — bring the parka</div></div>
+  </div>
+
+  <!-- ============ title band + ranger footer ============ -->
+  <div class="band">
+    <div class="kicker">National parks of the solar system · District No. 4</div>
+    <h1>Mars</h1>
+    <div class="rule"></div>
+    <div class="sub">Home of the tallest mountain in the solar system</div>
+  </div>
+  <div class="footer">Mars Ranger Service · figures: NASA Mars fact sheet · made with epic-infographics</div>
+
+  <div class="poster-frame"></div>
+</div>
+</body>
+</html>
