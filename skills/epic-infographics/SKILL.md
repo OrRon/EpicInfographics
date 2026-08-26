@@ -12,18 +12,49 @@ things that separate a great result from a mediocre one:
 
 1. **Varied data representations** — not everything is a bar chart.
 2. **Executing one design language exactly** — its tokens are law.
-3. **The render–review–fix loop** — you MUST look at your own PNG and fix it
-   before delivering. Never deliver a render you haven't looked at.
+3. **The check–render–review loop** — the mechanical preflight must pass,
+   and you MUST look at your own PNG and fix it before delivering. Never
+   deliver a render you haven't looked at.
 
 ## Workflow
 
-### 1. Find the story
-Before any visuals, write one sentence: *what should the reader remember?*
-Decide which number/fact is the **hero** and which are support. An infographic
-is an argument, not a data dump. If the user gave no data, research or derive
-it first — never invent statistics; if values are illustrative, label them so.
+### 1. Understand the brief
+An infographic made for "everyone" lands with no one. Before touching any
+data, pin down three things:
 
-### 2. Find the visual metaphor
+- **Audience** — who is this for, and how much do they already know?
+  (executives skimming, practitioners fluent in the jargon, general public)
+- **Goal** — what should the graphic *do*: inform, persuade, impress, or
+  drive one action? The goal decides what kind of fact can be the hero.
+- **Context** — where will it live (feed, slide deck, print, link preview)?
+  This feeds the canvas choice in step 5 and sets how loud the design can be.
+
+If the request already answers these, restate them in one line and move on.
+If not, ask the user before proceeding — one round of questions, as
+multiple-choice where you have a tool for it (e.g. AskUserQuestion) so
+answering takes one click. Only when you are running unattended and cannot
+ask, pick sensible answers and state those assumptions at delivery.
+
+### 2. Gather the data
+Collect the facts that serve the brief. Use what the user gave; research or
+derive the rest — never invent statistics; if values are illustrative, label
+them so. Gather slightly more than one graphic needs: the pitch in step 3 is
+only honest when there was more than one possible angle in the material.
+
+### 3. Pitch the story
+An infographic is an argument, not a data dump. From the data, draft **2–3
+candidate story angles**. Each pitch is a working headline, the hero
+number/fact that anchors it, and one sentence: *what should the reader
+remember?* The angles must genuinely differ — e.g. "how big it is" vs. "how
+fast it's changing" vs. "what it costs you" — not rewordings of one claim.
+
+Present the pitches to the user as a multiple-choice question (AskUserQuestion
+where available, plain text otherwise), with your recommended angle first and
+marked as recommended. If you cannot ask, take your recommendation and say so
+at delivery. The chosen angle decides the hero element; every other fact is
+support or gets cut.
+
+### 4. Find the visual metaphor
 Read `references/illustration-and-texture.md`. List 2–3 physical objects
 the subject evokes and pick one that can **carry data** (a cup whose fill
 level is the value, a ladder whose rungs are the steps). This becomes the
@@ -32,7 +63,7 @@ Type-led styles (swiss) may go abstract instead, but then scale and
 composition must do the identity work. The litmus test comes back at
 review: cover the text — is the topic still recognizable?
 
-### 3. Pick the canvas
+### 5. Pick the canvas
 | Preset | Size (px) | Use for |
 |---|---|---|
 | `square` | 1080×1080 | social feed post |
@@ -46,14 +77,15 @@ Aspect drives layout before style does: `story`/`tall` = vertical single-column
 flow; `wide` = 2–3 column zones; `square` = hero + 2×2 support grid is a safe
 default.
 
-### 4. Pick the design language
+### 6. Pick the design language
 Read exactly ONE file from `references/design-languages/` and follow it
 completely — palette hexes, fonts, geometry, signature devices, do/don'ts.
 
 - User asked for a vibe → match it (technical → `blueprint`, dramatic/tech →
   `dark-glass`, literary → `editorial`, warm/craft → `retro-print`,
   friendly → `hand-drawn`, nature/science/anatomy → `naturalist-plate`,
-  systems/places/playful-spatial → `isometric-world`).
+  systems/places/playful-spatial → `isometric-world`, places/journeys/
+  vistas → `park-poster`, how-it-works/inside-a-machine → `cutaway`).
 - No preference → pick by subject matter, favoring the scene-native styles
   above.
 - **High slop-risk styles** — `swiss`, `corporate-clean`, `neo-brutalist` —
@@ -64,14 +96,14 @@ completely — palette hexes, fonts, geometry, signature devices, do/don'ts.
 - Every color and font size in your HTML must come from the style file. No
   freelancing.
 
-### 5. Choose data representations
+### 7. Choose data representations
 Read `references/data-vocabulary.md` and pick deliberately **varied** forms:
 one hero element (big number, hero chart, or hero pictogram) plus 2–4 support
 elements of *different* types. Three bar charts in a row is a failure even if
 each one is correct. Prefer forms that fuse with the metaphor (liquid fill,
 object-as-bar, icon army) over generic charts beside it.
 
-### 6. Compose and build
+### 8. Compose and build
 Read `references/composition.md` and **pick one named composition pattern**
 (Big Object, Bleed, Overlap stack, Diagonal drive, Editorial spread,
 Specimen sheet) — state it in an HTML comment. A card grid may only be a
@@ -83,18 +115,43 @@ style calls for it. Then start from `templates/skeleton.html`. Rules:
 - Single self-contained file: style tokens as CSS custom properties, all
   charts as **inline SVG** (recipes + math in `references/charts.md`),
   Google Fonts via `<link>`, no other external resources, no JS frameworks.
-- One hero element; everything else visually subordinate to it.
+- One hero element; everything else visually subordinate to it. Mark it
+  with the `data-hero` attribute — the preflight checker uses it to verify
+  emphasis.
 - A consistent spacing scale (the style file defines it) — no ad-hoc margins.
 - Footer strip: data source (if one exists) and/or attribution.
 
-### 7. Render
+### 9. Preflight the layout — mechanical gate
+```bash
+node scripts/check.mjs infographic.html --preset square
+```
+Before rendering a single pixel, the checker loads the page headless and
+measures the actual glyph geometry. It reports **errors** (text painted over
+other text, text clipped by an overflow ancestor or cut by the canvas edge,
+content escaping the canvas, fonts below the readable floor, more than one
+`data-hero`) and **warnings** (missing `data-hero`, weak hero dominance,
+tight font sizes, near-miss overlaps).
+
+- **Errors block you.** Fix the HTML and re-run until the error count is
+  zero. Never render around an error — an error at this stage is a real
+  defect, not a formality.
+- **Warnings are review items**: fix each one, or keep it only with a
+  one-line justification (e.g. a deliberate 10px caption in a print
+  titleblock).
+- Ink-on-ink layering you designed on purpose (a giant translucent numeral
+  behind a headline) is waived with `data-overlap-ok` on one of the two
+  elements. Add it only for overlaps that are a composition decision, and
+  confirm their legibility in the PNG review — every waiver is yours to
+  defend.
+
+### 10. Render
 ```bash
 node scripts/render.mjs infographic.html infographic.png --preset square
 ```
 First-time setup (once per machine): `npm install && npx playwright install chromium`
 (run from the skill directory). The script waits for fonts, so text always renders.
 
-### 8. Review your own PNG — mandatory
+### 11. Review your own PNG — mandatory
 Read the PNG file (view the image). Check ruthlessly:
 
 - [ ] Any text overflowing, clipped, colliding, or widowed?
@@ -117,8 +174,9 @@ Read the PNG file (view the image). Check ruthlessly:
 - [ ] Is everything evenly spaced with nothing crossing a boundary?
 - [ ] Is every element between 16–40px with no giant anchor?
 
-Fix and re-render. Minimum one loop; repeat until the list is clean. Deliver
-the PNG and offer the HTML source.
+Fix, re-run the preflight (a fix can introduce a new collision), and
+re-render. Minimum one loop; repeat until the list is clean. Deliver the PNG
+and offer the HTML source.
 
 ## Hard rules
 
@@ -152,10 +210,11 @@ the PNG and offer the HTML source.
 
 | File | When to read it |
 |---|---|
-| `references/illustration-and-texture.md` | Step 2, always |
-| `references/data-vocabulary.md` | Step 5, always |
-| `references/composition.md` | Step 6, always |
+| `references/illustration-and-texture.md` | Step 4, always |
+| `references/data-vocabulary.md` | Step 7, always |
+| `references/composition.md` | Step 8, always |
 | `references/charts.md` | Before writing any chart SVG |
-| `references/design-languages/*.md` | Step 4 — exactly one |
-| `templates/skeleton.html` | Step 6, as your starting file |
+| `references/design-languages/*.md` | Step 6 — exactly one |
+| `templates/skeleton.html` | Step 8, as your starting file |
+| `scripts/check.mjs` | Step 9 — run it, fix errors, rerun |
 | `scripts/render.mjs` | Run it; read only if debugging |

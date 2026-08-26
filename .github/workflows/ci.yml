@@ -35,6 +35,10 @@ jobs:
         run: node scripts/render.mjs templates/skeleton.html /tmp/skeleton.png --preset square
       - name: Render a shipped example
         run: node scripts/render.mjs ../../examples/streaming-wars/infographic.html /tmp/example.png --preset wide
+      - name: Preflight-check the skeleton and a shipped example
+        run: |
+          node scripts/check.mjs templates/skeleton.html --preset square
+          node scripts/check.mjs ../../examples/streaming-wars/infographic.html --preset wide
       - name: Assert non-trivial output
         run: |
           # The skeleton is near-empty boilerplate (~18KB locally); the example is a full scene.
