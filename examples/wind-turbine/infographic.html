@@ -52,6 +52,53 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
 .scalelbl { position: absolute; z-index: 20; font: 600 13px/1 var(--font-body);
             letter-spacing: .12em; text-transform: uppercase; color: var(--ink-muted); }
 .dim { position: absolute; z-index: 20; font: 600 12.5px/1.2 var(--font-body); color: var(--ink); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md; cutaway = precise technical assembly):
+   frame 0 already shows the museum paper, grain, ground line and soil.
+   Structure: the placard rises (.15s); the foundation is cast (.3s); the
+   tower erects from its base (.45–1.15s); yaw ring, nacelle shell, blades,
+   anemometer and spinner bolt on (1.1–1.7s). The cutaway interior reveals
+   next, following the energy path: tower cut + ladder + technician
+   (1.8–2.8s) while shaft -> gearbox -> brake -> generator -> cooling ->
+   controller assemble in sequence (2.0–2.8s); the power cables draw down
+   the tower (2.95–3.95s). Numbered callouts pop 1..8 in order, each leader
+   drawing on first (3.5–5.4s). The to-scale inset and the homes army
+   populate, the tiny people last (5.1–6.2s). The hero lands LAST, alone:
+   lens connectors draw, the gearbox lens pops, its gears click in and the
+   15 -> 1,500 rpm step-up blooms (6.1–7.7s). The homes caption fades at
+   the very end (7.4s). Total build ~7.8s; check/render read the end state.
+   From-only keyframes use fill-mode "backwards" (end state = base state,
+   keeps the finished frame unlayerized); draw-ons must keep "both". */
+.a-rise   { animation: rise .55s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-fadein { animation: fadein .4s ease-out var(--dl,0s) backwards; }
+.a-erect  { transform-box: fill-box; transform-origin: bottom;
+            animation: erect .7s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-pop    { transform-box: fill-box; transform-origin: center;
+            animation: pop .5s cubic-bezier(.3,1.25,.5,1) var(--dl,0s) backwards; }
+.a-bloom  { animation: bloom .6s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-draw   { stroke-dasharray: var(--len,600); stroke-dashoffset: var(--len,600);
+            animation: draw var(--d,.45s) ease-in-out var(--dl,0s) both; }
+/* early entrances (assembly phase, ends < ~3.3s) must keep "both": an
+   animation that finishes during page setup with only "backwards" fill is
+   no longer relevant to getAnimations(), so animate.mjs cannot rewind it
+   and it would sit at its end state in frame 0. SVG children layerize
+   cheaply; only the placard is HTML. */
+#machine .a-fadein, #machine .a-rise, #machine .a-erect,
+.placard.a-rise { animation-fill-mode: both; }
+/* homes army: 30 houses arrive left-to-right in six waves of five */
+.army > * { animation: fadein .35s ease-out var(--dl,5.3s) backwards; }
+.army > :nth-child(n+6):nth-child(-n+10)  { --dl:5.4s; }
+.army > :nth-child(n+11):nth-child(-n+15) { --dl:5.5s; }
+.army > :nth-child(n+16):nth-child(-n+20) { --dl:5.6s; }
+.army > :nth-child(n+21):nth-child(-n+25) { --dl:5.7s; }
+.army > :nth-child(n+26)                  { --dl:5.8s; }
+@keyframes rise   { from { opacity:0; transform: translateY(14px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes erect  { from { transform: scaleY(0); } }
+@keyframes pop    { from { opacity:0; transform: scale(.25); } }
+@keyframes bloom  { from { opacity:0; transform: translateY(10px) scale(.97); } }
+@keyframes draw   { to { stroke-dashoffset: 0; } }
 </style>
 </head>
 <body>
@@ -84,21 +131,21 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
         <line x1="1050" y1="1470" x2="1042" y2="1462"/><line x1="1130" y1="1470" x2="1122" y2="1462"/>
       </g>
       <rect x="540" y="1471" width="636" height="128" fill="#EFE8D3"/>
-      <path d="M 740,1482 L 1060,1482 L 1020,1580 L 780,1580 Z" fill="url(#rebar)" stroke="#2B2A26" stroke-width="1.5"/>
+      <path d="M 740,1482 L 1060,1482 L 1020,1580 L 780,1580 Z" fill="url(#rebar)" stroke="#2B2A26" stroke-width="1.5" class="a-fadein" style="--dl:.3s"/>
       <!-- hatched cut edges of the slab -->
-      <path d="M 740,1482 L 1060,1482 L 1060,1494 L 740,1494 Z" fill="url(#hatch)" stroke="none"/>
+      <path d="M 740,1482 L 1060,1482 L 1060,1494 L 740,1494 Z" fill="url(#hatch)" stroke="none" class="a-fadein" style="--dl:.3s"/>
 
       <!-- tower (tapered) with cut strip showing ladder + cables -->
-      <path d="M 866,658 L 934,658 L 962,1470 L 838,1470 Z" fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5"/>
+      <path d="M 866,658 L 934,658 L 962,1470 L 838,1470 Z" fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5" class="a-erect" style="--dl:.45s"/>
       <!-- cut opening -->
-      <path d="M 880,760 L 926,760 L 938,1380 L 872,1380 Z" fill="#F6F0E0" stroke="none"/>
-      <path d="M 880,760 L 926,760 L 938,1380 L 872,1380 Z" fill="none" stroke="#2B2A26" stroke-width="3"/>
-      <path d="M 880,760 L 872,1380 L 878,1380 L 886,760 Z" fill="url(#hatch)"/>
-      <path d="M 926,760 L 938,1380 L 932,1380 L 920,760 Z" fill="url(#hatch)"/>
+      <path d="M 880,760 L 926,760 L 938,1380 L 872,1380 Z" fill="#F6F0E0" stroke="none" class="a-fadein" style="--dl:1.8s"/>
+      <path d="M 880,760 L 926,760 L 938,1380 L 872,1380 Z" fill="none" stroke="#2B2A26" stroke-width="3" class="a-fadein" style="--dl:1.8s"/>
+      <path d="M 880,760 L 872,1380 L 878,1380 L 886,760 Z" fill="url(#hatch)" class="a-fadein" style="--dl:1.8s"/>
+      <path d="M 926,760 L 938,1380 L 932,1380 L 920,760 Z" fill="url(#hatch)" class="a-fadein" style="--dl:1.8s"/>
       <!-- ladder -->
-      <line x1="893" y1="775" x2="890" y2="1372" stroke="#2B2A26" stroke-width="2"/>
-      <line x1="907" y1="775" x2="906" y2="1372" stroke="#2B2A26" stroke-width="2"/>
-      <g stroke="#2B2A26" stroke-width="1.4">
+      <line x1="893" y1="775" x2="890" y2="1372" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:1.95s"/>
+      <line x1="907" y1="775" x2="906" y2="1372" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:1.95s"/>
+      <g stroke="#2B2A26" stroke-width="1.4" class="a-fadein" style="--dl:1.95s">
         <line x1="892" y1="800" x2="908" y2="800"/><line x1="892" y1="836" x2="908" y2="836"/>
         <line x1="892" y1="872" x2="907" y2="872"/><line x1="891" y1="908" x2="907" y2="908"/>
         <line x1="891" y1="944" x2="907" y2="944"/><line x1="891" y1="980" x2="907" y2="980"/>
@@ -109,18 +156,18 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
         <line x1="889" y1="1304" x2="905" y2="1304"/><line x1="888" y1="1340" x2="904" y2="1340"/>
       </g>
       <!-- power cables coming down from the controller -->
-      <path d="M 1048,588 C 1048,625 960,630 918,648 L 918,760" fill="none" stroke="#B57F1B" stroke-width="4" opacity=".85"/>
-      <path d="M 918,760 L 916,1380 L 920,1470 L 940,1478" fill="none" stroke="#B57F1B" stroke-width="4" opacity=".85"/>
+      <path d="M 1048,588 C 1048,625 960,630 918,648 L 918,760" fill="none" stroke="#B57F1B" stroke-width="4" opacity=".85" class="a-draw" style="--len:420; --dl:2.95s; --d:.5s"/>
+      <path d="M 918,760 L 916,1380 L 920,1470 L 940,1478" fill="none" stroke="#B57F1B" stroke-width="4" opacity=".85" class="a-draw" style="--len:850; --dl:3.3s; --d:.65s"/>
       <!-- technician on the ladder -->
-      <g transform="translate(891,1002)" fill="#2B2A26">
+      <g transform="translate(891,1002)" fill="#2B2A26" class="a-fadein" style="--dl:2.4s">
         <circle cx="9" cy="4" r="4.5"/>
         <rect x="4.5" y="9" width="9" height="12" rx="3"/>
         <path d="M 5,20 L 8.5,20 L 8,30 L 5,30 Z"/><path d="M 10,20 L 13.5,20 L 13,30 L 10,30 Z"/>
       </g>
 
       <!-- yaw ring between tower and nacelle -->
-      <rect x="862" y="640" width="76" height="18" fill="#B57F1B" opacity=".5" stroke="#2B2A26" stroke-width="1.5"/>
-      <g stroke="#2B2A26" stroke-width="1">
+      <rect x="862" y="640" width="76" height="18" fill="#B57F1B" opacity=".5" stroke="#2B2A26" stroke-width="1.5" class="a-fadein" style="--dl:1.1s"/>
+      <g stroke="#2B2A26" stroke-width="1" class="a-fadein" style="--dl:1.1s">
         <line x1="870" y1="641" x2="870" y2="657"/><line x1="880" y1="641" x2="880" y2="657"/>
         <line x1="890" y1="641" x2="890" y2="657"/><line x1="900" y1="641" x2="900" y2="657"/>
         <line x1="910" y1="641" x2="910" y2="657"/><line x1="920" y1="641" x2="920" y2="657"/>
@@ -129,87 +176,91 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
 
       <!-- blades (rotor plane at the hub) -->
       <path d="M 492,472 C 482,320 478,150 488,-15 L 516,-15 C 520,150 518,320 522,472 Z"
-            fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5"/>
+            fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5" class="a-rise" style="--dl:1.3s"/>
       <path d="M 496,552 C 448,700 372,880 300,1018 L 322,1036 C 396,890 460,712 524,562 Z"
-            fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5"/>
+            fill="#E4DBC4" stroke="#2B2A26" stroke-width="1.5" class="a-rise" style="--dl:1.4s"/>
 
       <!-- nacelle shell: outer wall hatched, interior revealed -->
       <path d="M 520,415 L 1120,415 Q 1176,415 1176,470 L 1176,585 Q 1176,640 1120,640 L 520,640 Q 500,640 500,600 L 500,455 Q 500,415 520,415 Z"
-            fill="url(#hatch)" stroke="#2B2A26" stroke-width="2.5"/>
+            fill="url(#hatch)" stroke="#2B2A26" stroke-width="2.5" class="a-rise" style="--dl:1.2s"/>
       <path d="M 528,425 L 1116,425 Q 1166,425 1166,472 L 1166,583 Q 1166,630 1116,630 L 528,630 Q 510,630 510,598 L 510,457 Q 510,425 528,425 Z"
-            fill="#F6F0E0" stroke="none"/>
+            fill="#F6F0E0" stroke="none" class="a-rise" style="--dl:1.2s"/>
 
       <!-- drivetrain: shaft -> gearbox -> brake -> generator -> controller -->
-      <rect x="540" y="500" width="145" height="32" fill="#3E6DA6" opacity=".38" stroke="#2B2A26" stroke-width="1.5"/>
-      <rect x="586" y="478" width="34" height="76" fill="#3E6DA6" opacity=".5" stroke="#2B2A26" stroke-width="1.5"/>
+      <rect x="540" y="500" width="145" height="32" fill="#3E6DA6" opacity=".38" stroke="#2B2A26" stroke-width="1.5" class="a-fadein" style="--dl:2s"/>
+      <rect x="586" y="478" width="34" height="76" fill="#3E6DA6" opacity=".5" stroke="#2B2A26" stroke-width="1.5" class="a-fadein" style="--dl:2s"/>
       <!-- gearbox -->
-      <rect x="685" y="450" width="125" height="145" fill="#3E6DA6" opacity=".45" stroke="#2B2A26" stroke-width="2"/>
-      <circle cx="723" cy="520" r="34" fill="none" stroke="#2B2A26" stroke-width="2"/>
-      <circle cx="770" cy="500" r="21" fill="none" stroke="#2B2A26" stroke-width="2"/>
-      <circle cx="785" cy="545" r="13" fill="none" stroke="#2B2A26" stroke-width="2"/>
+      <rect x="685" y="450" width="125" height="145" fill="#3E6DA6" opacity=".45" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.15s"/>
+      <circle cx="723" cy="520" r="34" fill="none" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.15s"/>
+      <circle cx="770" cy="500" r="21" fill="none" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.22s"/>
+      <circle cx="785" cy="545" r="13" fill="none" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.29s"/>
       <!-- brake disc -->
-      <rect x="816" y="470" width="14" height="102" fill="#B5432F" opacity=".55" stroke="#2B2A26" stroke-width="1.5"/>
+      <rect x="816" y="470" width="14" height="102" fill="#B5432F" opacity=".55" stroke="#2B2A26" stroke-width="1.5" class="a-fadein" style="--dl:2.4s"/>
       <!-- generator -->
-      <rect x="845" y="455" width="150" height="130" rx="14" fill="#B5432F" opacity=".4" stroke="#2B2A26" stroke-width="2"/>
-      <g stroke="#2B2A26" stroke-width="1" opacity=".8">
+      <rect x="845" y="455" width="150" height="130" rx="14" fill="#B5432F" opacity=".4" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.5s"/>
+      <g stroke="#2B2A26" stroke-width="1" opacity=".8" class="a-fadein" style="--dl:2.55s">
         <line x1="862" y1="462" x2="862" y2="578"/><line x1="880" y1="462" x2="880" y2="578"/>
         <line x1="898" y1="462" x2="898" y2="578"/><line x1="916" y1="462" x2="916" y2="578"/>
         <line x1="934" y1="462" x2="934" y2="578"/><line x1="952" y1="462" x2="952" y2="578"/>
         <line x1="970" y1="462" x2="970" y2="578"/>
       </g>
       <!-- cooling pipe -->
-      <path d="M 745,445 L 745,436 L 985,436 L 985,452" fill="none" stroke="#0E8E76" stroke-width="4" opacity=".8"/>
+      <path d="M 745,445 L 745,436 L 985,436 L 985,452" fill="none" stroke="#0E8E76" stroke-width="4" opacity=".8" class="a-draw" style="--len:320; --dl:2.65s"/>
       <!-- controller cabinet -->
-      <rect x="1012" y="468" width="80" height="120" fill="#B57F1B" opacity=".4" stroke="#2B2A26" stroke-width="2"/>
+      <rect x="1012" y="468" width="80" height="120" fill="#B57F1B" opacity=".4" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:2.75s"/>
+      <g class="a-fadein" style="--dl:2.8s">
       <circle cx="1052" cy="500" r="11" fill="none" stroke="#2B2A26" stroke-width="1.5"/>
       <line x1="1052" y1="500" x2="1058" y2="492" stroke="#2B2A26" stroke-width="1.5"/>
       <line x1="1020" y1="530" x2="1084" y2="530" stroke="#2B2A26" stroke-width="1"/>
       <line x1="1020" y1="548" x2="1084" y2="548" stroke="#2B2A26" stroke-width="1"/>
+      </g>
 
       <!-- anemometer mast on the tail -->
+      <g class="a-fadein" style="--dl:1.65s">
       <line x1="1100" y1="415" x2="1100" y2="376" stroke="#2B2A26" stroke-width="2"/>
       <line x1="1088" y1="376" x2="1112" y2="376" stroke="#2B2A26" stroke-width="2"/>
       <circle cx="1086" cy="372" r="4" fill="#2B2A26"/><circle cx="1114" cy="372" r="4" fill="#2B2A26"/>
+      </g>
 
       <!-- spinner over the blade roots -->
       <path d="M 522,458 C 478,464 450,492 446,515 C 450,538 478,566 522,572 Z"
-            fill="#E4DBC4" stroke="#2B2A26" stroke-width="2"/>
-      <path d="M 522,458 C 478,464 450,492 446,515 L 522,515 Z" fill="#D8CCA8" stroke="none"/>
+            fill="#E4DBC4" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:1.7s"/>
+      <path d="M 522,458 C 478,464 450,492 446,515 L 522,515 Z" fill="#D8CCA8" stroke="none" class="a-fadein" style="--dl:1.7s"/>
     </g>
 
     <!-- ================= detail lens: the gearbox step-up ================= -->
-    <line x1="770" y1="595" x2="1006" y2="806" stroke="#2B2A26" stroke-width="1.5"/>
-    <line x1="810" y1="580" x2="1092" y2="778" stroke="#2B2A26" stroke-width="1.5"/>
-    <circle cx="1062" cy="880" r="112" fill="#F1EADA" stroke="#2B2A26" stroke-width="2.5"/>
-    <circle cx="1022" cy="880" r="52" fill="#3E6DA6" opacity=".35"/>
-    <circle cx="1022" cy="880" r="52" fill="none" stroke="#2B2A26" stroke-width="2" stroke-dasharray="4 3"/>
-    <circle cx="1096" cy="880" r="15" fill="#B5432F" opacity=".55"/>
-    <circle cx="1096" cy="880" r="15" fill="none" stroke="#2B2A26" stroke-width="2"/>
+    <line x1="770" y1="595" x2="1006" y2="806" stroke="#2B2A26" stroke-width="1.5" class="a-draw" style="--len:380; --dl:6.1s; --d:.5s"/>
+    <line x1="810" y1="580" x2="1092" y2="778" stroke="#2B2A26" stroke-width="1.5" class="a-draw" style="--len:420; --dl:6.2s; --d:.5s"/>
+    <circle cx="1062" cy="880" r="112" fill="#F1EADA" stroke="#2B2A26" stroke-width="2.5" class="a-pop" style="--dl:6.5s"/>
+    <circle cx="1022" cy="880" r="52" fill="#3E6DA6" opacity=".35" class="a-fadein" style="--dl:6.75s"/>
+    <circle cx="1022" cy="880" r="52" fill="none" stroke="#2B2A26" stroke-width="2" stroke-dasharray="4 3" class="a-fadein" style="--dl:6.75s"/>
+    <circle cx="1096" cy="880" r="15" fill="#B5432F" opacity=".55" class="a-fadein" style="--dl:6.85s"/>
+    <circle cx="1096" cy="880" r="15" fill="none" stroke="#2B2A26" stroke-width="2" class="a-fadein" style="--dl:6.85s"/>
     <path d="M 1022,806 A 74,74 0 0 1 1084,846" fill="none" stroke="#2B2A26" stroke-width="1.5"
-          marker-end="url(#arr)"/>
+          marker-end="url(#arr)" class="a-fadein" style="--dl:7s"/>
     <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
       <path d="M 0,0 L 8,4 L 0,8 Z" fill="#2B2A26"/></marker></defs>
 
     <!-- ================= leader lines ================= -->
     <g stroke="#2B2A26" stroke-width="1.2" fill="none">
-      <path d="M 402,528 L 430,515 L 446,515"/>
-      <path d="M 560,786 L 560,610"/>
-      <path d="M 900,362 L 900,412"/>
-      <path d="M 1090,240 L 1098,370"/>
-      <path d="M 785,712 L 830,690 L 872,664"/>
-      <path d="M 986,1140 L 942,1140"/>
-      <path d="M 726,1516 L 748,1516"/>
-      <path d="M 322,838 L 372,846"/>
+      <path d="M 402,528 L 430,515 L 446,515" class="a-draw" style="--len:80; --dl:3.5s"/>
+      <path d="M 560,786 L 560,610" class="a-draw" style="--len:200; --dl:3.7s"/>
+      <path d="M 900,362 L 900,412" class="a-draw" style="--len:70; --dl:4.1s"/>
+      <path d="M 1090,240 L 1098,370" class="a-draw" style="--len:150; --dl:4.3s"/>
+      <path d="M 785,712 L 830,690 L 872,664" class="a-draw" style="--len:130; --dl:4.5s"/>
+      <path d="M 986,1140 L 942,1140" class="a-draw" style="--len:60; --dl:4.7s"/>
+      <path d="M 726,1516 L 748,1516" class="a-draw" style="--len:40; --dl:4.9s"/>
+      <path d="M 322,838 L 372,846" class="a-draw" style="--len:70; --dl:5.15s"/>
     </g>
     <g fill="none" stroke="#2B2A26" stroke-width="1.2">
-      <circle cx="450" cy="515" r="4"/><circle cx="560" cy="606" r="4"/>
-      <circle cx="900" cy="416" r="4"/><circle cx="1099" cy="374" r="4"/>
-      <circle cx="876" cy="662" r="4"/><circle cx="938" cy="1140" r="4"/>
-      <circle cx="752" cy="1516" r="4"/><circle cx="376" cy="847" r="4"/>
+      <circle cx="450" cy="515" r="4" class="a-fadein" style="--dl:3.8s"/><circle cx="560" cy="606" r="4" class="a-fadein" style="--dl:4s"/>
+      <circle cx="900" cy="416" r="4" class="a-fadein" style="--dl:4.4s"/><circle cx="1099" cy="374" r="4" class="a-fadein" style="--dl:4.6s"/>
+      <circle cx="876" cy="662" r="4" class="a-fadein" style="--dl:4.8s"/><circle cx="938" cy="1140" r="4" class="a-fadein" style="--dl:5s"/>
+      <circle cx="752" cy="1516" r="4" class="a-fadein" style="--dl:5.2s"/><circle cx="376" cy="847" r="4" class="a-fadein" style="--dl:5.45s"/>
     </g>
 
     <!-- blade dimension: root to tip -->
-    <g stroke="#2B2A26" stroke-width="1.2">
+    <g stroke="#2B2A26" stroke-width="1.2" class="a-fadein" style="--dl:5.15s">
       <line x1="472" y1="580" x2="286" y2="1030"/>
       <line x1="466" y1="572" x2="480" y2="590"/>
       <line x1="280" y1="1022" x2="294" y2="1040"/>
@@ -217,40 +268,40 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
 
     <!-- numbered callouts -->
     <g font-family="'Source Sans 3',sans-serif" font-size="14" font-weight="700" text-anchor="middle">
-      <circle cx="470" cy="482" r="12" fill="#B5432F"/><text x="470" y="487" fill="#FAF6EC">1</text>
-      <circle cx="612" cy="516" r="12" fill="#B5432F"/><text x="612" y="521" fill="#FAF6EC">2</text>
-      <circle cx="748" cy="472" r="12" fill="#B5432F"/><text x="748" y="477" fill="#FAF6EC">3</text>
-      <circle cx="920" cy="520" r="12" fill="#B5432F"/><text x="920" y="525" fill="#FAF6EC">4</text>
-      <circle cx="1122" cy="392" r="12" fill="#B5432F"/><text x="1122" y="397" fill="#FAF6EC">5</text>
-      <circle cx="850" cy="649" r="12" fill="#B5432F"/><text x="850" y="654" fill="#FAF6EC">6</text>
-      <circle cx="921" cy="1108" r="12" fill="#B5432F"/><text x="921" y="1113" fill="#FAF6EC">7</text>
-      <circle cx="770" cy="1543" r="12" fill="#B5432F"/><text x="770" y="1548" fill="#FAF6EC">8</text>
+      <g class="a-pop" style="--dl:3.62s"><circle cx="470" cy="482" r="12" fill="#B5432F"/><text x="470" y="487" fill="#FAF6EC">1</text></g>
+      <g class="a-pop" style="--dl:3.82s"><circle cx="612" cy="516" r="12" fill="#B5432F"/><text x="612" y="521" fill="#FAF6EC">2</text></g>
+      <g class="a-pop" style="--dl:4.02s"><circle cx="748" cy="472" r="12" fill="#B5432F"/><text x="748" y="477" fill="#FAF6EC">3</text></g>
+      <g class="a-pop" style="--dl:4.22s"><circle cx="920" cy="520" r="12" fill="#B5432F"/><text x="920" y="525" fill="#FAF6EC">4</text></g>
+      <g class="a-pop" style="--dl:4.42s"><circle cx="1122" cy="392" r="12" fill="#B5432F"/><text x="1122" y="397" fill="#FAF6EC">5</text></g>
+      <g class="a-pop" style="--dl:4.62s"><circle cx="850" cy="649" r="12" fill="#B5432F"/><text x="850" y="654" fill="#FAF6EC">6</text></g>
+      <g class="a-pop" style="--dl:4.82s"><circle cx="921" cy="1108" r="12" fill="#B5432F"/><text x="921" y="1113" fill="#FAF6EC">7</text></g>
+      <g class="a-pop" style="--dl:5.02s"><circle cx="770" cy="1543" r="12" fill="#B5432F"/><text x="770" y="1548" fill="#FAF6EC">8</text></g>
     </g>
 
     <!-- ================= to-scale elevation inset ================= -->
     <g>
-      <line x1="60" y1="1660" x2="470" y2="1660" stroke="#2B2A26" stroke-width="2"/>
-      <circle cx="255" cy="1340" r="208" fill="none" stroke="#6E695D" stroke-width="1.5" stroke-dasharray="6 6"/>
-      <path d="M 250,1660 L 260,1660 L 257,1340 L 253,1340 Z" fill="#2B2A26"/>
-      <g stroke="#2B2A26" stroke-width="2.5">
+      <line x1="60" y1="1660" x2="470" y2="1660" stroke="#2B2A26" stroke-width="2" class="a-draw" style="--len:430; --dl:5.1s; --d:.5s"/>
+      <circle cx="255" cy="1340" r="208" fill="none" stroke="#6E695D" stroke-width="1.5" stroke-dasharray="6 6" class="a-fadein" style="--dl:5.3s"/>
+      <path d="M 250,1660 L 260,1660 L 257,1340 L 253,1340 Z" fill="#2B2A26" class="a-fadein" style="--dl:5.4s"/>
+      <g stroke="#2B2A26" stroke-width="2.5" class="a-fadein" style="--dl:5.45s">
         <line x1="255" y1="1340" x2="255" y2="1136"/>
         <line x1="255" y1="1340" x2="79" y2="1444"/>
         <line x1="255" y1="1340" x2="431" y2="1444"/>
       </g>
-      <circle cx="255" cy="1340" r="7" fill="#2B2A26"/>
+      <circle cx="255" cy="1340" r="7" fill="#2B2A26" class="a-fadein" style="--dl:5.45s"/>
       <!-- hub-height dimension -->
-      <g stroke="#2B2A26" stroke-width="1.2">
+      <g stroke="#2B2A26" stroke-width="1.2" class="a-fadein" style="--dl:5.6s">
         <line x1="110" y1="1660" x2="110" y2="1340"/>
         <line x1="104" y1="1654" x2="116" y2="1660"/><line x1="104" y1="1666" x2="116" y2="1660"/>
         <line x1="104" y1="1346" x2="116" y2="1340"/><line x1="104" y1="1334" x2="116" y2="1340"/>
         <line x1="110" y1="1340" x2="246" y2="1340" stroke-dasharray="3 4"/>
       </g>
       <!-- rotor dimension across the swept circle -->
-      <g stroke="#2B2A26" stroke-width="1.2">
+      <g stroke="#2B2A26" stroke-width="1.2" class="a-fadein" style="--dl:5.65s">
         <line x1="47" y1="1340" x2="463" y2="1340" stroke-dasharray="3 4"/>
       </g>
       <!-- the person -->
-      <g transform="translate(330,1646)" fill="#2B2A26">
+      <g transform="translate(330,1646)" fill="#2B2A26" class="a-fadein" style="--dl:5.8s">
         <circle cx="3" cy="2" r="2.2"/><rect x="1" y="4.5" width="4" height="9.5" rx="1.6"/>
       </g>
     </g>
@@ -259,7 +310,7 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
   </svg>
 
   <!-- ================= placard ================= -->
-  <div class="placard">
+  <div class="placard a-rise" style="--dl:.15s">
     <div class="kicker">Incredible cross-sections · No. 7</div>
     <h1>Inside a<br>wind turbine</h1>
     <div class="standfirst">A slow-turning windmill hides a 100× gearbox
@@ -272,57 +323,57 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
   </div>
 
   <!-- ================= callout captions ================= -->
-  <div class="cap" style="left:200px; top:500px; width:200px;">
+  <div class="cap a-fadein" style="left:200px; top:500px; width:200px; --dl:3.7s">
     <b>1 · Hub &amp; spinner</b> — the three blades bolt on here.
     The whole rotor turns a lazy ~15 rpm.
   </div>
-  <div class="cap" style="left:452px; top:790px; width:216px;">
+  <div class="cap a-fadein" style="left:452px; top:790px; width:216px; --dl:3.9s">
     <b>2 · Main shaft</b> — slow but immensely strong: all the
     rotor's torque flows through this one steel bar.
   </div>
-  <div class="cap" style="left:968px; top:1012px; width:208px;">
+  <div class="cap a-fadein" style="left:968px; top:1012px; width:208px; --dl:4.1s">
     <b>3 · Gearbox</b> — steps ~15 rpm up about 100× to
     ~1,500 rpm — the speed the generator needs.
   </div>
-  <div class="cap" style="left:760px; top:296px; width:270px;">
+  <div class="cap a-fadein" style="left:760px; top:296px; width:270px; --dl:4.3s">
     <b>4 · Generator</b> — spins at ~1,500 rpm and makes up
     to 4 MW of electricity.
   </div>
-  <div class="cap" style="left:950px; top:168px; width:226px;">
+  <div class="cap a-fadein" style="left:950px; top:168px; width:226px; --dl:4.5s">
     <b>5 · Weather mast</b> — wakes the turbine at ~11 km/h
     of wind, parks it for safety at ~90.
   </div>
-  <div class="cap" style="left:585px; top:700px; width:200px;">
+  <div class="cap a-fadein" style="left:585px; top:700px; width:200px; --dl:4.7s">
     <b>6 · Yaw ring</b> — motors swivel the whole head so the
     rotor always faces the wind.
   </div>
-  <div class="cap" style="left:990px; top:1108px; width:186px;">
+  <div class="cap a-fadein" style="left:990px; top:1108px; width:186px; --dl:4.9s">
     <b>7 · The climb</b> — a ladder runs ~100 m up inside;
     the cables ride down with it.
   </div>
-  <div class="cap" style="left:556px; top:1494px; width:166px;">
+  <div class="cap a-fadein" style="left:556px; top:1494px; width:166px; --dl:5.1s">
     <b>8 · Foundation</b> — a buried concrete anchor holds
     it all upright.
   </div>
-  <div class="cap" style="left:118px; top:790px; width:196px;">
+  <div class="cap a-fadein" style="left:118px; top:790px; width:196px; --dl:5.3s">
     <b>Each blade ≈ 63 m</b> — tips travel up to
     ~290 km/h in a working breeze.
   </div>
-  <div class="cap" style="left:1028px; top:940px; width:120px; text-align:center;">
+  <div class="cap a-bloom" style="left:1028px; top:940px; width:120px; text-align:center; --dl:7.1s">
     <b>15 → 1,500 rpm</b>
   </div>
 
   <!-- ================= to-scale labels ================= -->
-  <div class="scalelbl" style="left:70px; top:1094px;">Drawn to scale</div>
-  <div class="dim" style="left:64px; top:1288px;">hub ≈ 100 m</div>
-  <div class="dim" style="left:284px; top:1306px;">rotor ≈ 130 m</div>
-  <div class="dim" style="left:348px; top:1636px;">a person</div>
+  <div class="scalelbl a-fadein" style="left:70px; top:1094px; --dl:5.3s">Drawn to scale</div>
+  <div class="dim a-fadein" style="left:64px; top:1288px; --dl:5.6s">hub ≈ 100 m</div>
+  <div class="dim a-fadein" style="left:284px; top:1306px; --dl:5.65s">rotor ≈ 130 m</div>
+  <div class="dim a-fadein" style="left:348px; top:1636px; --dl:5.8s">a person</div>
 
   <!-- ================= homes strip ================= -->
   <div class="homes-strip">
-    <div class="lead">What it feeds</div>
+    <div class="lead a-rise" style="--dl:5.2s">What it feeds</div>
     <svg width="660" height="40" viewBox="0 0 660 40">
-      <g fill="#0E8E76" opacity=".85">
+      <g fill="#0E8E76" opacity=".85" class="army">
         <!-- 30 houses, one per 100 homes -->
         <g id="h"><path d="M 2,18 L 10,10 L 18,18 L 18,32 L 2,32 Z"/></g>
         <use href="#h" x="22"/><use href="#h" x="44"/><use href="#h" x="66"/><use href="#h" x="88"/>
@@ -335,7 +386,7 @@ body { width: 1240px; font-family: var(--font-body); color: var(--ink); }
         <use href="#h" x="638"/>
       </g>
     </svg>
-    <div class="caption">≈ 3,000 homes at EU-average use · one house = 100 homes ·
+    <div class="caption a-fadein" style="--dl:7.4s">≈ 3,000 homes at EU-average use · one house = 100 homes ·
       figures rounded · made with epic-infographics</div>
   </div>
 

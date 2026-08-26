@@ -46,6 +46,53 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
 
 .tape { position:absolute; background:var(--surface-2); opacity:.6; z-index:12;
   clip-path:polygon(0% 12%, 4% 0%, 50% 6%, 96% 0%, 100% 14%, 97% 50%, 100% 88%, 95% 100%, 48% 94%, 5% 100%, 0% 86%, 3% 50%); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md): the paper, tinted plate circle and
+   grain pre-exist at frame 0. Structure sketches in: title rises, its
+   marker underline draws, the flame pops then sways gently (0.1-0.9s).
+   The pizza assembles like a cook working — crust plops down, sauce
+   spreads, the eight cheese blobs and five basil leaves land with ONE
+   shared pop duration (staggered delays only), char speckles in
+   (0.8-3.1s). Labels wobble in and their doodle arrows draw on
+   (2.9-4.1s) while the left column builds: water pours up the cup,
+   stat doodles pop, the build bar wipes at one speed so the 55/20/20/5
+   ratios stay truthful mid-flight (3.4-6.2s); the magnifier bubble
+   sticks down bottom-left with its tape (4.8-6.0s). The hero lands
+   LAST and alone: the bake note presses on with a tape-settle, then
+   the crayon circle draws itself around "90 sec" (6.25-7.5s). Footer
+   fades ~7.95s. check.mjs / render.mjs scrub every animation to its
+   end state, so the still render is unchanged. */
+/* HTML-text entrances (.a-rise/.a-wobble/.a-stick/.a-fadein) deliberately
+   animate NON-composited properties (visibility, margin, color,
+   fill-opacity) — a composited transform/opacity animation re-rasterizes
+   text on its own layer, so the scrubbed end frame would drift from the
+   approved still. SVG marks keep transform pops (cheap to composite). */
+.a-rise   { animation: rise .55s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-fadein { animation: fadein .45s ease-out var(--dl,0s) both; }
+.a-pop    { transform-box: fill-box; transform-origin: center;
+            animation: pop .55s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-place  { animation: place .5s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-wobble { animation: wobble .5s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-stick  { animation: stick .55s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-pour   { animation: pour .8s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe .7s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-draw   { stroke-dasharray: var(--len,300); stroke-dashoffset: var(--len,300);
+            animation: draw var(--dd,.5s) ease-in-out var(--dl,0s) both; }
+.a-flame  { transform-origin: 50% 90%;
+            animation: pop .55s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both,
+                       sway 2.8s ease-in-out 1.8s infinite alternate; }
+@keyframes rise   { from { visibility:hidden; margin-top:12px; } }
+@keyframes fadein { from { fill-opacity:0; stroke-opacity:0; color:transparent; } }
+@keyframes pop    { from { opacity:0; transform: scale(.5); } }
+@keyframes place  { from { opacity:0; transform: var(--tf0); } }
+@keyframes wobble { from { visibility:hidden; margin-top:10px; margin-left:-8px; } }
+@keyframes stick  { from { visibility:hidden; margin-top:-10px; } }
+@keyframes pour   { from { transform: translateY(100px); } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes draw   { to { stroke-dashoffset: 0; } }
+@keyframes sway   { to { rotate: 2.5deg; } }
 </style>
 </head>
 <body>
@@ -69,14 +116,14 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
   </svg>
 
   <!-- title -->
-  <div class="abs" style="left:48px; top:44px; z-index:9; width:640px;">
+  <div class="abs a-rise" style="--dl:.1s; left:48px; top:44px; z-index:9; width:640px;">
     <div style="font:700 26px/1.2 var(--font-body);">the anatomy of a</div>
     <div style="font:800 52px/1.05 var(--font-display);">perfect margherita</div>
   </div>
-  <div class="aside abs" style="left:48px; top:180px; transform:rotate(-0.8deg);">so few ingredients — nowhere to hide</div>
+  <div class="aside abs a-wobble" style="--dl:.55s; left:48px; top:180px; transform:rotate(-0.8deg);">so few ingredients — nowhere to hide</div>
 
   <!-- flame doodle between title and bake note -->
-  <svg class="abs" style="left:640px; top:52px; z-index:9;" width="56" height="88" viewBox="0 0 56 88">
+  <svg class="abs a-flame" style="--dl:.5s; left:640px; top:52px; z-index:9;" width="56" height="88" viewBox="0 0 56 88">
     <path d="M28 6 Q44 28 46 48 Q47 72 28 80 Q9 72 10 48 Q12 30 21 20 Q19 34 28 41 Q38 30 28 6 Z"
           fill="var(--chart-1)" opacity=".85" transform="translate(2.5 2)" filter="url(#rough)"/>
     <path d="M28 6 Q44 28 46 48 Q47 72 28 80 Q9 72 10 48 Q12 30 21 20 Q19 34 28 41 Q38 30 28 6 Z"
@@ -84,7 +131,7 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
   </svg>
 
   <!-- bake note, washi-taped, top right -->
-  <div class="abs" style="left:690px; top:36px; width:356px; height:178px; z-index:5; transform:rotate(1.5deg);">
+  <div class="abs a-stick" style="--dl:6.25s; left:690px; top:36px; width:356px; height:178px; z-index:5; transform:rotate(1.5deg);">
     <div style="position:absolute; inset:0; background:var(--surface);
                 clip-path:polygon(1% 4%, 52% 0%, 99% 3%, 100% 95%, 47% 100%, 0% 97%);"></div>
     <div style="position:relative; padding:18px 22px 0;">
@@ -102,7 +149,7 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
     </div>
     <!-- crayon circle around the 90 sec -->
     <svg style="position:absolute; left:2px; top:34px; pointer-events:none;" width="220" height="126" viewBox="0 0 220 126">
-      <ellipse cx="104" cy="64" rx="98" ry="54" fill="none" stroke="var(--chart-1)" stroke-width="4.5" filter="url(#wobble)"/>
+      <ellipse cx="104" cy="64" rx="98" ry="54" fill="none" stroke="var(--chart-1)" stroke-width="4.5" filter="url(#wobble)" class="a-draw" style="--len:500; --dd:.65s; --dl:6.85s;"/>
     </svg>
     <!-- wobbly ink outline so the note reads as a card -->
     <svg style="position:absolute; inset:0; pointer-events:none;" width="356" height="178" viewBox="0 0 356 178">
@@ -138,127 +185,127 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
     </defs>
 
     <!-- crust: crayon fill offset from ink outline -->
-    <circle cx="373" cy="373" r="345" fill="var(--surface-2)" opacity=".85" filter="url(#rough)"/>
-    <circle cx="370" cy="370" r="345" fill="none" stroke="var(--ink)" stroke-width="3.5" filter="url(#wobble)"/>
+    <circle cx="373" cy="373" r="345" fill="var(--surface-2)" opacity=".85" filter="url(#rough)" class="a-pop" style="--dl:.8s;"/>
+    <circle cx="370" cy="370" r="345" fill="none" stroke="var(--ink)" stroke-width="3.5" filter="url(#wobble)" class="a-pop" style="--dl:.8s;"/>
     <!-- sauce -->
-    <circle cx="367" cy="372" r="278" fill="var(--chart-1)" opacity=".85" filter="url(#rough)"/>
-    <circle cx="370" cy="370" r="278" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+    <circle cx="367" cy="372" r="278" fill="var(--chart-1)" opacity=".85" filter="url(#rough)" class="a-pop" style="--dl:1.1s;"/>
+    <circle cx="370" cy="370" r="278" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)" class="a-pop" style="--dl:1.1s;"/>
 
     <!-- fior di latte blobs -->
-    <use href="#cheese1" transform="translate(430 185) rotate(15)"/>
-    <use href="#cheese2" transform="translate(340 220) rotate(140) scale(0.9)"/>
-    <use href="#cheese1" transform="translate(255 300) rotate(75) scale(1.05)"/>
-    <use href="#cheese2" transform="translate(390 335) rotate(-30)"/>
-    <use href="#cheese1" transform="translate(505 425) rotate(200) scale(0.95)"/>
-    <use href="#cheese2" transform="translate(300 465) rotate(50)"/>
-    <use href="#cheese1" transform="translate(420 535) rotate(255) scale(0.9)"/>
-    <use href="#cheese2" transform="translate(245 585) rotate(-70) scale(0.85)"/>
+    <use href="#cheese1" transform="translate(430 185) rotate(15)" class="a-place" style="--dl:1.4s; --tf0:translate(430px,185px) rotate(15deg) scale(.5);"/>
+    <use href="#cheese2" transform="translate(340 220) rotate(140) scale(0.9)" class="a-place" style="--dl:1.48s; --tf0:translate(340px,220px) rotate(140deg) scale(.45);"/>
+    <use href="#cheese1" transform="translate(255 300) rotate(75) scale(1.05)" class="a-place" style="--dl:1.56s; --tf0:translate(255px,300px) rotate(75deg) scale(.52);"/>
+    <use href="#cheese2" transform="translate(390 335) rotate(-30)" class="a-place" style="--dl:1.64s; --tf0:translate(390px,335px) rotate(-30deg) scale(.5);"/>
+    <use href="#cheese1" transform="translate(505 425) rotate(200) scale(0.95)" class="a-place" style="--dl:1.72s; --tf0:translate(505px,425px) rotate(200deg) scale(.48);"/>
+    <use href="#cheese2" transform="translate(300 465) rotate(50)" class="a-place" style="--dl:1.8s; --tf0:translate(300px,465px) rotate(50deg) scale(.5);"/>
+    <use href="#cheese1" transform="translate(420 535) rotate(255) scale(0.9)" class="a-place" style="--dl:1.88s; --tf0:translate(420px,535px) rotate(255deg) scale(.45);"/>
+    <use href="#cheese2" transform="translate(245 585) rotate(-70) scale(0.85)" class="a-place" style="--dl:1.96s; --tf0:translate(245px,585px) rotate(-70deg) scale(.43);"/>
 
     <!-- basil leaves -->
-    <use href="#leaf" transform="translate(340 158) rotate(-15) scale(1.2)"/>
-    <use href="#leaf" transform="translate(505 230) rotate(30) scale(1.15)"/>
-    <use href="#leaf" transform="translate(243 398) rotate(160) scale(1.2)"/>
-    <use href="#leaf" transform="translate(452 482) rotate(200) scale(1.1)"/>
-    <use href="#leaf" transform="translate(325 332) rotate(80)"/>
+    <use href="#leaf" transform="translate(340 158) rotate(-15) scale(1.2)" class="a-place" style="--dl:2.1s; --tf0:translate(340px,158px) rotate(-15deg) scale(.6);"/>
+    <use href="#leaf" transform="translate(505 230) rotate(30) scale(1.15)" class="a-place" style="--dl:2.2s; --tf0:translate(505px,230px) rotate(30deg) scale(.58);"/>
+    <use href="#leaf" transform="translate(243 398) rotate(160) scale(1.2)" class="a-place" style="--dl:2.3s; --tf0:translate(243px,398px) rotate(160deg) scale(.6);"/>
+    <use href="#leaf" transform="translate(452 482) rotate(200) scale(1.1)" class="a-place" style="--dl:2.4s; --tf0:translate(452px,482px) rotate(200deg) scale(.55);"/>
+    <use href="#leaf" transform="translate(325 332) rotate(80)" class="a-place" style="--dl:2.5s; --tf0:translate(325px,332px) rotate(80deg) scale(.5);"/>
 
     <!-- char spots on the cornicione: varied size + darkness, with companion specks -->
     <g fill="var(--ink)">
-      <use href="#charblob" transform="translate(424 63) scale(1.4)" opacity=".5"/>
-      <use href="#charblob" transform="translate(452 78) scale(0.5)" opacity=".38"/>
-      <use href="#charblob" transform="translate(591 149) rotate(40) scale(1.0)" opacity=".38"/>
-      <use href="#charblob" transform="translate(640 316) rotate(80) scale(1.3)" opacity=".5"/>
-      <use href="#charblob" transform="translate(648 348) rotate(30) scale(0.5)" opacity=".35"/>
-      <use href="#charblob" transform="translate(628 502) rotate(120) scale(0.9)" opacity=".42"/>
-      <use href="#charblob" transform="translate(526 640) rotate(200) scale(1.5)" opacity=".52"/>
-      <use href="#charblob" transform="translate(494 662) rotate(90) scale(0.55)" opacity=".36"/>
-      <use href="#charblob" transform="translate(316 677) rotate(20) scale(1.0)" opacity=".4"/>
-      <use href="#charblob" transform="translate(114 549) rotate(60) scale(1.2)" opacity=".5"/>
-      <use href="#charblob" transform="translate(146 576) rotate(190) scale(0.5)" opacity=".35"/>
-      <use href="#charblob" transform="translate(58 370) rotate(150) scale(0.9)" opacity=".38"/>
-      <use href="#charblob" transform="translate(214 100) rotate(240) scale(1.1)" opacity=".46"/>
+      <use href="#charblob" transform="translate(424 63) scale(1.4)" opacity=".5" class="a-fadein" style="--dl:2.5s;"/>
+      <use href="#charblob" transform="translate(452 78) scale(0.5)" opacity=".38" class="a-fadein" style="--dl:2.55s;"/>
+      <use href="#charblob" transform="translate(591 149) rotate(40) scale(1.0)" opacity=".38" class="a-fadein" style="--dl:2.6s;"/>
+      <use href="#charblob" transform="translate(640 316) rotate(80) scale(1.3)" opacity=".5" class="a-fadein" style="--dl:2.65s;"/>
+      <use href="#charblob" transform="translate(648 348) rotate(30) scale(0.5)" opacity=".35" class="a-fadein" style="--dl:2.7s;"/>
+      <use href="#charblob" transform="translate(628 502) rotate(120) scale(0.9)" opacity=".42" class="a-fadein" style="--dl:2.75s;"/>
+      <use href="#charblob" transform="translate(526 640) rotate(200) scale(1.5)" opacity=".52" class="a-fadein" style="--dl:2.8s;"/>
+      <use href="#charblob" transform="translate(494 662) rotate(90) scale(0.55)" opacity=".36" class="a-fadein" style="--dl:2.85s;"/>
+      <use href="#charblob" transform="translate(316 677) rotate(20) scale(1.0)" opacity=".4" class="a-fadein" style="--dl:2.9s;"/>
+      <use href="#charblob" transform="translate(114 549) rotate(60) scale(1.2)" opacity=".5" class="a-fadein" style="--dl:2.95s;"/>
+      <use href="#charblob" transform="translate(146 576) rotate(190) scale(0.5)" opacity=".35" class="a-fadein" style="--dl:3s;"/>
+      <use href="#charblob" transform="translate(58 370) rotate(150) scale(0.9)" opacity=".38" class="a-fadein" style="--dl:3.05s;"/>
+      <use href="#charblob" transform="translate(214 100) rotate(240) scale(1.1)" opacity=".46" class="a-fadein" style="--dl:3.1s;"/>
     </g>
   </svg>
 
   <!-- part labels around the pizza -->
-  <div class="lbl abs" style="left:553px; top:232px; transform:rotate(-1deg);">sauce</div>
-  <div class="lbl abs" style="left:745px; top:232px; transform:rotate(0.8deg);">char spots</div>
-  <div class="lbl abs" style="left:940px; top:232px; transform:rotate(-1.2deg);">basil</div>
-  <div class="lbl abs" style="left:560px; top:1034px; transform:rotate(0.9deg);">cheese</div>
-  <div class="lbl abs" style="left:128px; top:826px; transform:rotate(-1deg);">cornicione</div>
-  <div class="lbl abs" style="left:56px; top:988px; transform:rotate(1.1deg);">crumb</div>
+  <div class="lbl abs a-wobble" style="--dl:2.9s; left:553px; top:232px; transform:rotate(-1deg);">sauce</div>
+  <div class="lbl abs a-wobble" style="--dl:3.05s; left:745px; top:232px; transform:rotate(0.8deg);">char spots</div>
+  <div class="lbl abs a-wobble" style="--dl:3.2s; left:940px; top:232px; transform:rotate(-1.2deg);">basil</div>
+  <div class="lbl abs a-wobble" style="--dl:3.35s; left:560px; top:1034px; transform:rotate(0.9deg);">cheese</div>
+  <div class="lbl abs a-wobble" style="--dl:3.5s; left:128px; top:826px; transform:rotate(-1deg);">cornicione</div>
+  <div class="lbl abs a-wobble" style="--dl:5.2s; left:56px; top:988px; transform:rotate(1.1deg);">crumb</div>
 
-  <div class="aside abs" style="left:858px; top:314px; width:180px; font-size:23px; transform:rotate(-2deg);">char = flavor,<br>not a mistake!</div>
-  <div class="aside abs" style="left:40px; top:888px; width:200px; font-size:22px; transform:rotate(-2deg);">wet dough bakes<br>into airy crumb</div>
+  <div class="aside abs a-wobble" style="--dl:3.7s; left:858px; top:314px; width:180px; font-size:23px; transform:rotate(-2deg);">char = flavor,<br>not a mistake!</div>
+  <div class="aside abs a-wobble" style="--dl:5.45s; left:40px; top:888px; width:200px; font-size:22px; transform:rotate(-2deg);">wet dough bakes<br>into airy crumb</div>
 
   <!-- ===== LEFT COLUMN ===== -->
 
   <!-- dough zone -->
-  <div class="abs" style="left:48px; top:236px; z-index:9;">
+  <div class="abs a-rise" style="--dl:3.4s; left:48px; top:236px; z-index:9;">
     <div style="font:700 24px/1 var(--font-display);">the dough</div>
   </div>
 
   <!-- measuring cup, water at 65%: interior y 21..141 (h 120) -> level y = 141 - 0.65*120 = 63 -->
-  <svg class="abs" style="left:48px; top:296px; z-index:9;" width="130" height="152" viewBox="0 0 130 152">
+  <svg class="abs a-rise" style="--dl:3.6s; left:48px; top:296px; z-index:9;" width="130" height="152" viewBox="0 0 130 152">
     <defs>
       <clipPath id="cupClip"><path d="M25 21 L37 130 Q39 141 51 141 L87 141 Q99 141 101 130 L113 21 Z"/></clipPath>
     </defs>
     <g clip-path="url(#cupClip)">
-      <path d="M14 66 Q34 58 54 66 T94 66 T134 66 L134 152 L14 152 Z" fill="var(--chart-2)" opacity=".85" filter="url(#rough)"/>
-      <path d="M14 64 Q34 56 54 64 T94 64 T134 64" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
+      <path d="M14 66 Q34 58 54 66 T94 66 T134 66 L134 152 L14 152 Z" fill="var(--chart-2)" opacity=".85" filter="url(#rough)" class="a-pour" style="--dl:3.8s;"/>
+      <path d="M14 64 Q34 56 54 64 T94 64 T134 64" fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)" class="a-pour" style="--dl:3.8s;"/>
     </g>
     <path d="M22 18 L34 132 Q36 144 50 144 L88 144 Q102 144 104 132 L116 18"
           fill="none" stroke="var(--ink)" stroke-width="3" filter="url(#wobble)"/>
     <path d="M103 62 h9 M105 96 h9" stroke="var(--ink)" stroke-width="2" filter="url(#wobble)"/>
   </svg>
-  <div class="abs" style="left:198px; top:304px; z-index:9;">
+  <div class="abs a-rise" style="--dl:3.95s; left:198px; top:304px; z-index:9;">
     <div style="font:800 44px/1 var(--font-display);">65%</div>
     <div style="font:700 18px/1 var(--font-body); margin-top:8px;">hydration</div>
     <div class="cap" style="margin-top:6px; width:190px;">water vs flour, by weight</div>
   </div>
 
   <!-- ferment -->
-  <svg class="abs" style="left:52px; top:462px; z-index:9;" width="44" height="44" viewBox="0 0 44 44">
+  <svg class="abs a-pop" style="--dl:4.2s; left:52px; top:462px; z-index:9;" width="44" height="44" viewBox="0 0 44 44">
     <g stroke="var(--chart-2)" stroke-width="3" stroke-linecap="round" fill="none" filter="url(#wobble)">
       <path d="M22 3 V41 M5.5 12.5 L38.5 31.5 M38.5 12.5 L5.5 31.5"/>
       <path d="M17 8 L22 12 L27 8 M17 36 L22 32 L27 36"/>
     </g>
   </svg>
-  <div class="abs" style="left:112px; top:458px; z-index:9;">
+  <div class="abs a-rise" style="--dl:4.3s; left:112px; top:458px; z-index:9;">
     <div class="stat-big">48&ndash;72&thinsp;h</div>
     <div class="stat-sub" style="margin-top:5px;">cold ferment, in the fridge</div>
   </div>
 
   <!-- dough ball -->
-  <svg class="abs" style="left:52px; top:540px; z-index:9;" width="50" height="46" viewBox="0 0 50 46">
+  <svg class="abs a-pop" style="--dl:4.45s; left:52px; top:540px; z-index:9;" width="50" height="46" viewBox="0 0 50 46">
     <path d="M4 30 Q2 12 20 6 Q40 0 46 16 Q50 32 36 38 Q16 44 4 30 Z"
           fill="var(--surface-2)" opacity=".9" transform="translate(2.5 2)" filter="url(#rough)"/>
     <path d="M4 30 Q2 12 20 6 Q40 0 46 16 Q50 32 36 38 Q16 44 4 30 Z"
           fill="none" stroke="var(--ink)" stroke-width="2.5" filter="url(#wobble)"/>
     <g fill="var(--ink-muted)"><circle cx="18" cy="18" r="1.6"/><circle cx="30" cy="26" r="1.6"/><circle cx="25" cy="14" r="1.3"/></g>
   </svg>
-  <div class="abs" style="left:112px; top:536px; z-index:9;">
+  <div class="abs a-rise" style="--dl:4.55s; left:112px; top:536px; z-index:9;">
     <div class="stat-big">250&thinsp;g</div>
     <div class="stat-sub" style="margin-top:5px;">per dough ball</div>
   </div>
 
   <!-- build ratio -->
-  <div class="abs" style="left:48px; top:624px; z-index:9;">
+  <div class="abs a-rise" style="--dl:4.7s; left:48px; top:624px; z-index:9;">
     <div style="font:700 24px/1 var(--font-display);">the build, by weight</div>
   </div>
   <!-- stacked bar: 340px total -> crust 55% = 187, sauce 20% = 68, cheese 20% = 68, basil+oil 5% = 17 -->
   <div class="abs" style="left:48px; top:678px; z-index:9; transform:rotate(0.7deg);">
     <svg width="380" height="58" viewBox="0 0 380 58" font-family="Shantell Sans">
-      <g opacity=".85" filter="url(#rough)">
+      <g opacity=".85" filter="url(#rough)" class="a-wipe" style="--dl:5s;">
         <rect x="4.5" y="10" width="187" height="34" fill="var(--surface-2)"/>
         <rect x="191.5" y="10" width="68" height="34" fill="var(--chart-1)"/>
         <rect x="259.5" y="10" width="68" height="34" fill="var(--surface)"/>
         <rect x="327.5" y="10" width="17" height="34" fill="var(--chart-3)"/>
       </g>
       <g fill="none" stroke="var(--ink)" filter="url(#wobble)">
-        <path d="M2 8 H342 V42 H2 Z" stroke-width="3"/>
-        <path d="M189 8 V42 M257 8 V42 M325 8 V42" stroke-width="2.5"/>
+        <path d="M2 8 H342 V42 H2 Z" stroke-width="3" class="a-draw" style="--len:780; --dd:.7s; --dl:5s;"/>
+        <path d="M189 8 V42 M257 8 V42 M325 8 V42" stroke-width="2.5" class="a-draw" style="--len:45; --dd:.25s; --dl:5.6s;"/>
       </g>
-      <g font-size="16" font-weight="700" text-anchor="middle">
+      <g font-size="16" font-weight="700" text-anchor="middle" class="a-fadein" style="--dl:5.7s;">
         <text x="95" y="31" fill="var(--ink)">55%</text>
         <text x="223" y="31" fill="var(--bg)">20%</text>
         <text x="291" y="31" fill="var(--ink)">20%</text>
@@ -266,7 +313,7 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
     </svg>
   </div>
   <!-- legend -->
-  <div class="abs" style="left:48px; top:744px; z-index:9;">
+  <div class="abs a-fadein" style="--dl:5.75s; left:48px; top:744px; z-index:9;">
     <svg width="400" height="80" viewBox="0 0 400 80" font-family="Shantell Sans" font-size="17" font-weight="500">
       <g opacity=".9" filter="url(#rough)">
         <rect x="2" y="5" width="15" height="15" fill="var(--surface-2)"/>
@@ -287,7 +334,7 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
   </div>
 
   <!-- ===== ZOOM BUBBLE: cornicione cross-section ===== -->
-  <svg class="abs" style="left:195px; top:848px; z-index:5;" width="220" height="230" viewBox="0 0 220 230">
+  <svg class="abs a-stick" style="--dl:4.8s; left:195px; top:848px; z-index:5;" width="220" height="230" viewBox="0 0 220 230">
     <circle cx="105" cy="112" r="96" fill="var(--bg)" stroke="none"/>
     <!-- cut face of the cornicione -->
     <path d="M30 152 Q35 72 105 64 Q175 72 180 152 Z"
@@ -312,39 +359,39 @@ body { width:1080px; font-family:var(--font-body); font-weight:500; color:var(--
     <!-- bubble ring -->
     <circle cx="105" cy="112" r="96" fill="none" stroke="var(--ink)" stroke-width="3.5" filter="url(#wobble)"/>
   </svg>
-  <div class="tape" style="left:348px; top:852px; width:84px; height:26px; transform:rotate(6deg);"></div>
+  <div class="tape a-stick" style="--dl:5.1s; left:348px; top:852px; width:84px; height:26px; transform:rotate(6deg);"></div>
 
   <!-- ===== annotation layer: arrows, underlines, dashes, scribbles ===== -->
   <svg class="abs" style="left:0; top:0; z-index:8; pointer-events:none;" width="1080" height="1080" viewBox="0 0 1080 1080">
     <g fill="none" stroke-linecap="round" filter="url(#wobble)">
       <!-- underlines -->
-      <path d="M258 142 Q400 151 540 138" stroke="var(--chart-1)" stroke-width="6"/>
-      <path d="M48 272 Q100 277 170 271" stroke="var(--chart-2)" stroke-width="5"/>
-      <path d="M48 660 Q150 666 292 659" stroke="var(--chart-1)" stroke-width="5"/>
+      <path d="M258 142 Q400 151 540 138" stroke="var(--chart-1)" stroke-width="6" class="a-draw" style="--len:300; --dd:.5s; --dl:.3s;"/>
+      <path d="M48 272 Q100 277 170 271" stroke="var(--chart-2)" stroke-width="5" class="a-draw" style="--len:140; --dd:.35s; --dl:3.55s;"/>
+      <path d="M48 660 Q150 666 292 659" stroke="var(--chart-1)" stroke-width="5" class="a-draw" style="--len:260; --dd:.4s; --dl:4.85s;"/>
       <!-- doodle arrows (ink) -->
       <g stroke="var(--ink)" stroke-width="3">
-        <path d="M596 262 Q640 360 692 458 M692 458 l-13 -5 M692 458 l-2 -15"/>
-        <path d="M800 266 Q840 310 866 382 M866 382 l-14 -4 M866 382 l-3 -15"/>
-        <path d="M975 266 Q1010 420 932 524 M932 524 l3 -16 M932 524 l14 -7"/>
-        <path d="M615 1030 Q606 960 652 908 M652 908 l-15 2 M652 908 l-5 15"/>
-        <path d="M262 843 Q288 846 298 864 M298 864 l-11 -5 M298 864 l-3 -13"/>
-        <path d="M142 998 Q180 988 232 968 M232 968 l-14 -2 M232 968 l-8 12"/>
+        <path d="M596 262 Q640 360 692 458 M692 458 l-13 -5 M692 458 l-2 -15" class="a-draw" style="--len:240; --dd:.45s; --dl:3s;"/>
+        <path d="M800 266 Q840 310 866 382 M866 382 l-14 -4 M866 382 l-3 -15" class="a-draw" style="--len:150; --dd:.45s; --dl:3.15s;"/>
+        <path d="M975 266 Q1010 420 932 524 M932 524 l3 -16 M932 524 l14 -7" class="a-draw" style="--len:300; --dd:.5s; --dl:3.3s;"/>
+        <path d="M615 1030 Q606 960 652 908 M652 908 l-15 2 M652 908 l-5 15" class="a-draw" style="--len:160; --dd:.45s; --dl:3.45s;"/>
+        <path d="M262 843 Q288 846 298 864 M298 864 l-11 -5 M298 864 l-3 -13" class="a-draw" style="--len:60; --dd:.3s; --dl:3.6s;"/>
+        <path d="M142 998 Q180 988 232 968 M232 968 l-14 -2 M232 968 l-8 12" class="a-draw" style="--len:115; --dd:.4s; --dl:5.3s;"/>
       </g>
       <!-- zoom dashes from bubble to rim -->
-      <g stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="8 7">
+      <g stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="8 7" class="a-fadein" style="--dl:5.05s;">
         <path d="M378 895 L480 852 M392 1012 L512 918"/>
       </g>
       <!-- margin scribbles: little sparks -->
       <g stroke-width="2.5">
-        <path d="M400 190 l0 -18 M391 181 l18 0 M394 175 l12 12 M406 175 l-12 12" stroke="var(--chart-1)"/>
-        <path d="M648 176 l0 -14 M641 169 l14 0" stroke="var(--chart-2)"/>
-        <path d="M424 612 l0 -16 M416 604 l16 0 M419 599 l10 10" stroke="var(--chart-3)"/>
+        <path d="M400 190 l0 -18 M391 181 l18 0 M394 175 l12 12 M406 175 l-12 12" stroke="var(--chart-1)" class="a-fadein" style="--dl:3.6s;"/>
+        <path d="M648 176 l0 -14 M641 169 l14 0" stroke="var(--chart-2)" class="a-fadein" style="--dl:3.7s;"/>
+        <path d="M424 612 l0 -16 M416 604 l16 0 M419 599 l10 10" stroke="var(--chart-3)" class="a-fadein" style="--dl:3.8s;"/>
       </g>
     </g>
   </svg>
 
   <!-- footer -->
-  <p class="cap abs" style="left:48px; top:1048px; z-index:9; font-size:13px;">one cook's opinion &mdash; illustrative</p>
+  <p class="cap abs a-fadein" style="--dl:7.5s; left:48px; top:1048px; z-index:9; font-size:13px;">one cook's opinion &mdash; illustrative</p>
 
   <div class="grain"></div>
 </div>

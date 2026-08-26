@@ -51,8 +51,9 @@ can follow without needing taste of its own:
 
 ## The gallery
 
-Thirteen briefs, twelve design languages, six canvas formats. Click any
-image for its brief and HTML source.
+Thirteen briefs, twelve design languages, six canvas formats, and every
+piece animated. Click any image for its brief, its HTML source, and the
+MP4 and GIF versions.
 
 <table>
 <tr>
@@ -81,6 +82,22 @@ image for its brief and HTML source.
 <td align="center" width="33%"></td>
 </tr>
 </table>
+
+## It also moves
+
+Every gallery piece is also a short animation, rendered from the same
+HTML file as its still. The skill asks up front whether the graphic
+should move, storyboards the build (the scene is already on stage, the
+data arrives in order, the hero lands last), and choreographs it in the
+design language's own motion character: the blueprint rocket is drafted
+line by line, the honeybee poster arrives as screen-print ink passes,
+the theatre runs its lighting cues, the Mars vista pulls layer by layer
+off the screen. A bundled script scrubs the page's CSS animations frame
+by frame in headless Chromium and assembles the MP4 and GIF with ffmpeg,
+so every render is deterministic and the layout checks still hold on the
+finished frame.
+
+![The signup funnel, animated](examples/launch-funnel/infographic.gif)
 
 ## The design languages
 
@@ -175,9 +192,9 @@ turn this data into a poster for the office printer  [paste a table]
 a fun square social graphic about how sourdough works, hand-drawn style
 ```
 
-The agent first pins down who the graphic is for and what it needs to do,
-gathers the data, then pitches you two or three story angles as a
-multiple-choice question. Once you pick one, it selects a visual metaphor
+The agent first pins down who the graphic is for, what it needs to do,
+and whether it should also move, gathers the data, then pitches you two
+or three story angles as a multiple-choice question. Once you pick one, it selects a visual metaphor
 that can carry real data, chooses a canvas and a design language, composes
 the scene, builds it, renders it, and reviews its own PNG against the
 checklist before handing it over. There are usually one or two self-correction loops you
@@ -199,6 +216,10 @@ never see.
   canvas, or falls below readable size.
 - The render-review-fix loop is mandatory: at least one pass, with a
   checklist that treats "could be a dashboard template" as a hard fail.
+- Motion is a layer on the approved still, never a substitute for one. The
+  animation's final frame is the infographic itself, the same layout gates
+  apply to it, and the agent reviews an eight-frame contact sheet of its
+  own video before delivering.
 
 ## Architecture
 
@@ -210,10 +231,12 @@ skills/epic-infographics/
     illustration-and-texture.md metaphor-first method, grain/halftone/misregistration
     data-vocabulary.md          ~25 data forms, chosen by the question the data answers
     charts.md                   inline-SVG recipes with the math written out
+    motion.md                   animation as staging: build order, easing, recipes
     design-languages/           one complete spec per style (+ _template.md)
   templates/skeleton.html       canvas boilerplate
   scripts/check.mjs             preflight gate: collisions, clipping, sizes, hero
   scripts/render.mjs            HTML -> PNG · 6 presets · font-safe · retina
+  scripts/animate.mjs           HTML -> MP4/GIF · scrubbed CSS keyframes · ffmpeg
 examples/                       brief + HTML + PNG for every gallery image
 .claude-plugin/ .codex-plugin/  plugin + marketplace manifests
 .factory-plugin/ .agents/         (Claude Code · Codex · Factory Droid · Pi)

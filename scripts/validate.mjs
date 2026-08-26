@@ -6,7 +6,8 @@
 // Checks:
 //   1. Every plugin manifest parses, names agree, versions are in sync.
 //   2. SKILL.md has valid frontmatter (name + description within limits).
-//   3. Every example ships the full triplet: brief.md + infographic.html + infographic.png.
+//   3. Every example ships the full set: brief.md + infographic.html + infographic.png
+//      + infographic.mp4 + infographic.gif (stills and animations from one file).
 //   4. Example HTML is self-contained (no external resources beyond Google Fonts).
 //   5. Every design language named in SKILL.md exists on disk, and vice versa.
 
@@ -70,7 +71,7 @@ const exampleDirs = readdirSync(examplesDir).filter((d) => statSync(join(example
 if (exampleDirs.length === 0) err('examples/: no example directories found');
 
 for (const dir of exampleDirs) {
-  for (const f of ['brief.md', 'infographic.html', 'infographic.png']) {
+  for (const f of ['brief.md', 'infographic.html', 'infographic.png', 'infographic.mp4', 'infographic.gif']) {
     if (!existsSync(join(examplesDir, dir, f))) err(`examples/${dir}: missing ${f}`);
   }
   const htmlPath = join(examplesDir, dir, 'infographic.html');

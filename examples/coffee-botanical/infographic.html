@@ -60,6 +60,56 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
 .grain { position:absolute; inset:0; pointer-events:none; z-index:60;
   opacity:.2; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0.6 0.6 0 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E"); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md, naturalist-plate: scholarly, quiet, no
+   bounce — nothing faster than a careful hand):
+   0.0  the folio page pre-exists — paper, foxing, double-rule frame,
+        vignette, grain are all there at frame 0; the plate header settles
+        in with gentle fades (0.1–0.9s).
+   0.6  Fig. I — the etcher's stroke draws the stem in two pulls (base
+        upward, 0.6–2.35s); leaves, cherry stalks, cherries and blossoms
+        wash in node by node following the stroke; the ochre stem tint
+        arrives only AFTER the ink line it tints; herbarium tab last.
+   2.7  part labels a–d fade with restraint, each leader line drawing from
+        label to specimen, the open circle arriving at its subject.
+   3.1  Fig. II — the cherry's skin is drawn, then its tints and inner
+        layers wash in outer→inner; its four labels follow the same
+        label→line→circle habit.  4.1 Fig. III — the seed, green then roasted,
+        tint after line.
+   4.5  the OBSERVATIONS rule; Fig. V bars wipe from the scale's zero — all
+        five share ONE duration and easing (truthful mid-frames), staggered
+        0.1s, values fading in as each bar lands; Fig. VI sacks and Fig. VII
+        cups fade in as families, same duration, BRAZIL stamp pressed after
+        its sack.  Meanwhile Fig. IV's cup is engraved (saucer, body, rim,
+        handle drawn 4.7–5.75s; prussian wash after), steam rising last as
+        the only ambient loop (identity at t=0).
+   6.8  the HERO lands alone — the 2.25 numeral blooms with nothing else
+        moving; its unit line, latin aside, caption strip and imprint fade
+        almost unnoticed (7.1–8.0s). Total build 8.0s.
+   check.mjs / render.mjs scrub to the end state, so the still is unchanged.
+   Fill modes: every keyframe set below is from-only, so its `to` IS the
+   element's resting state — `backwards` is therefore frame-for-frame
+   identical to `both` (covers the pre-delay flash; after the finish the
+   element rests at its underlying = final value) while leaving NO active
+   effect on the finished frame, which keeps the end-state rasterization
+   bit-identical to the approved still. Only .a-draw keeps `both`: its
+   forward fill (dashoffset 0) differs from the underlying value. */
+.a-rise   { animation: rise .9s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-fadein { animation: fadein var(--d,.9s) ease-out var(--dl,0s) backwards; }
+.a-draw   { stroke-dasharray: var(--len,600); stroke-dashoffset: var(--len,600);
+            animation: draw var(--d,1s) ease-in-out var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe 1s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-bloom  { animation: bloom 1.2s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-drift  { animation: fadein .8s ease-out var(--dl,0s) backwards,
+            drift 6s ease-in-out calc(var(--dl,0s) + .8s) infinite alternate; }
+@keyframes rise   { from { opacity:0; transform: translateY(10px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes draw   { to { stroke-dashoffset: 0; } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes bloom  { from { opacity:0; transform: translateY(14px); } }
+@keyframes drift  { to { transform: translateY(-6px); } }
 </style>
 </head>
 <body>
@@ -142,17 +192,17 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
        background:radial-gradient(circle, rgba(143,47,40,.05), rgba(143,47,40,0) 70%);"></div>
 
   <!-- ============ plate header ============ -->
-  <div class="abs caption" style="left:70px; top:52px;">Econ. Botany, Vol. II.</div>
-  <div class="abs caption" style="right:70px; top:52px;">Tab. IX.</div>
+  <div class="abs caption a-fadein" style="--dl:.1s; left:70px; top:52px;">Econ. Botany, Vol. II.</div>
+  <div class="abs caption a-fadein" style="--dl:.2s; right:70px; top:52px;">Tab. IX.</div>
 
   <div class="abs" style="left:0; top:60px; width:1240px; text-align:center;">
-    <div class="figtag" style="font-size:18px; letter-spacing:.3em;">PLATE IX.</div>
-    <div class="display" style="font-size:68px; margin-top:14px;">The Coffee Tree</div>
-    <div class="latin" style="font-size:26px; margin-top:12px;">Coffea arabica L. &middot; fam. Rubiace&aelig;</div>
-    <div class="caption" style="font-size:17px; margin-top:8px;">its flower, its fruit, its seed, &amp; the prodigious drinking thereof</div>
+    <div class="figtag a-rise" style="--dl:.1s; font-size:18px; letter-spacing:.3em;">PLATE IX.</div>
+    <div class="display a-rise" style="--dl:.25s; font-size:68px; margin-top:14px;">The Coffee Tree</div>
+    <div class="latin a-fadein" style="--dl:.45s; font-size:26px; margin-top:12px;">Coffea arabica L. &middot; fam. Rubiace&aelig;</div>
+    <div class="caption a-fadein" style="--dl:.6s; font-size:17px; margin-top:8px;">its flower, its fruit, its seed, &amp; the prodigious drinking thereof</div>
   </div>
   <!-- small ornament rule under the header -->
-  <svg class="abs" style="left:520px; top:262px;" width="200" height="12" viewBox="0 0 200 12">
+  <svg class="abs a-fadein" style="--dl:.7s; left:520px; top:262px;" width="200" height="12" viewBox="0 0 200 12">
     <line x1="0" y1="6" x2="86" y2="6" stroke="var(--ink)" stroke-width="1"/>
     <path d="M100 0 L106 6 L100 12 L94 6 Z" fill="var(--ink)"/>
     <line x1="114" y1="6" x2="200" y2="6" stroke="var(--ink)" stroke-width="1"/>
@@ -161,63 +211,63 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
   <!-- ============ Fig. 1 — the branch (Big Object) ============ -->
   <svg class="abs" style="left:0px; top:245px;" width="640" height="920" viewBox="0 0 640 920">
     <!-- stem: ochre tint underlay loose, walnut ink over; lower half thicker -->
-    <path d="M330 900 C 322 780, 312 660, 302 520" fill="none" stroke="var(--chart-4)" stroke-opacity=".45" stroke-width="12" transform="translate(2 2)"/>
-    <path d="M302 520 C 294 400, 298 260, 316 70" fill="none" stroke="var(--chart-4)" stroke-opacity=".45" stroke-width="8" transform="translate(2 2)"/>
-    <path d="M330 900 C 322 780, 312 660, 302 520" fill="none" stroke="var(--ink)" stroke-width="7"/>
-    <path d="M302 520 C 294 400, 298 260, 316 70" fill="none" stroke="var(--ink)" stroke-width="4.5"/>
+    <path class="a-fadein" style="--dl:1.55s" d="M330 900 C 322 780, 312 660, 302 520" fill="none" stroke="var(--chart-4)" stroke-opacity=".45" stroke-width="12" transform="translate(2 2)"/>
+    <path class="a-fadein" style="--dl:2.4s" d="M302 520 C 294 400, 298 260, 316 70" fill="none" stroke="var(--chart-4)" stroke-opacity=".45" stroke-width="8" transform="translate(2 2)"/>
+    <path class="a-draw" style="--dl:.6s; --d:.9s; --len:420" d="M330 900 C 322 780, 312 660, 302 520" fill="none" stroke="var(--ink)" stroke-width="7"/>
+    <path class="a-draw" style="--dl:1.45s; --d:.9s; --len:490" d="M302 520 C 294 400, 298 260, 316 70" fill="none" stroke="var(--ink)" stroke-width="4.5"/>
     <!-- node N1 (318,800): leaves + ripe cluster -->
-    <use href="#leaf" transform="translate(318 800) rotate(160) scale(1.05)"/>
-    <use href="#leaf" transform="translate(322 808) rotate(22) scale(0.9)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1s" transform="translate(318 800) rotate(160) scale(1.05)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1.12s" transform="translate(322 808) rotate(22) scale(0.9)"/>
     <!-- node N2 (306,622): the frame-crossing leaf (scale 1.28 → tip x≈11, through both rules, still on the paper) -->
-    <use href="#leaf" transform="translate(306 622) rotate(164) scale(1.28)"/>
-    <use href="#leaf" transform="translate(310 630) rotate(12) scale(1.1)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1.3s" transform="translate(306 622) rotate(164) scale(1.28)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1.42s" transform="translate(310 630) rotate(12) scale(1.1)"/>
     <!-- node N3 (298,430): leaves + blossoms -->
-    <use href="#leaf" transform="translate(298 430) rotate(35) scale(1.15)"/>
-    <use href="#leaf" transform="translate(296 438) rotate(150) scale(0.9)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1.7s" transform="translate(298 430) rotate(35) scale(1.15)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:1.82s" transform="translate(296 438) rotate(150) scale(0.9)"/>
     <!-- node N4 (306,240) -->
-    <use href="#leaf" transform="translate(306 240) rotate(200) scale(0.85)"/>
-    <use href="#leaf" transform="translate(310 248) rotate(-20) scale(0.9)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:2s" transform="translate(306 240) rotate(200) scale(0.85)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:2.12s" transform="translate(310 248) rotate(-20) scale(0.9)"/>
     <!-- apex pair, young leaves folded upward -->
-    <use href="#leaf" transform="translate(316 110) rotate(-60) scale(0.4)"/>
-    <use href="#leaf" transform="translate(316 110) rotate(240) scale(0.4)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:2.3s" transform="translate(316 110) rotate(-60) scale(0.4)"/>
+    <use href="#leaf" class="a-fadein" style="--dl:2.38s" transform="translate(316 110) rotate(240) scale(0.4)"/>
     <!-- cherry cluster C1 at N1, right of stem; stalks first -->
-    <g stroke="var(--ink)" stroke-width="1.5" fill="none">
+    <g class="a-fadein" style="--dl:1.3s" stroke="var(--ink)" stroke-width="1.5" fill="none">
       <path d="M322 796 q14 -14 24 -22"/><path d="M322 798 q24 -10 44 -14"/>
       <path d="M324 802 q16 2 30 4"/><path d="M324 804 q26 6 50 4"/>
       <path d="M322 800 q8 -4 12 -8"/>
     </g>
-    <use href="#cherry" transform="translate(348 772)"/>
-    <use href="#cherry" transform="translate(370 780)"/>
-    <use href="#cherry" transform="translate(356 806)"/>
-    <use href="#cherry" transform="translate(378 802)"/>
-    <use href="#cherryG" transform="translate(336 790)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.45s" transform="translate(348 772)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.55s" transform="translate(370 780)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.65s" transform="translate(356 806)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.75s" transform="translate(378 802)"/>
+    <use href="#cherryG" class="a-fadein" style="--dl:1.85s" transform="translate(336 790)"/>
     <!-- cherry cluster C2 at N2, left of stem -->
-    <g stroke="var(--ink)" stroke-width="1.5" fill="none">
+    <g class="a-fadein" style="--dl:1.7s" stroke="var(--ink)" stroke-width="1.5" fill="none">
       <path d="M302 618 q-16 -12 -30 -18"/><path d="M302 620 q-24 -4 -46 -6"/>
       <path d="M303 624 q-16 6 -28 2"/><path d="M302 616 q-10 -18 -18 -28"/>
     </g>
-    <use href="#cherry" transform="translate(268 596)"/>
-    <use href="#cherry" transform="translate(252 612)"/>
-    <use href="#cherry" transform="translate(272 626)"/>
-    <use href="#cherryG" transform="translate(282 584)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.85s" transform="translate(268 596)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:1.95s" transform="translate(252 612)"/>
+    <use href="#cherry" class="a-fadein" style="--dl:2.05s" transform="translate(272 626)"/>
+    <use href="#cherryG" class="a-fadein" style="--dl:2.15s" transform="translate(282 584)"/>
     <!-- blossoms at N3, left axil -->
-    <g stroke="var(--ink)" stroke-width="1.3" fill="none">
+    <g class="a-fadein" style="--dl:2.1s" stroke="var(--ink)" stroke-width="1.3" fill="none">
       <path d="M296 428 q-14 -8 -26 -10"/><path d="M296 430 q-16 2 -30 8"/><path d="M295 426 q-8 -14 -14 -22"/>
     </g>
-    <use href="#flower" transform="translate(266 414)"/>
-    <use href="#flower" transform="translate(258 442) scale(0.9)"/>
-    <use href="#flower" transform="translate(278 400) scale(0.8)"/>
-    <ellipse cx="248" cy="424" rx="3" ry="5" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(-30 248 424)"/>
-    <ellipse cx="286" cy="446" rx="2.6" ry="4.4" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(20 286 446)"/>
+    <use href="#flower" class="a-fadein" style="--dl:2.2s" transform="translate(266 414)"/>
+    <use href="#flower" class="a-fadein" style="--dl:2.3s" transform="translate(258 442) scale(0.9)"/>
+    <use href="#flower" class="a-fadein" style="--dl:2.4s" transform="translate(278 400) scale(0.8)"/>
+    <ellipse class="a-fadein" style="--dl:2.5s" cx="248" cy="424" rx="3" ry="5" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(-30 248 424)"/>
+    <ellipse class="a-fadein" style="--dl:2.55s" cx="286" cy="446" rx="2.6" ry="4.4" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.2" transform="rotate(20 286 446)"/>
     <!-- herbarium paper tab holding the stem near its base (rotated: collector's marks) -->
-    <g transform="rotate(-8 325 860)">
+    <g class="a-fadein" style="--dl:2.7s" transform="rotate(-8 325 860)">
       <rect x="288" y="847" width="74" height="26" fill="var(--surface-2)" fill-opacity=".92" stroke="var(--ink)" stroke-width="1"/>
       <text x="325" y="864" text-anchor="middle" font-size="12" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">no. 9</text>
     </g>
   </svg>
 
   <!-- Fig. 1 tag -->
-  <div class="abs" style="left:56px; top:256px; width:210px;">
+  <div class="abs a-fadein" style="--dl:2.8s; left:56px; top:256px; width:210px;">
     <div class="figtag" style="font-size:17px;">Fig. 1.</div>
     <div class="caption">the flowering branch,<br>shewn at one half the natural size</div>
   </div>
@@ -225,26 +275,26 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
   <!-- ============ Fig. 2 — the cherry, in section ============ -->
   <svg class="abs" style="left:665px; top:275px;" width="200" height="230" viewBox="0 0 200 230">
     <!-- skin r70 → pulp r56 → parchment r44 → twin seeds r40, flat faces at centre -->
-    <circle cx="100" cy="105" r="70" fill="var(--chart-3)" fill-opacity=".5"/>
-    <path d="M30 105 A70 70 0 0 0 170 105 Z" fill="url(#hatch)" opacity=".55"/>
-    <circle cx="100" cy="105" r="70" fill="none" stroke="var(--ink)" stroke-width="2"/>
-    <circle cx="100" cy="105" r="56" fill="var(--chart-4)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.2"/>
-    <circle cx="100" cy="105" r="44" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.4"/>
-    <path d="M97 65 A40 40 0 0 0 97 145 Z" fill="var(--chart-1)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.5"/>
-    <path d="M103 65 A40 40 0 0 1 103 145 Z" fill="var(--chart-1)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.5"/>
-    <path d="M84 85 q6 10 0 20 q-6 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
-    <path d="M116 85 q-6 10 0 20 q6 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+    <circle class="a-fadein" style="--dl:3.7s" cx="100" cy="105" r="70" fill="var(--chart-3)" fill-opacity=".5"/>
+    <path class="a-fadein" style="--dl:3.8s" d="M30 105 A70 70 0 0 0 170 105 Z" fill="url(#hatch)" opacity=".55"/>
+    <circle class="a-draw" style="--dl:3.1s; --d:.8s; --len:465" cx="100" cy="105" r="70" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <circle class="a-fadein" style="--dl:3.9s" cx="100" cy="105" r="56" fill="var(--chart-4)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.2"/>
+    <circle class="a-fadein" style="--dl:4s" cx="100" cy="105" r="44" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.4"/>
+    <path class="a-fadein" style="--dl:4.1s" d="M97 65 A40 40 0 0 0 97 145 Z" fill="var(--chart-1)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.5"/>
+    <path class="a-fadein" style="--dl:4.17s" d="M103 65 A40 40 0 0 1 103 145 Z" fill="var(--chart-1)" fill-opacity=".45" stroke="var(--ink)" stroke-width="1.5"/>
+    <path class="a-fadein" style="--dl:4.25s" d="M84 85 q6 10 0 20 q-6 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+    <path class="a-fadein" style="--dl:4.3s" d="M116 85 q-6 10 0 20 q6 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
     <!-- annotated dimension: the section, twice enlarged -->
-    <g stroke="var(--ink)" stroke-width="1">
+    <g class="a-fadein" style="--dl:4.35s" stroke="var(--ink)" stroke-width="1">
       <line x1="30" y1="195" x2="170" y2="195"/>
       <path d="M30 195 l8 -4 v8 z" fill="var(--ink)"/>
       <path d="M170 195 l-8 -4 v8 z" fill="var(--ink)"/>
       <line x1="30" y1="188" x2="30" y2="180"/>
       <line x1="170" y1="188" x2="170" y2="180"/>
     </g>
-    <text x="100" y="215" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">twice the natural size</text>
+    <text class="a-fadein" style="--dl:4.45s" x="100" y="215" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">twice the natural size</text>
   </svg>
-  <div class="abs" style="left:650px; top:508px; width:230px; text-align:center;">
+  <div class="abs a-fadein" style="--dl:4.5s; left:650px; top:508px; width:230px; text-align:center;">
     <span class="figtag" style="font-size:16px;">Fig. 2.</span>
     <span class="caption">the cherry, in section</span>
   </div>
@@ -252,207 +302,207 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
   <!-- ============ Fig. 3 — the seed, green & roasted ============ -->
   <svg class="abs" style="left:1075px; top:300px;" width="110" height="200" viewBox="0 0 110 200">
     <!-- green seed -->
-    <ellipse cx="55" cy="40" rx="33" ry="22" fill="var(--chart-1)" fill-opacity=".45" transform="translate(2 2)"/>
-    <path d="M22 40 A33 22 0 0 0 88 40 Z" fill="url(#hatch)" opacity=".5"/>
-    <ellipse cx="55" cy="40" rx="33" ry="22" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
-    <path d="M53 20 q8 10 0 20 q-8 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
-    <text x="55" y="86" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">green</text>
+    <ellipse class="a-fadein" style="--dl:4.3s" cx="55" cy="40" rx="33" ry="22" fill="var(--chart-1)" fill-opacity=".45" transform="translate(2 2)"/>
+    <path class="a-fadein" style="--dl:4.25s" d="M22 40 A33 22 0 0 0 88 40 Z" fill="url(#hatch)" opacity=".5"/>
+    <ellipse class="a-fadein" style="--dl:4.1s" cx="55" cy="40" rx="33" ry="22" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
+    <path class="a-fadein" style="--dl:4.2s" d="M53 20 q8 10 0 20 q-8 10 0 20" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+    <text class="a-fadein" style="--dl:4.4s" x="55" y="86" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">green</text>
     <!-- roasted seed -->
-    <ellipse cx="55" cy="130" rx="33" ry="22" fill="var(--ink)" fill-opacity=".6" transform="translate(2 2)"/>
-    <ellipse cx="55" cy="130" rx="33" ry="22" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
-    <path d="M53 110 q8 10 0 20 q-8 10 0 20" fill="none" stroke="var(--bg)" stroke-width="1.6"/>
-    <text x="55" y="176" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">roasted</text>
+    <ellipse class="a-fadein" style="--dl:4.4s" cx="55" cy="130" rx="33" ry="22" fill="var(--ink)" fill-opacity=".6" transform="translate(2 2)"/>
+    <ellipse class="a-fadein" style="--dl:4.25s" cx="55" cy="130" rx="33" ry="22" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
+    <path class="a-fadein" style="--dl:4.5s" d="M53 110 q8 10 0 20 q-8 10 0 20" fill="none" stroke="var(--bg)" stroke-width="1.6"/>
+    <text class="a-fadein" style="--dl:4.55s" x="55" y="176" text-anchor="middle" font-size="14" font-style="italic" fill="var(--ink-muted)" font-family="EB Garamond">roasted</text>
   </svg>
-  <div class="abs" style="left:1075px; top:508px; width:110px; text-align:center;">
+  <div class="abs a-fadein" style="--dl:4.6s; left:1075px; top:508px; width:110px; text-align:center;">
     <span class="figtag" style="font-size:16px;">Fig. 3.</span>
     <span class="caption">the seed</span>
   </div>
 
   <!-- ============ Fig. 4 — the hero: the infusion ============ -->
-  <div class="abs figtag" style="left:665px; top:556px; font-size:17px;">Fig. 4. &mdash; the infusion, as taken by mankind</div>
+  <div class="abs figtag a-fadein" style="--dl:4.6s; left:665px; top:556px; font-size:17px;">Fig. 4. &mdash; the infusion, as taken by mankind</div>
   <div class="abs" style="left:660px; top:582px; width:520px;">
-    <div style="font-family:var(--font-display); font-weight:600; font-size:185px; line-height:.95;">2.25</div>
-    <div class="display" style="font-size:38px; letter-spacing:.18em; margin-top:10px;">Billion cups daily</div>
-    <div class="latin" style="font-size:19px; margin-top:14px; color:var(--ink);">
+    <div class="a-bloom" style="--dl:6.8s; font-family:var(--font-display); font-weight:600; font-size:185px; line-height:.95;">2.25</div>
+    <div class="display a-fadein" style="--dl:7.1s; --d:.6s; font-size:38px; letter-spacing:.18em; margin-top:10px;">Billion cups daily</div>
+    <div class="latin a-fadein" style="--dl:7.3s; --d:.5s; font-size:19px; margin-top:14px; color:var(--ink);">
       poured across the whole world &mdash; some 26,000 in every passing second.</div>
   </div>
   <!-- the engraved cup -->
   <svg class="abs" style="left:745px; top:850px;" width="340" height="300" viewBox="0 0 340 300">
     <!-- steam: two engraved curls -->
-    <path d="M150 130 q-14 -22 0 -42 q14 -20 2 -44" fill="none" stroke="var(--ink-muted)" stroke-width="2" opacity=".8"/>
-    <path d="M192 126 q14 -24 -2 -46 q-12 -18 -2 -40" fill="none" stroke="var(--ink-muted)" stroke-width="2" opacity=".8"/>
+    <path class="a-drift" style="--dl:5.7s" d="M150 130 q-14 -22 0 -42 q14 -20 2 -44" fill="none" stroke="var(--ink-muted)" stroke-width="2" opacity=".8"/>
+    <path class="a-drift" style="--dl:5.8s" d="M192 126 q14 -24 -2 -46 q-12 -18 -2 -40" fill="none" stroke="var(--ink-muted)" stroke-width="2" opacity=".8"/>
     <!-- hatched cast shadow on the paper, right of the cup -->
-    <ellipse cx="206" cy="272" rx="112" ry="12" fill="url(#hatch)" opacity=".5"/>
+    <ellipse class="a-fadein" style="--dl:5.5s" cx="206" cy="272" rx="112" ry="12" fill="url(#hatch)" opacity=".5"/>
     <!-- saucer -->
-    <ellipse cx="170" cy="252" rx="122" ry="24" fill="var(--chart-2)" fill-opacity=".18" transform="translate(3 2)"/>
-    <ellipse cx="170" cy="252" rx="122" ry="24" fill="none" stroke="var(--ink)" stroke-width="2"/>
-    <ellipse cx="170" cy="252" rx="78" ry="14" fill="none" stroke="var(--ink-muted)" stroke-width="1"/>
+    <ellipse class="a-fadein" style="--dl:5.3s" cx="170" cy="252" rx="122" ry="24" fill="var(--chart-2)" fill-opacity=".18" transform="translate(3 2)"/>
+    <ellipse class="a-draw" style="--dl:4.7s; --d:.8s; --len:545" cx="170" cy="252" rx="122" ry="24" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <ellipse class="a-fadein" style="--dl:5.3s" cx="170" cy="252" rx="78" ry="14" fill="none" stroke="var(--ink-muted)" stroke-width="1"/>
     <!-- body: loose prussian wash + ink line -->
-    <path d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140 A 92 20 0 0 1 78 140 Z"
+    <path class="a-fadein" style="--dl:5.35s" d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140 A 92 20 0 0 1 78 140 Z"
           fill="var(--chart-2)" fill-opacity=".18" transform="translate(3 2)"/>
-    <path d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <path class="a-draw" style="--dl:4.9s; --d:.7s; --len:330" d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140" fill="none" stroke="var(--ink)" stroke-width="2"/>
     <!-- hatch on the cup's shaded right side -->
     <clipPath id="cupR"><rect x="188" y="138" width="80" height="102"/></clipPath>
-    <path d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140 A 92 20 0 0 1 78 140 Z"
+    <path class="a-fadein" style="--dl:5.45s" d="M78 140 C 80 198, 104 228, 146 236 H 194 C 236 228, 260 198, 262 140 A 92 20 0 0 1 78 140 Z"
           fill="url(#hatch)" opacity=".5" clip-path="url(#cupR)"/>
     <!-- foot -->
-    <path d="M150 236 h40 l6 16 h-52 z" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <path class="a-fadein" style="--dl:5.25s" d="M150 236 h40 l6 16 h-52 z" fill="none" stroke="var(--ink)" stroke-width="2"/>
     <!-- rim + coffee (walnut wash) -->
-    <ellipse cx="170" cy="140" rx="92" ry="20" fill="none" stroke="var(--ink)" stroke-width="2"/>
-    <ellipse cx="170" cy="140" rx="76" ry="15" fill="var(--ink)" fill-opacity=".55"/>
-    <path d="M120 134 q22 -8 46 -6" fill="none" stroke="var(--bg)" stroke-width="2.4" opacity=".8"/>
+    <ellipse class="a-draw" style="--dl:5.1s; --d:.6s; --len:420" cx="170" cy="140" rx="92" ry="20" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <ellipse class="a-fadein" style="--dl:5.55s" cx="170" cy="140" rx="76" ry="15" fill="var(--ink)" fill-opacity=".55"/>
+    <path class="a-fadein" style="--dl:5.7s" d="M120 134 q22 -8 46 -6" fill="none" stroke="var(--bg)" stroke-width="2.4" opacity=".8"/>
     <!-- handle -->
-    <path d="M260 158 q42 -4 42 30 q0 32 -38 38" fill="none" stroke="var(--ink)" stroke-width="2"/>
-    <path d="M260 170 q28 -2 28 20 q0 22 -26 26" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+    <path class="a-draw" style="--dl:5.25s; --d:.5s; --len:140" d="M260 158 q42 -4 42 30 q0 32 -38 38" fill="none" stroke="var(--ink)" stroke-width="2"/>
+    <path class="a-fadein" style="--dl:5.55s" d="M260 170 q28 -2 28 20 q0 22 -26 26" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
   </svg>
 
   <!-- ============ part labels + leader lines (1px ink, open circle at subject) ============ -->
   <svg class="abs" style="left:0; top:0; z-index:20; pointer-events:none;" width="1240" height="1754" viewBox="0 0 1240 1754">
     <g stroke="var(--ink)" stroke-width="1" fill="none">
       <!-- a. the leaf → N4 right leaf -->
-      <line x1="508" y1="312" x2="454" y2="412"/><circle cx="450" cy="418" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:2.8s; --d:.45s; --len:130" x1="508" y1="312" x2="454" y2="412"/><circle class="a-fadein" style="--dl:3.25s" cx="450" cy="418" r="4" fill="var(--bg)"/>
       <!-- b. the cherries → cluster C1 -->
-      <line x1="470" y1="968" x2="396" y2="1042"/><circle cx="392" cy="1046" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:2.95s; --d:.45s; --len:120" x1="470" y1="968" x2="396" y2="1042"/><circle class="a-fadein" style="--dl:3.4s" cx="392" cy="1046" r="4" fill="var(--bg)"/>
       <!-- c. the blossom → N3 flowers -->
-      <line x1="176" y1="560" x2="258" y2="646"/><circle cx="262" cy="650" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.1s; --d:.45s; --len:135" x1="176" y1="560" x2="258" y2="646"/><circle class="a-fadein" style="--dl:3.55s" cx="262" cy="650" r="4" fill="var(--bg)"/>
       <!-- d. herbarium tab note → tab -->
-      <line x1="215" y1="1064" x2="296" y2="1098"/><circle cx="301" cy="1101" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.25s; --d:.45s; --len:105" x1="215" y1="1064" x2="296" y2="1098"/><circle class="a-fadein" style="--dl:3.7s" cx="301" cy="1101" r="4" fill="var(--bg)"/>
       <!-- Fig 2: the skin -->
-      <line x1="880" y1="322" x2="820" y2="333"/><circle cx="815" cy="334" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.6s; --d:.4s; --len:75" x1="880" y1="322" x2="820" y2="333"/><circle class="a-fadein" style="--dl:4s" cx="815" cy="334" r="4" fill="var(--bg)"/>
       <!-- Fig 2: the pulp -->
-      <line x1="880" y1="362" x2="825" y2="372"/><circle cx="820" cy="373" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.7s; --d:.4s; --len:70" x1="880" y1="362" x2="825" y2="372"/><circle class="a-fadein" style="--dl:4.1s" cx="820" cy="373" r="4" fill="var(--bg)"/>
       <!-- Fig 2: the parchment -->
-      <line x1="880" y1="400" x2="812" y2="392"/><circle cx="807" cy="391" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.8s; --d:.4s; --len:85" x1="880" y1="400" x2="812" y2="392"/><circle class="a-fadein" style="--dl:4.2s" cx="807" cy="391" r="4" fill="var(--bg)"/>
       <!-- Fig 2: the twin seeds (point on the seed disc, r<40 of centre 765,380) -->
-      <line x1="880" y1="440" x2="796" y2="412"/><circle cx="791" cy="408" r="4" fill="var(--bg)"/>
+      <line class="a-draw" style="--dl:3.9s; --d:.4s; --len:105" x1="880" y1="440" x2="796" y2="412"/><circle class="a-fadein" style="--dl:4.3s" cx="791" cy="408" r="4" fill="var(--bg)"/>
     </g>
   </svg>
 
-  <div class="abs plabel" style="left:500px; top:282px; width:150px;"><b>a.</b> the leaf &mdash; evergreen, glossy</div>
-  <div class="abs plabel" style="left:462px; top:952px; width:170px;"><b>b.</b> the cherries, clustered at the axil</div>
-  <div class="abs plabel" style="left:56px; top:518px; width:180px;"><b>c.</b> the blossom &mdash; white &amp; jasmine-sweet</div>
-  <div class="abs plabel" style="left:56px; top:1008px; width:200px;"><b>d.</b> gathered in Brazil, whence near a third of the world&rsquo;s crop now comes</div>
+  <div class="abs plabel a-fadein" style="--dl:2.7s; left:500px; top:282px; width:150px;"><b>a.</b> the leaf &mdash; evergreen, glossy</div>
+  <div class="abs plabel a-fadein" style="--dl:2.85s; left:462px; top:952px; width:170px;"><b>b.</b> the cherries, clustered at the axil</div>
+  <div class="abs plabel a-fadein" style="--dl:3s; left:56px; top:518px; width:180px;"><b>c.</b> the blossom &mdash; white &amp; jasmine-sweet</div>
+  <div class="abs plabel a-fadein" style="--dl:3.15s; left:56px; top:1008px; width:200px;"><b>d.</b> gathered in Brazil, whence near a third of the world&rsquo;s crop now comes</div>
 
-  <div class="abs plabel" style="left:884px; top:312px; width:180px;">the skin</div>
-  <div class="abs plabel" style="left:884px; top:352px; width:180px;">the pulp, sweet</div>
-  <div class="abs plabel" style="left:884px; top:392px; width:180px;">the parchment</div>
-  <div class="abs plabel" style="left:884px; top:432px; width:180px;">the twin seeds, face to face</div>
+  <div class="abs plabel a-fadein" style="--dl:3.5s; left:884px; top:312px; width:180px;">the skin</div>
+  <div class="abs plabel a-fadein" style="--dl:3.6s; left:884px; top:352px; width:180px;">the pulp, sweet</div>
+  <div class="abs plabel a-fadein" style="--dl:3.7s; left:884px; top:392px; width:180px;">the parchment</div>
+  <div class="abs plabel a-fadein" style="--dl:3.8s; left:884px; top:432px; width:180px;">the twin seeds, face to face</div>
 
   <!-- ============ OBSERVATIONS rule ============ -->
-  <div class="abs" style="left:70px; top:1168px; width:1100px; text-align:center; border-bottom:1px solid var(--ink); padding-bottom:10px;">
+  <div class="abs a-fadein" style="--dl:4.5s; left:70px; top:1168px; width:1100px; text-align:center; border-bottom:1px solid var(--ink); padding-bottom:10px;">
     <span class="figtag" style="font-size:19px; letter-spacing:.24em;">OBSERVATIONS ON ITS CONSUMPTION</span>
   </div>
 
   <!-- ============ Fig. 5 — per-capita bars ============ -->
-  <div class="abs figtag" style="left:70px; top:1218px; font-size:16px;">Fig. 5. &mdash; kilogrammes per head, each year</div>
+  <div class="abs figtag a-fadein" style="--dl:4.55s; left:70px; top:1218px; font-size:16px;">Fig. 5. &mdash; kilogrammes per head, each year</div>
   <svg class="abs" style="left:70px; top:1248px;" width="540" height="300" viewBox="0 0 540 300">
     <!-- scale: 12.0 kg = 320px → w = kg/12*320. FI 320 · NO 264 · IS 240 · DK 232 · NL 224.
          rows at y = 10 + i*46, bar h 16, labels end-anchored at x=124, values at bar end +10 -->
     <g font-size="16" font-family="EB Garamond" fill="var(--ink)">
-      <text x="124" y="24" text-anchor="end" class="figtag">Finland</text>
-      <rect x="134" y="10" width="320" height="16" fill="var(--chart-2)" fill-opacity=".75" stroke="var(--ink)" stroke-width="1.2"/>
-      <text x="464" y="24" font-weight="600">12.0 kg</text>
-      <text x="124" y="70" text-anchor="end" class="figtag">Norway</text>
-      <rect x="134" y="56" width="264" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
-      <text x="408" y="70">9.9</text>
-      <text x="124" y="116" text-anchor="end" class="figtag">Iceland</text>
-      <rect x="134" y="102" width="240" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
-      <text x="384" y="116">9.0</text>
-      <text x="124" y="162" text-anchor="end" class="figtag">Denmark</text>
-      <rect x="134" y="148" width="232" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
-      <text x="376" y="162">8.7</text>
-      <text x="124" y="208" text-anchor="end" class="figtag">Netherlands</text>
-      <rect x="134" y="194" width="224" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
-      <text x="368" y="208">8.4</text>
+      <text class="figtag a-fadein" style="--dl:4.7s" x="124" y="24" text-anchor="end">Finland</text>
+      <rect class="a-wipe" style="--dl:4.8s" x="134" y="10" width="320" height="16" fill="var(--chart-2)" fill-opacity=".75" stroke="var(--ink)" stroke-width="1.2"/>
+      <text class="a-fadein" style="--dl:5.8s; --d:.4s" x="464" y="24" font-weight="600">12.0 kg</text>
+      <text class="figtag a-fadein" style="--dl:4.8s" x="124" y="70" text-anchor="end">Norway</text>
+      <rect class="a-wipe" style="--dl:4.9s" x="134" y="56" width="264" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
+      <text class="a-fadein" style="--dl:5.9s; --d:.4s" x="408" y="70">9.9</text>
+      <text class="figtag a-fadein" style="--dl:4.9s" x="124" y="116" text-anchor="end">Iceland</text>
+      <rect class="a-wipe" style="--dl:5s" x="134" y="102" width="240" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
+      <text class="a-fadein" style="--dl:6s; --d:.4s" x="384" y="116">9.0</text>
+      <text class="figtag a-fadein" style="--dl:5s" x="124" y="162" text-anchor="end">Denmark</text>
+      <rect class="a-wipe" style="--dl:5.1s" x="134" y="148" width="232" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
+      <text class="a-fadein" style="--dl:6.1s; --d:.4s" x="376" y="162">8.7</text>
+      <text class="figtag a-fadein" style="--dl:5.1s" x="124" y="208" text-anchor="end">Netherlands</text>
+      <rect class="a-wipe" style="--dl:5.2s" x="134" y="194" width="224" height="16" fill="var(--chart-2)" fill-opacity=".5" stroke="var(--ink)" stroke-width="1"/>
+      <text class="a-fadein" style="--dl:6.2s; --d:.4s" x="368" y="208">8.4</text>
     </g>
     <!-- scale bar: 0 at x134 · 6 at x294 · 12 at x454 -->
-    <g stroke="var(--ink)" stroke-width="1">
+    <g class="a-fadein" style="--dl:4.6s" stroke="var(--ink)" stroke-width="1">
       <line x1="134" y1="240" x2="454" y2="240"/>
       <line x1="134" y1="234" x2="134" y2="246"/>
       <line x1="294" y1="236" x2="294" y2="244"/>
       <line x1="454" y1="234" x2="454" y2="246"/>
     </g>
-    <g font-size="13" font-family="EB Garamond" fill="var(--ink-muted)" text-anchor="middle">
+    <g class="a-fadein" style="--dl:4.65s" font-size="13" font-family="EB Garamond" fill="var(--ink-muted)" text-anchor="middle">
       <text x="134" y="262">0</text><text x="294" y="262">6</text><text x="454" y="262">12</text>
     </g>
-    <text x="134" y="286" font-size="14" font-style="italic" font-family="EB Garamond" fill="var(--ink-muted)">kilogrammes, yearly &mdash; the north drinks deepest</text>
+    <text class="a-fadein" style="--dl:6.25s; --d:.5s" x="134" y="286" font-size="14" font-style="italic" font-family="EB Garamond" fill="var(--ink-muted)">kilogrammes, yearly &mdash; the north drinks deepest</text>
   </svg>
 
   <!-- ============ Fig. 6 — the harvest, in sacks ============ -->
-  <div class="abs figtag" style="left:625px; top:1218px; font-size:16px;">Fig. 6. &mdash; the harvest, in sacks</div>
+  <div class="abs figtag a-fadein" style="--dl:4.9s; left:625px; top:1218px; font-size:16px;">Fig. 6. &mdash; the harvest, in sacks</div>
   <svg class="abs" style="left:620px; top:1250px;" width="260" height="200" viewBox="0 0 260 200">
     <!-- two plain sacks (jute, ochre tint) + one stamped BRAZIL (green tint).
          sack: squat bulging body 72 wide, cinched tie at y~24 with a ruffle of
          gathered cloth flaring above it — unmistakably a tied sack -->
     <g>
-      <g transform="translate(0 40)">
+      <g class="a-fadein" style="--dl:5.1s" transform="translate(0 40)">
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="var(--chart-4)" fill-opacity=".38" transform="translate(2 2)"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="url(#hatchX)" opacity=".4"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
         <path d="M25 25 q11 6 22 0" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
         <path d="M8 80 q28 8 56 0 M7 112 q29 8 58 0" fill="none" stroke="var(--ink-muted)" stroke-width="1"/>
       </g>
-      <g transform="translate(92 40)">
+      <g class="a-fadein" style="--dl:5.25s" transform="translate(92 40)">
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="var(--chart-4)" fill-opacity=".38" transform="translate(2 2)"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="url(#hatchX)" opacity=".4"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
         <path d="M25 25 q11 6 22 0" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
         <path d="M8 80 q28 8 56 0 M7 112 q29 8 58 0" fill="none" stroke="var(--ink-muted)" stroke-width="1"/>
       </g>
-      <g transform="translate(180 28) scale(1.1)">
+      <g class="a-fadein" style="--dl:5.4s" transform="translate(180 28) scale(1.1)">
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="var(--chart-1)" fill-opacity=".5" transform="translate(2 2)"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="url(#hatchX)" opacity=".4"/>
         <path d="M2 140 Q-5 95 2 55 Q2 36 20 28 L26 22 Q16 14 18 5 Q36 -2 54 5 Q56 14 46 22 L52 28 Q70 36 70 55 Q77 95 70 140 Z" fill="none" stroke="var(--ink)" stroke-width="1.8"/>
         <path d="M25 25 q11 6 22 0" fill="none" stroke="var(--ink)" stroke-width="2.4"/>
         <!-- the collector's stamp (rotated: collector's-marks family) -->
-        <g transform="rotate(-6 36 88)">
+        <g class="a-fadein" style="--dl:5.7s" transform="rotate(-6 36 88)">
           <ellipse cx="36" cy="88" rx="29" ry="16" fill="none" stroke="var(--chart-3)" stroke-width="1.6"/>
           <text x="36" y="93" text-anchor="middle" font-size="12" letter-spacing="1" fill="var(--chart-3)" font-family="EB Garamond" font-weight="600">BRAZIL</text>
         </g>
       </g>
-      <line x1="0" y1="182" x2="260" y2="182" stroke="var(--ink)" stroke-width="1.2"/>
-      <ellipse cx="130" cy="190" rx="120" ry="6" fill="url(#hatch)" opacity=".4"/>
+      <line class="a-fadein" style="--dl:5s" x1="0" y1="182" x2="260" y2="182" stroke="var(--ink)" stroke-width="1.2"/>
+      <ellipse class="a-fadein" style="--dl:5.5s" cx="130" cy="190" rx="120" ry="6" fill="url(#hatch)" opacity=".4"/>
     </g>
   </svg>
   <div class="abs" style="left:625px; top:1462px; width:250px;">
-    <div style="font-family:var(--font-display); font-weight:600; font-size:46px; line-height:1;">1 in 3</div>
-    <div class="caption" style="margin-top:8px;">of all the coffee grown on Earth ripens in Brazil &mdash; near a third of the whole harvest.</div>
+    <div class="a-rise" style="--dl:5.9s; font-family:var(--font-display); font-weight:600; font-size:46px; line-height:1;">1 in 3</div>
+    <div class="caption a-fadein" style="--dl:6s; --d:.7s; margin-top:8px;">of all the coffee grown on Earth ripens in Brazil &mdash; near a third of the whole harvest.</div>
   </div>
 
   <!-- ============ Fig. 7 — the American habit ============ -->
-  <div class="abs figtag" style="left:905px; top:1218px; font-size:16px;">Fig. 7. &mdash; the American habit</div>
+  <div class="abs figtag a-fadein" style="--dl:5.2s; left:905px; top:1218px; font-size:16px;">Fig. 7. &mdash; the American habit</div>
   <svg class="abs" style="left:900px; top:1258px;" width="280" height="140" viewBox="0 0 280 140">
-    <g transform="translate(6 20) scale(1.15)">
+    <g class="a-fadein" style="--dl:5.4s" transform="translate(6 20) scale(1.15)">
       <use href="#cupBody" fill="var(--chart-4)" fill-opacity=".4"/>
       <use href="#cupLiquid" fill="var(--ink)" fill-opacity=".55"/>
       <use href="#cupLines"/>
     </g>
-    <g transform="translate(100 20) scale(1.15)">
+    <g class="a-fadein" style="--dl:5.55s" transform="translate(100 20) scale(1.15)">
       <use href="#cupBody" fill="var(--chart-4)" fill-opacity=".4"/>
       <use href="#cupLiquid" fill="var(--ink)" fill-opacity=".55"/>
       <use href="#cupLines"/>
     </g>
-    <g transform="translate(194 20) scale(1.15)">
+    <g class="a-fadein" style="--dl:5.7s" transform="translate(194 20) scale(1.15)">
       <use href="#cupBody" fill="var(--surface-2)" fill-opacity=".7"/>
       <use href="#cupLines"/>
     </g>
-    <line x1="0" y1="102" x2="280" y2="102" stroke="var(--ink)" stroke-width="1.2"/>
+    <line class="a-fadein" style="--dl:5.3s" x1="0" y1="102" x2="280" y2="102" stroke="var(--ink)" stroke-width="1.2"/>
   </svg>
   <div class="abs" style="left:905px; top:1462px; width:265px;">
-    <div style="font-family:var(--font-display); font-weight:600; font-size:46px; line-height:1;">2 in 3</div>
-    <div class="caption" style="margin-top:8px;">adults in the United States take the infusion every day.</div>
+    <div class="a-rise" style="--dl:6s; font-family:var(--font-display); font-weight:600; font-size:46px; line-height:1;">2 in 3</div>
+    <div class="caption a-fadein" style="--dl:6.1s; --d:.7s; margin-top:8px;">adults in the United States take the infusion every day.</div>
   </div>
 
   <!-- ============ caption strip + footer ============ -->
-  <div class="abs caption" style="left:120px; top:1592px; width:1000px; text-align:center; font-size:14px; line-height:1.6;">
+  <div class="abs caption a-fadein" style="--dl:7.35s; --d:.5s; left:120px; top:1592px; width:1000px; text-align:center; font-size:14px; line-height:1.6;">
     Fig. 1. flowering branch of <span class="latin">Coffea arabica</span>, gathered in Brazil &mdash; Fig. 2. the cherry, in section &mdash; Fig. 3. the seed, green &amp; roasted &mdash;<br>
     Fig. 4. the daily infusion of mankind &mdash; Fig. 5. consumption per head &mdash; Fig. 6. the harvest, in sacks &mdash; Fig. 7. the American habit.
   </div>
-  <div class="abs caption" style="left:120px; top:1668px; width:1000px; text-align:center; font-size:13px;">
+  <div class="abs caption a-fadein" style="--dl:7.45s; --d:.5s; left:120px; top:1668px; width:1000px; text-align:center; font-size:13px;">
     commonly cited ICO &middot; NCA estimates &mdash; illustrative &middot; engraved for the folio by epic-infographics
   </div>
-  <div class="abs caption" style="left:70px; top:1692px; font-size:12px;">del. et lith. by the collector</div>
-  <div class="abs caption" style="right:70px; top:1692px; font-size:12px;">London: printed for the Society, 1874</div>
+  <div class="abs caption a-fadein" style="--dl:7.5s; --d:.5s; left:70px; top:1692px; font-size:12px;">del. et lith. by the collector</div>
+  <div class="abs caption a-fadein" style="--dl:7.5s; --d:.5s; right:70px; top:1692px; font-size:12px;">London: printed for the Society, 1874</div>
 
   <div class="frame"></div>
   <div class="vignette"></div>

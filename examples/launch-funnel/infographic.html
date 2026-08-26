@@ -85,6 +85,34 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
 .meter-track { margin-top:7px; height:10px; border-radius:5px;
   background:rgb(255 255 255 / 0.08); position:relative; }
 .meter-fill { position:absolute; left:0; top:0; height:10px; border-radius:5px; }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md): the scene pre-exists at frame 0; the
+   beam pours down stage by stage (0.2–3.1s) with labels and multipliers
+   arriving beside each stage; the retained star pops (3.3s); the gauge
+   bank sweeps its four rates at one shared speed (3.1–4.35s); the hero
+   number blooms alone as the final beat (4.4s); support copy and footer
+   fade last (~6.0s total). check.mjs and render.mjs read the end state. */
+.a-rise   { animation: rise .6s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-fadein { animation: fadein .6s ease-out var(--dl,0s) both; }
+.a-pour   { transform-box: fill-box; transform-origin: top;
+            animation: pour var(--d,.45s) cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe .5s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-pop    { transform-box: fill-box; transform-origin: center;
+            animation: pop .5s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-bloom  { animation: bloom .9s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-grow   { transform-origin: left;
+            animation: wipe .8s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-drift  { animation: fadein .9s ease-out 1.4s both,
+            drift 7s ease-in-out 2.3s infinite alternate; }
+@keyframes rise   { from { opacity:0; transform: translateY(14px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes pour   { from { transform: scaleY(0); } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes pop    { from { opacity:0; transform: scale(.2); } }
+@keyframes bloom  { from { opacity:0; transform: translateY(16px) scale(.96); } }
+@keyframes drift  { to { transform: translate(-8px,10px); } }
 </style>
 </head>
 <body>
@@ -101,34 +129,39 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
     <!-- stage bands: width = users / 140 (see math in head comment) -->
     <g>
       <!-- Visitors 84,000 -> 600px -->
-      <rect x="20" y="0" width="600" height="180" fill="var(--chart-1)"
-            style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55))"/>
+      <rect x="20" y="0" width="600" height="180" fill="var(--chart-1)" class="a-pour"
+            style="--dl:.2s; --d:.55s; filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55))"/>
       <!-- conn 600 -> 90 -->
-      <polygon points="20,180 620,180 365,255 275,255" fill="var(--chart-2)" opacity="0.28"/>
+      <polygon points="20,180 620,180 365,255 275,255" fill="var(--chart-2)" opacity="0.28"
+               class="a-pour" style="--dl:.7s; --d:.35s"/>
       <!-- Signups 12,600 -> 90px -->
-      <rect x="275" y="255" width="90" height="75" fill="var(--chart-2)"
-            style="filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55))"/>
+      <rect x="275" y="255" width="90" height="75" fill="var(--chart-2)" class="a-pour"
+            style="--dl:.95s; filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55))"/>
       <!-- conn 90 -> 49.29 -->
-      <polygon points="275,330 365,330 344.64,405 295.36,405" fill="var(--chart-3)" opacity="0.28"/>
+      <polygon points="275,330 365,330 344.64,405 295.36,405" fill="var(--chart-3)" opacity="0.28"
+               class="a-pour" style="--dl:1.3s; --d:.35s"/>
       <!-- Activated 6,900 -> 49.29px -->
-      <rect x="295.36" y="405" width="49.29" height="75" fill="var(--chart-3)"
-            style="filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55))"/>
+      <rect x="295.36" y="405" width="49.29" height="75" fill="var(--chart-3)" class="a-pour"
+            style="--dl:1.5s; filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55))"/>
       <!-- conn 49.29 -> 15 -->
-      <polygon points="295.36,480 344.64,480 327.5,555 312.5,555" fill="var(--chart-4)" opacity="0.28"/>
+      <polygon points="295.36,480 344.64,480 327.5,555 312.5,555" fill="var(--chart-4)" opacity="0.28"
+               class="a-pour" style="--dl:1.85s; --d:.35s"/>
       <!-- Paying 2,100 -> 15px -->
-      <rect x="312.5" y="555" width="15" height="75" fill="var(--chart-4)"
-            style="filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55))"/>
+      <rect x="312.5" y="555" width="15" height="75" fill="var(--chart-4)" class="a-pour"
+            style="--dl:2.05s; filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55))"/>
       <!-- conn 15 -> 11.43 -->
-      <polygon points="312.5,630 327.5,630 325.71,705 314.29,705" fill="var(--chart-5)" opacity="0.28"/>
+      <polygon points="312.5,630 327.5,630 325.71,705 314.29,705" fill="var(--chart-5)" opacity="0.28"
+               class="a-pour" style="--dl:2.4s; --d:.35s"/>
       <!-- Retained 1,600 -> 11.43px -->
-      <rect x="314.29" y="705" width="11.43" height="175" fill="var(--chart-5)"
-            style="filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55))"/>
+      <rect x="314.29" y="705" width="11.43" height="175" fill="var(--chart-5)" class="a-pour"
+            style="--dl:2.6s; --d:.5s; filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55))"/>
       <!-- beam tip converging to the star -->
-      <polygon points="314.29,880 325.71,880 320,910" fill="var(--chart-5)" opacity="0.5"/>
+      <polygon points="314.29,880 325.71,880 320,910" fill="var(--chart-5)" opacity="0.5"
+               class="a-pour" style="--dl:3s; --d:.3s"/>
     </g>
 
     <!-- the retained star (echoes the hero; single strong glow) -->
-    <g style="filter:drop-shadow(0 0 10px rgb(224 85 144 / 0.8)) drop-shadow(0 0 30px rgb(224 85 144 / 0.5))">
+    <g class="a-pop" style="--dl:3.3s; filter:drop-shadow(0 0 10px rgb(224 85 144 / 0.8)) drop-shadow(0 0 30px rgb(224 85 144 / 0.5))">
       <line x1="320" y1="896" x2="320" y2="940" stroke="var(--chart-5)" stroke-width="1.5"/>
       <line x1="298" y1="918" x2="342" y2="918" stroke="var(--chart-5)" stroke-width="1.5"/>
       <circle cx="320" cy="918" r="6" fill="var(--chart-5)"/>
@@ -136,7 +169,7 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
     </g>
 
     <!-- drop-off particles drifting out of each contraction (the leavers) -->
-    <g fill="var(--de-emphasis)">
+    <g fill="var(--de-emphasis)" class="a-drift">
       <circle cx="150" cy="230" r="3.2" opacity="0.75"/>
       <circle cx="112" cy="252" r="2.6" opacity="0.55"/>
       <circle cx="78"  cy="282" r="2.2" opacity="0.4"/>
@@ -156,14 +189,14 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
     <!-- stage-to-stage multipliers beside each contraction (instrument style) -->
     <g font-family="'IBM Plex Mono',monospace" font-size="14" font-weight="500"
        fill="var(--ink-muted)" text-anchor="end">
-      <text x="128" y="223">&#215;0.15</text>
-      <text x="258" y="373">&#215;0.55</text>
-      <text x="282" y="523">&#215;0.30</text>
-      <text x="296" y="673">&#215;0.76</text>
+      <text x="128" y="223" class="a-fadein" style="--dl:.85s">&#215;0.15</text>
+      <text x="258" y="373" class="a-fadein" style="--dl:1.45s">&#215;0.55</text>
+      <text x="282" y="523" class="a-fadein" style="--dl:2s">&#215;0.30</text>
+      <text x="296" y="673" class="a-fadein" style="--dl:2.55s">&#215;0.76</text>
     </g>
 
     <!-- Visitors label lives inside the widest band -->
-    <g text-anchor="middle">
+    <g text-anchor="middle" class="a-fadein" style="--dl:.55s">
       <text x="320" y="102" font-family="'IBM Plex Mono',monospace" font-size="13"
             font-weight="500" letter-spacing="3.2" fill="rgb(237 241 250 / 0.85)">VISITORS</text>
       <text x="320" y="142" font-family="'Sora',sans-serif" font-size="34"
@@ -172,85 +205,93 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
 
     <!-- leader lines + labels, right side -->
     <g stroke="rgb(255 255 255 / 0.25)" stroke-width="1">
-      <line x1="369" y1="292" x2="410" y2="292"/>
-      <line x1="349" y1="442" x2="410" y2="442"/>
-      <line x1="332" y1="592" x2="410" y2="592"/>
-      <line x1="330" y1="792" x2="410" y2="792"/>
+      <line x1="369" y1="292" x2="410" y2="292" class="a-wipe" style="--dl:1.35s"/>
+      <line x1="349" y1="442" x2="410" y2="442" class="a-wipe" style="--dl:1.85s"/>
+      <line x1="332" y1="592" x2="410" y2="592" class="a-wipe" style="--dl:2.35s"/>
+      <line x1="330" y1="792" x2="410" y2="792" class="a-wipe" style="--dl:2.85s"/>
     </g>
     <g>
-      <circle cx="369" cy="292" r="2.5" fill="var(--chart-2)"/>
-      <circle cx="349" cy="442" r="2.5" fill="var(--chart-3)"/>
-      <circle cx="332" cy="592" r="2.5" fill="var(--chart-4)"/>
-      <circle cx="330" cy="792" r="2.5" fill="var(--chart-5)"/>
+      <circle cx="369" cy="292" r="2.5" fill="var(--chart-2)" class="a-fadein" style="--dl:1.35s"/>
+      <circle cx="349" cy="442" r="2.5" fill="var(--chart-3)" class="a-fadein" style="--dl:1.85s"/>
+      <circle cx="332" cy="592" r="2.5" fill="var(--chart-4)" class="a-fadein" style="--dl:2.35s"/>
+      <circle cx="330" cy="792" r="2.5" fill="var(--chart-5)" class="a-fadein" style="--dl:2.85s"/>
     </g>
 
     <g font-family="'Albert Sans',sans-serif">
       <!-- Signups -->
-      <text x="420" y="284" font-size="16" font-weight="700" fill="var(--ink)">Signups</text>
-      <text x="420" y="310" font-family="'IBM Plex Mono',monospace" font-size="21"
-            font-weight="500" fill="var(--ink)">12,600</text>
-      <text x="420" y="331" font-size="13" fill="var(--ink-muted)">15% of visitors</text>
+      <g class="a-rise" style="--dl:1.5s">
+        <text x="420" y="284" font-size="16" font-weight="700" fill="var(--ink)">Signups</text>
+        <text x="420" y="310" font-family="'IBM Plex Mono',monospace" font-size="21"
+              font-weight="500" fill="var(--ink)">12,600</text>
+        <text x="420" y="331" font-size="13" fill="var(--ink-muted)">15% of visitors</text>
+      </g>
       <!-- Activated -->
-      <text x="420" y="434" font-size="16" font-weight="700" fill="var(--ink)">Activated</text>
-      <text x="420" y="460" font-family="'IBM Plex Mono',monospace" font-size="21"
-            font-weight="500" fill="var(--ink)">6,900</text>
-      <text x="420" y="481" font-size="13" fill="var(--ink-muted)">55% of signups</text>
+      <g class="a-rise" style="--dl:2s">
+        <text x="420" y="434" font-size="16" font-weight="700" fill="var(--ink)">Activated</text>
+        <text x="420" y="460" font-family="'IBM Plex Mono',monospace" font-size="21"
+              font-weight="500" fill="var(--ink)">6,900</text>
+        <text x="420" y="481" font-size="13" fill="var(--ink-muted)">55% of signups</text>
+      </g>
       <!-- Paying -->
-      <text x="420" y="584" font-size="16" font-weight="700" fill="var(--ink)">Paying</text>
-      <text x="420" y="610" font-family="'IBM Plex Mono',monospace" font-size="21"
-            font-weight="500" fill="var(--ink)">2,100</text>
-      <text x="420" y="631" font-size="13" fill="var(--ink-muted)">30% of activated</text>
+      <g class="a-rise" style="--dl:2.5s">
+        <text x="420" y="584" font-size="16" font-weight="700" fill="var(--ink)">Paying</text>
+        <text x="420" y="610" font-family="'IBM Plex Mono',monospace" font-size="21"
+              font-weight="500" fill="var(--ink)">2,100</text>
+        <text x="420" y="631" font-size="13" fill="var(--ink-muted)">30% of activated</text>
+      </g>
       <!-- Retained -->
-      <text x="420" y="784" font-size="16" font-weight="700" fill="var(--ink)">Retained, month 6</text>
-      <text x="420" y="810" font-family="'IBM Plex Mono',monospace" font-size="21"
-            font-weight="500" fill="var(--ink)">1,600</text>
-      <text x="420" y="831" font-size="13" fill="var(--ink-muted)">76% of paying</text>
+      <g class="a-rise" style="--dl:3s">
+        <text x="420" y="784" font-size="16" font-weight="700" fill="var(--ink)">Retained, month 6</text>
+        <text x="420" y="810" font-family="'IBM Plex Mono',monospace" font-size="21"
+              font-weight="500" fill="var(--ink)">1,600</text>
+        <text x="420" y="831" font-size="13" fill="var(--ink-muted)">76% of paying</text>
+      </g>
     </g>
   </svg>
 
-  <!-- HERO cluster, top right -->
-  <div class="abs" style="left:640px; top:70px; width:400px;">
-    <div class="kicker">// signup funnel &#183; launch &#8594; month six</div>
-    <div class="hero-num" style="margin-top:26px;">1,600</div>
-    <div style="font:700 20px/1.3 var(--font-body); margin-top:14px;">
+  <!-- HERO cluster, top right (the number blooms LAST — the final beat) -->
+  <div class="abs" data-hero style="left:640px; top:70px; width:400px;">
+    <div class="kicker a-rise">// signup funnel &#183; launch &#8594; month six</div>
+    <div class="hero-num a-bloom" style="--dl:4.4s; margin-top:26px;">1,600</div>
+    <div class="a-rise" style="--dl:5.1s; font:700 20px/1.3 var(--font-body); margin-top:14px;">
       people still with us at month six</div>
-    <p style="font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:14px; max-width:360px;">
+    <p class="a-rise" style="--dl:5.25s; font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:14px; max-width:360px;">
       84,000 landed during launch. The beam is drawn to true scale &#8212;
       width is headcount &#8212; so every narrowing is a real drop-off.</p>
   </div>
 
   <!-- conversion meters: the same four rates, read as a gauge bank -->
-  <div class="panel scanlines abs" style="left:640px; top:596px; width:400px;">
+  <div class="panel scanlines abs a-rise" style="--dl:2.6s; left:640px; top:596px; width:400px;">
     <div class="kicker" style="color:var(--ink-muted);">who makes the next stage</div>
 
     <!-- fills: rate x 344px inner width -> 51.6 / 189.2 / 103.2 / 261.4 -->
     <div class="meter-row" style="margin-top:22px;">
       <div class="meter-head"><span class="meter-label">Visitors &#8594; Signups</span>
         <span class="meter-val">15%</span></div>
-      <div class="meter-track"><div class="meter-fill" style="width:51.6px; background:var(--chart-2);"></div></div>
+      <div class="meter-track"><div class="meter-fill a-grow" style="--dl:3.1s; width:51.6px; background:var(--chart-2);"></div></div>
     </div>
     <div class="meter-row">
       <div class="meter-head"><span class="meter-label">Signups &#8594; Activated</span>
         <span class="meter-val">55%</span></div>
-      <div class="meter-track"><div class="meter-fill" style="width:189.2px; background:var(--chart-3);"></div></div>
+      <div class="meter-track"><div class="meter-fill a-grow" style="--dl:3.25s; width:189.2px; background:var(--chart-3);"></div></div>
     </div>
     <div class="meter-row">
       <div class="meter-head"><span class="meter-label">Activated &#8594; Paying</span>
         <span class="meter-val">30%</span></div>
-      <div class="meter-track"><div class="meter-fill" style="width:103.2px; background:var(--chart-4);"></div></div>
+      <div class="meter-track"><div class="meter-fill a-grow" style="--dl:3.4s; width:103.2px; background:var(--chart-4);"></div></div>
     </div>
     <div class="meter-row">
       <div class="meter-head"><span class="meter-label" style="color:var(--ink); font-weight:700;">Paying &#8594; Retained</span>
         <span class="meter-val" style="color:var(--ink);">76%</span></div>
-      <div class="meter-track"><div class="meter-fill"
-        style="width:261.4px; background:var(--chart-5); box-shadow:0 0 12px rgb(224 85 144 / 0.55);"></div></div>
-      <p style="font:400 13px/1.4 var(--font-body); color:var(--ink-muted); margin-top:8px;">
+      <div class="meter-track"><div class="meter-fill a-grow"
+        style="--dl:3.55s; width:261.4px; background:var(--chart-5); box-shadow:0 0 12px rgb(224 85 144 / 0.55);"></div></div>
+      <p class="a-fadein" style="--dl:4.35s; font:400 13px/1.4 var(--font-body); color:var(--ink-muted); margin-top:8px;">
         the funnel's strongest wall &#8212;<br>once they pay, they stay</p>
     </div>
   </div>
 
   <!-- terminal footer -->
-  <p class="abs value" style="left:40px; bottom:26px; font-size:13px; color:var(--ink-muted);">
+  <p class="abs value a-fadein" style="--dl:5.4s; left:40px; bottom:26px; font-size:13px; color:var(--ink-muted);">
     // fictional demo data &#8212; made with epic-infographics</p>
 
 </div>

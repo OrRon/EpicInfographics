@@ -16,8 +16,10 @@ agent-made. Two kinds of contribution matter most here, in this order.
 3. Mention the style in `SKILL.md` step 4 so the router can actually pick
    it (CI enforces this).
 4. Include one rendered example produced through the skill: a new
-   `examples/<name>/` directory with `brief.md`, `infographic.html` and
-   `infographic.png`, plus a gallery row in the README.
+   `examples/<name>/` directory with `brief.md`, `infographic.html`,
+   `infographic.png`, and the animated pair `infographic.mp4` +
+   `infographic.gif` (the skill's step 12 renders both from the same
+   file), plus a gallery row in the README.
 
 PRs that add a style without a rendered example won't be merged. The
 gallery is the test suite.
@@ -29,8 +31,9 @@ will be classified as high slop-risk or rejected. See rule zero in
 
 ## 2. A new example for an existing style
 
-Same triplet (`brief.md`, `infographic.html`, `infographic.png`), produced
-end-to-end through the skill: brief in, PNG out, unedited. Examples that
+Same file set (`brief.md`, `infographic.html`, `infographic.png`,
+`infographic.mp4`, `infographic.gif`), produced end-to-end through the
+skill: brief in, renders out, unedited. Examples that
 survive the SKILL.md anti-slop checklist and show a form or composition the
 gallery doesn't have yet are very welcome.
 

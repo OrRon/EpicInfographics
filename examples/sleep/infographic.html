@@ -46,6 +46,39 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
 .grain { position:absolute; inset:0; pointer-events:none; z-index:50;
   opacity:.3; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0.6 0.6 0 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.28'/%3E%3C/svg%3E"); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md): the night scene — paper, ghosted
+   crescent, engraved stars, print grain — pre-exists at frame 0; the stars
+   keep an ambient drift. Structure composes like a magazine page: folio
+   fades (0s), title and standfirst rise (0.1–0.25s), the heavy rule wipes
+   and the column rule draws down (0.5–0.65s). Data builds with quiet
+   precision: the three moon-ring arcs sweep at one shared speed and easing
+   (1.0–2.5s) while the crescent, leaders and labels fade in place
+   (1.9–2.75s); the shortfall figure rises and the three beds arrive in
+   step (2.8–4.25s); the pull-quote and the three habit rows settle below
+   (3.95–5.45s). The hero "7–9" numeral lands alone as the final beat
+   (5.6–6.9s); the footer fades last (~7.7s total). Editorial character:
+   gentle rises and fades only — no bounce, no pops. check.mjs and
+   render.mjs read the end state; the ambient loop is identity at t=0. */
+.a-rise   { animation: rise .8s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-fadein { animation: fadein .7s ease-out var(--dl,0s) both; }
+.a-grow   { transform-origin: left;
+            animation: wipe .7s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe .6s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-pour   { transform-box: fill-box; transform-origin: top;
+            animation: pour .7s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-sweep  { animation: sweep 1.1s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-bloom  { animation: bloom 1.3s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-drift  { animation: drift 8s ease-in-out infinite alternate; }
+@keyframes rise   { from { opacity:0; transform: translateY(16px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes pour   { from { transform: scaleY(0); } }
+@keyframes sweep  { from { stroke-dasharray: 0 691.15; } }
+@keyframes bloom  { from { opacity:0; transform: translateY(24px) scale(.985); } }
+@keyframes drift  { to { transform: translate(5px,-8px); } }
 </style>
 </head>
 <body>
@@ -61,7 +94,7 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
       <path id="star" d="M0 -10 L2.2 -2.2 L10 0 L2.2 2.2 L0 10 L-2.2 2.2 L-10 0 L-2.2 -2.2 Z"/>
     </defs>
     <circle cx="770" cy="650" r="330" fill="var(--surface)" mask="url(#cutmoon)"/>
-    <g fill="var(--ink)">
+    <g fill="var(--ink)" class="a-drift">
       <use href="#star" transform="translate(836 196) scale(1.2)" opacity=".45"/>
       <use href="#star" transform="translate(936 258) scale(0.8)" opacity=".4"/>
       <use href="#star" transform="translate(884 338) scale(1.0)" opacity=".45"/>
@@ -73,29 +106,29 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
   </svg>
 
   <!-- folio line -->
-  <div class="abs" style="left:72px; top:64px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:10px 2px; display:flex; justify-content:space-between;">
+  <div class="abs a-fadein" style="left:72px; top:64px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:10px 2px; display:flex; justify-content:space-between;">
     <span class="kicker" style="color:var(--ink);">Health &middot; A Nightly Briefing</span>
     <span class="kicker" style="color:var(--ink);">No. 07</span>
   </div>
 
   <!-- title -->
-  <h1 class="display abs" style="left:72px; top:140px; font-size:96px;">The case for sleep</h1>
+  <h1 class="display abs a-rise" style="--dl:.1s; left:72px; top:140px; font-size:96px;">The case for sleep</h1>
 
   <!-- standfirst with oxblood drop cap (the one decorative oxblood) -->
-  <div class="standfirst abs" style="left:72px; top:274px; width:660px;">
+  <div class="standfirst abs a-rise" style="--dl:.25s; left:72px; top:274px; width:660px;">
     <span style="float:left; font:900 112px/0.82 var(--font-display); color:var(--accent); padding:10px 14px 0 0; font-style:normal;">S</span>
     leep is the body&rsquo;s nightly maintenance shift &mdash; memory, mood, and
     metabolism all clock in. Yet a third of adults run short of the minimum.
   </div>
 
   <!-- heavy rule under the title block -->
-  <div class="abs" style="left:72px; top:436px; width:936px; border-top:var(--rule-heavy);"></div>
+  <div class="abs a-grow" style="--dl:.5s; left:72px; top:436px; width:936px; border-top:var(--rule-heavy);"></div>
 
   <!-- column rule of the editorial spread -->
-  <div class="abs" style="left:402px; top:476px; width:1px; height:840px; background:var(--ink);"></div>
+  <div class="abs a-pour" style="--dl:.65s; left:402px; top:476px; width:1px; height:840px; background:var(--ink);"></div>
 
   <!-- HERO: towering rotated numeral in the left rail -->
-  <div class="abs" style="left:206px; top:896px; width:0; height:0;">
+  <div class="abs a-bloom" style="--dl:5.6s; left:206px; top:896px; width:0; height:0;">
     <div style="position:absolute; transform:translate(-50%,-50%) rotate(-90deg); text-align:center; white-space:nowrap;">
       <div class="display" style="font-size:320px; line-height:.8;">7&ndash;9</div>
       <div class="kicker" style="color:var(--ink); margin-top:26px; letter-spacing:.24em;">Hours of sleep a night &mdash; what every adult needs</div>
@@ -103,51 +136,51 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
   </div>
 
   <!-- stage donut: the moon ring -->
-  <div class="kicker abs" style="left:440px; top:466px;">One night, three kinds of sleep</div>
+  <div class="kicker abs a-fadein" style="--dl:.9s; left:440px; top:466px;">One night, three kinds of sleep</div>
   <svg class="abs" style="left:340px; top:500px;" width="668" height="420" viewBox="0 0 668 420" font-family="Libre Franklin">
     <!-- donut math: center (160,200), r=110, C = 2*pi*110 = 691.15
          light 50%: dash = 0.50*691.15 - 3 = 342.58, start 12 o'clock -> rotate(-90)
          REM  25%: dash = 0.25*691.15 - 3 = 169.79, start -90 + 0.50*360 = 90
          deep 25%: dash = 169.79,               start -90 + 0.75*360 = 180 -->
     <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-1)" stroke-width="24"
-            stroke-dasharray="342.58 691.15" transform="rotate(-90 160 200)"/>
+            stroke-dasharray="342.58 691.15" transform="rotate(-90 160 200)" class="a-sweep" style="--dl:1s"/>
     <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-2)" stroke-width="24"
-            stroke-dasharray="169.79 691.15" transform="rotate(90 160 200)"/>
+            stroke-dasharray="169.79 691.15" transform="rotate(90 160 200)" class="a-sweep" style="--dl:1.2s"/>
     <circle cx="160" cy="200" r="110" fill="none" stroke="var(--chart-3)" stroke-width="24"
-            stroke-dasharray="169.79 691.15" transform="rotate(180 160 200)"/>
+            stroke-dasharray="169.79 691.15" transform="rotate(180 160 200)" class="a-sweep" style="--dl:1.4s"/>
 
     <!-- engraved crescent moon in the hole -->
     <path d="M176 142 A44 44 0 1 0 176 220 A34 34 0 1 1 176 142 Z"
-          fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2"/>
-    <g stroke="var(--ink)" stroke-width="1.4" opacity=".55">
+          fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2" class="a-fadein" style="--dl:1.9s"/>
+    <g stroke="var(--ink)" stroke-width="1.4" opacity=".55" class="a-fadein" style="--dl:1.95s">
       <line x1="146" y1="168" x2="156" y2="168"/>
       <line x1="141" y1="182" x2="153" y2="182"/>
       <line x1="143" y1="196" x2="154" y2="196"/>
     </g>
-    <use href="#star" transform="translate(196 238) scale(0.5)" fill="var(--ink)" opacity=".5"/>
-    <text x="160" y="270" text-anchor="middle" font-size="13" fill="var(--ink-muted)">one night&rsquo;s sleep</text>
+    <use href="#star" transform="translate(196 238) scale(0.5)" fill="var(--ink)" opacity=".5" class="a-fadein" style="--dl:2.05s"/>
+    <text x="160" y="270" text-anchor="middle" font-size="13" fill="var(--ink-muted)" class="a-fadein" style="--dl:2.15s">one night&rsquo;s sleep</text>
 
     <!-- direct labels with leaders (mandatory, CVD-safe) -->
     <!-- deep: outer midpoint of top-left quadrant = (160-90.5, 200-90.5) = (69.5,109.5) -->
     <g stroke="var(--ink)" stroke-width="1.2" fill="none">
-      <polyline points="72,106 112,56"/>
-      <polyline points="72,294 112,344"/>
-      <line x1="292" y1="200" x2="316" y2="200"/>
+      <polyline points="72,106 112,56" class="a-wipe" style="--dl:2.5s"/>
+      <polyline points="72,294 112,344" class="a-wipe" style="--dl:2.3s"/>
+      <line x1="292" y1="200" x2="316" y2="200" class="a-wipe" style="--dl:2.1s"/>
     </g>
     <g font-size="16" font-weight="600" fill="var(--ink)">
-      <rect x="118" y="40" width="11" height="11" fill="var(--chart-3)"/>
-      <text x="136" y="50">Deep &mdash; ~25%</text>
-      <rect x="118" y="341" width="11" height="11" fill="var(--chart-2)"/>
-      <text x="136" y="351">REM &mdash; ~25%</text>
-      <rect x="324" y="192" width="11" height="11" fill="var(--chart-1)"/>
-      <text x="342" y="202">Light sleep &mdash; ~50%</text>
+      <rect x="118" y="40" width="11" height="11" fill="var(--chart-3)" class="a-fadein" style="--dl:2.6s"/>
+      <text x="136" y="50" class="a-fadein" style="--dl:2.6s">Deep &mdash; ~25%</text>
+      <rect x="118" y="341" width="11" height="11" fill="var(--chart-2)" class="a-fadein" style="--dl:2.4s"/>
+      <text x="136" y="351" class="a-fadein" style="--dl:2.4s">REM &mdash; ~25%</text>
+      <rect x="324" y="192" width="11" height="11" fill="var(--chart-1)" class="a-fadein" style="--dl:2.2s"/>
+      <text x="342" y="202" class="a-fadein" style="--dl:2.2s">Light sleep &mdash; ~50%</text>
     </g>
-    <text x="342" y="222" font-size="13" fill="var(--ink-muted)">half the night is light sleep</text>
+    <text x="342" y="222" font-size="13" fill="var(--ink-muted)" class="a-fadein" style="--dl:2.75s">half the night is light sleep</text>
   </svg>
 
   <!-- the shortfall -->
-  <div class="kicker abs" style="left:440px; top:952px;">The shortfall</div>
-  <div class="abs" style="left:440px; top:984px; width:568px; display:flex; align-items:center; gap:24px;">
+  <div class="kicker abs a-fadein" style="--dl:2.8s; left:440px; top:952px;">The shortfall</div>
+  <div class="abs a-rise" style="--dl:2.9s; left:440px; top:984px; width:568px; display:flex; align-items:center; gap:24px;">
     <div class="display" style="font-size:118px; white-space:nowrap;">1<span style="font:italic 400 46px var(--font-display); letter-spacing:0;"> in </span>3</div>
     <div style="font:600 22px/1.35 var(--font-body); max-width:260px;">adults report sleeping less than 7&nbsp;hours</div>
   </div>
@@ -164,18 +197,18 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
       <path id="blanket" d="M56 54 Q66 28 88 36 Q124 48 158 46 L158 54 Z"/>
     </defs>
     <!-- the one in three -->
-    <use href="#blanket" x="0" fill="var(--chart-1)" stroke="var(--ink)" stroke-width="2.5"/>
-    <use href="#bedframe" x="0"/>
-    <text x="85" y="90" text-anchor="middle" font-family="Libre Franklin" font-size="13" fill="var(--ink-muted)">under 7 h</text>
+    <use href="#blanket" x="0" fill="var(--chart-1)" stroke="var(--ink)" stroke-width="2.5" class="a-rise" style="--dl:3.15s"/>
+    <use href="#bedframe" x="0" class="a-rise" style="--dl:3.15s"/>
+    <text x="85" y="90" text-anchor="middle" font-family="Libre Franklin" font-size="13" fill="var(--ink-muted)" class="a-fadein" style="--dl:3.7s">under 7 h</text>
     <!-- the two in the 7-9 range -->
-    <use href="#blanket" x="194" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5"/>
-    <use href="#bedframe" x="194"/>
-    <use href="#blanket" x="388" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5"/>
-    <use href="#bedframe" x="388"/>
+    <use href="#blanket" x="194" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5" class="a-rise" style="--dl:3.3s"/>
+    <use href="#bedframe" x="194" class="a-rise" style="--dl:3.3s"/>
+    <use href="#blanket" x="388" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="2.5" class="a-rise" style="--dl:3.45s"/>
+    <use href="#bedframe" x="388" class="a-rise" style="--dl:3.45s"/>
   </svg>
 
   <!-- pull-quote: the all-nighter fact -->
-  <div class="abs" style="left:72px; top:1352px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:44px 0;">
+  <div class="abs a-rise" style="--dl:3.95s; left:72px; top:1352px; width:936px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); padding:44px 0;">
     <div class="display abs" style="left:8px; top:22px; font-size:120px; line-height:1;">&ldquo;</div>
     <div style="font:italic 400 31px/1.45 var(--font-display); width:700px; margin:0 auto; text-align:center;">
       After a night without sleep, reaction times are comparable to a
@@ -184,16 +217,16 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
   </div>
 
   <!-- charticle: what actually helps -->
-  <div class="kicker abs" style="left:72px; top:1576px;">What actually helps</div>
+  <div class="kicker abs a-fadein" style="--dl:4.25s; left:72px; top:1576px;">What actually helps</div>
   <div class="abs" style="left:72px; top:1604px; width:936px;">
-    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
+    <div class="a-rise" style="--dl:4.35s; display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
         <circle cx="20" cy="20" r="15"/><path d="M20 20 V10 M20 20 L28 24"/>
       </svg>
       <div style="font:600 21px/1 var(--font-body);">A consistent schedule</div>
       <div style="margin-left:auto; font:400 16px/1 var(--font-body); color:var(--ink-muted);">same bedtime, same wake time, every day</div>
     </div>
-    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
+    <div class="a-rise" style="--dl:4.5s; display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); height:68px;">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
         <rect x="6" y="5" width="28" height="30"/>
         <path d="M25 13 A8 8 0 1 0 25 27 A6.2 6.2 0 1 1 25 13 Z"/>
@@ -201,7 +234,7 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
       <div style="font:600 21px/1 var(--font-body);">A cool, dark room</div>
       <div style="margin-left:auto; font:400 16px/1 var(--font-body); color:var(--ink-muted);">low light, low temperature</div>
     </div>
-    <div style="display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); height:68px;">
+    <div class="a-rise" style="--dl:4.65s; display:flex; align-items:center; gap:22px; border-top:var(--rule-hair); border-bottom:var(--rule-hair); height:68px;">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round">
         <rect x="12" y="4" width="16" height="32"/><path d="M17 31 H23"/><path d="M8 36 L32 4"/>
       </svg>
@@ -211,7 +244,7 @@ body { width:1080px; font-family:var(--font-body); color:var(--ink); }
   </div>
 
   <!-- footer -->
-  <div class="abs caption" style="left:72px; top:1856px; width:936px; display:flex; justify-content:space-between;">
+  <div class="abs caption a-fadein" style="--dl:7s; left:72px; top:1856px; width:936px; display:flex; justify-content:space-between;">
     <span>Sources: commonly cited figures (CDC et al.) &mdash; illustrative</span>
     <span>made with epic-infographics</span>
   </div>

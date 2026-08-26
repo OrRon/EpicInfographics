@@ -59,6 +59,38 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
 
 .section-h { font:600 20px/1.2 var(--font-display); letter-spacing:-0.01em; margin-top:10px; }
 .muted { color:var(--ink-muted); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md): deep space pre-exists at frame 0 —
+   blobs, dot grid and scattered stars are already there (the stars pick
+   up a slow ambient drift). Structure enters 0.15–0.9s: header, glass
+   panels, the gray household screens. Data builds 0.95–4.8s: the four
+   rival orbs pop to scale with one shared pop (delays staggered), the
+   price line draws to $18, the waffle fills its 41 cells bottom-up,
+   the household screens wipe to 3.4. The constellation links then draw
+   inward to the still-empty hub (4.7–5.3s) and the hero lands last and
+   alone: the StreamMax orb pops at 5.4s and 260M blooms at 5.7s while
+   nothing else moves. Support copy and the footer fade ~6.3–6.5s;
+   the finite build ends ≈7.1s. check.mjs / render.mjs read the end
+   state, so the still design is unchanged. */
+.a-rise   { animation: rise .6s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-fadein { animation: fadein .6s ease-out var(--dl,0s) both; }
+.a-pop    { transform-box: fill-box; transform-origin: center;
+            animation: pop .55s cubic-bezier(.34,1.56,.64,1) var(--dl,0s) both; }
+.a-bloom  { transform-box: fill-box; transform-origin: center;
+            animation: bloom .9s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe var(--d,.45s) cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-draw   { stroke-dasharray: var(--len,800);
+            animation: draw var(--d,.6s) ease-in-out var(--dl,0s) both; }
+.a-drift  { animation: drift 9s ease-in-out 2s infinite alternate both; }
+@keyframes rise   { from { opacity:0; transform: translateY(14px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes pop    { from { opacity:0; transform: scale(.2); } }
+@keyframes bloom  { from { opacity:0; transform: translateY(16px) scale(.96); } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes draw   { from { stroke-dashoffset: var(--len,800); } to { stroke-dashoffset: 0; } }
+@keyframes drift  { to { transform: translate(7px,-10px); } }
 </style>
 </head>
 <body>
@@ -82,15 +114,15 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
 
     <!-- constellation links (behind orbs) -->
     <g stroke="rgb(255 255 255 / 0.13)" stroke-width="1">
-      <line x1="500" y1="610" x2="790" y2="720"/>
-      <line x1="500" y1="610" x2="330" y2="850"/>
-      <line x1="500" y1="610" x2="1185" y2="430"/>
-      <line x1="790" y1="720" x2="640" y2="1040"/>
-      <line x1="790" y1="720" x2="1185" y2="430"/>
+      <line x1="500" y1="610" x2="790" y2="720" class="a-draw" style="--len:315; --d:.4s; --dl:4.7s"/>
+      <line x1="500" y1="610" x2="330" y2="850" class="a-draw" style="--len:300; --d:.4s; --dl:4.76s"/>
+      <line x1="500" y1="610" x2="1185" y2="430" class="a-draw" style="--len:715; --d:.4s; --dl:4.82s"/>
+      <line x1="790" y1="720" x2="640" y2="1040" class="a-draw" style="--len:360; --d:.4s; --dl:4.88s"/>
+      <line x1="790" y1="720" x2="1185" y2="430" class="a-draw" style="--len:495; --d:.4s; --dl:4.94s"/>
     </g>
 
     <!-- scattered stars -->
-    <g fill="rgb(255 255 255 / 0.45)">
+    <g fill="rgb(255 255 255 / 0.45)" class="a-drift">
       <circle cx="900" cy="180" r="2"/><circle cx="1050" cy="300" r="1.5"/>
       <circle cx="150" cy="430" r="2"/><circle cx="700" cy="250" r="1.5"/>
       <circle cx="980" cy="560" r="2"/><circle cx="210" cy="620" r="1.5"/>
@@ -100,83 +132,84 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
 
     <!-- orbit ring around the leader -->
     <circle cx="500" cy="610" r="164" fill="none" stroke="rgb(255 255 255 / 0.18)"
-            stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round"/>
+            stroke-width="1.5" stroke-dasharray="2 10" stroke-linecap="round"
+            class="a-fadein" style="--dl:5.3s"/>
 
     <!-- StreamMax — THE hero mark: double glow -->
-    <g style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55)) drop-shadow(0 0 40px rgb(43 140 196 / 0.55));">
+    <g class="a-pop" style="--dl:5.4s; filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55)) drop-shadow(0 0 40px rgb(43 140 196 / 0.55));">
       <circle cx="500" cy="610" r="135" fill="var(--chart-1)" fill-opacity="0.16"
               stroke="var(--chart-1)" stroke-width="2.5"/>
       <path d="M488 494 L488 530 L520 512 Z" fill="var(--chart-1)"/>
     </g>
-    <text x="500" y="638" text-anchor="middle" class="display" font-family="Sora"
+    <text x="500" y="638" text-anchor="middle" class="display a-bloom" style="--dl:5.7s" font-family="Sora"
           font-weight="800" font-size="64" letter-spacing="-0.03em" fill="url(#heroNum)">260M</text>
-    <text x="500" y="674" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+    <text x="500" y="674" text-anchor="middle" class="a-fadein" style="--dl:6s" font-family="Albert Sans" font-weight="700"
           font-size="20" letter-spacing="0.08em" fill="var(--ink)">STREAMMAX</text>
-    <text x="500" y="702" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+    <text x="500" y="702" text-anchor="middle" class="a-fadein" style="--dl:6.15s" font-family="IBM Plex Mono" font-weight="500"
           font-size="12" letter-spacing="0.18em" fill="var(--ink-muted)">SUBSCRIBERS</text>
 
     <!-- VidPlus -->
-    <g style="filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55));">
+    <g class="a-pop" style="--dl:.95s; filter:drop-shadow(0 0 12px rgb(191 122 32 / 0.55));">
       <circle cx="790" cy="720" r="125" fill="var(--chart-2)" fill-opacity="0.16"
               stroke="var(--chart-2)" stroke-width="2.5"/>
       <path d="M779 619 L779 651 L807 635 Z" fill="var(--chart-2)"/>
     </g>
-    <text x="790" y="748" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+    <text x="790" y="748" text-anchor="middle" class="a-fadein" style="--dl:1.25s" font-family="IBM Plex Mono" font-weight="500"
           font-size="40" fill="var(--ink)">220M</text>
-    <text x="790" y="778" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+    <text x="790" y="778" text-anchor="middle" class="a-fadein" style="--dl:1.3s" font-family="Albert Sans" font-weight="700"
           font-size="17" letter-spacing="0.08em" fill="var(--ink)">VIDPLUS</text>
 
     <!-- NebulaTV -->
-    <g style="filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55));">
+    <g class="a-pop" style="--dl:1.15s; filter:drop-shadow(0 0 12px rgb(18 163 121 / 0.55));">
       <circle cx="330" cy="850" r="103" fill="var(--chart-3)" fill-opacity="0.16"
               stroke="var(--chart-3)" stroke-width="2.5"/>
       <path d="M321 767 L321 793 L344 780 Z" fill="var(--chart-3)"/>
     </g>
-    <text x="330" y="862" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+    <text x="330" y="862" text-anchor="middle" class="a-fadein" style="--dl:1.45s" font-family="IBM Plex Mono" font-weight="500"
           font-size="33" fill="var(--ink)">150M</text>
-    <text x="330" y="890" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+    <text x="330" y="890" text-anchor="middle" class="a-fadein" style="--dl:1.5s" font-family="Albert Sans" font-weight="700"
           font-size="15" letter-spacing="0.08em" fill="var(--ink)">NEBULATV</text>
 
     <!-- Kanal+ (slides behind the price panel) -->
-    <g style="filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55));">
+    <g class="a-pop" style="--dl:1.35s; filter:drop-shadow(0 0 12px rgb(139 108 240 / 0.55));">
       <circle cx="1185" cy="430" r="80" fill="var(--chart-4)" fill-opacity="0.16"
               stroke="var(--chart-4)" stroke-width="2.5"/>
       <path d="M1177 371 L1177 393 L1196 382 Z" fill="var(--chart-4)"/>
     </g>
-    <text x="1185" y="440" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+    <text x="1185" y="440" text-anchor="middle" class="a-fadein" style="--dl:1.65s" font-family="IBM Plex Mono" font-weight="500"
           font-size="27" fill="var(--ink)">90M</text>
-    <text x="1185" y="466" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+    <text x="1185" y="466" text-anchor="middle" class="a-fadein" style="--dl:1.7s" font-family="Albert Sans" font-weight="700"
           font-size="13" letter-spacing="0.08em" fill="var(--ink)">KANAL+</text>
 
     <!-- Others (bleeds off the bottom edge) -->
-    <g style="filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55));">
+    <g class="a-pop" style="--dl:1.55s; filter:drop-shadow(0 0 12px rgb(224 85 144 / 0.55));">
       <circle cx="640" cy="1040" r="92" fill="var(--chart-5)" fill-opacity="0.16"
               stroke="var(--chart-5)" stroke-width="2.5"/>
       <path d="M631 963 L631 987 L652 975 Z" fill="var(--chart-5)"/>
     </g>
-    <text x="640" y="1012" text-anchor="middle" font-family="IBM Plex Mono" font-weight="500"
+    <text x="640" y="1012" text-anchor="middle" class="a-fadein" style="--dl:1.85s" font-family="IBM Plex Mono" font-weight="500"
           font-size="29" fill="var(--ink)">120M</text>
-    <text x="640" y="1040" text-anchor="middle" font-family="Albert Sans" font-weight="700"
+    <text x="640" y="1040" text-anchor="middle" class="a-fadein" style="--dl:1.9s" font-family="Albert Sans" font-weight="700"
           font-size="14" letter-spacing="0.08em" fill="var(--ink)">OTHERS</text>
   </svg>
 
   <!-- ============ header ============ -->
   <div class="abs" style="left:64px; top:52px; z-index:3; width:640px;">
-    <div class="kicker">// streaming wars · fictional market · 2026</div>
-    <h1 class="display" style="font-size:76px; margin-top:18px;">Who's winning<br>streaming?</h1>
-    <p style="font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:20px; max-width:480px;">
+    <div class="kicker a-rise" style="--dl:.15s">// streaming wars · fictional market · 2026</div>
+    <h1 class="display a-rise" style="--dl:.3s; font-size:76px; margin-top:18px;">Who's winning<br>streaming?</h1>
+    <p class="a-fadein" style="--dl:6.3s; font:400 16px/1.5 var(--font-body); color:var(--ink-muted); margin-top:20px; max-width:480px;">
       Four fictional giants and a long tail of services, drawn to scale by
       paid subscribers. The winners charge more, sell ads — and stack up
       in your living room.</p>
   </div>
 
   <!-- vertical scale caption on the left edge -->
-  <div class="abs value" style="left:18px; top:430px; z-index:3; writing-mode:vertical-rl;
+  <div class="abs value a-fadein" style="--dl:6.4s; left:18px; top:430px; z-index:3; writing-mode:vertical-rl;
        transform:rotate(180deg); font-size:11px; letter-spacing:0.18em; color:var(--ink-muted);">
     CIRCLE AREA ∝ PAID SUBSCRIBERS (MILLIONS)</div>
 
   <!-- ============ price panel (scanline device) ============ -->
-  <div class="panel scanlines" style="left:1220px; top:64px; width:636px; height:372px;">
+  <div class="panel scanlines a-rise" style="--dl:.45s; left:1220px; top:64px; width:636px; height:372px;">
     <div class="kicker">avg subscription price · 2019–2026</div>
     <div class="section-h">The price of watching has doubled</div>
     <!-- scale: $0–20 over 200px plot => y = 220 − 10·v ; x_i = 52 + i·65.43
@@ -194,28 +227,31 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
         <text x="52" y="242">2019</text><text x="248" y="242">2022</text><text x="510" y="242">2026</text>
       </g>
       <path d="M52 220 L52 130 L117.4 120 L182.9 110 L248.3 95 L313.7 80 L379.1 65 L444.6 55 L510 40 L510 220 Z"
-            fill="var(--chart-1)" fill-opacity="0.12"/>
+            fill="var(--chart-1)" fill-opacity="0.12" class="a-fadein" style="--dl:2.9s"/>
       <polyline points="52,130 117.4,120 182.9,110 248.3,95 313.7,80 379.1,65 444.6,55 510,40"
             fill="none" stroke="var(--chart-1)" stroke-width="2.5" stroke-linejoin="round"
-            stroke-linecap="round" style="filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55));"/>
-      <circle cx="52" cy="130" r="4" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2"/>
+            stroke-linecap="round" class="a-draw"
+            style="--len:470; --d:1.1s; --dl:2.05s; filter:drop-shadow(0 0 12px rgb(43 140 196 / 0.55));"/>
+      <circle cx="52" cy="130" r="4" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2"
+              class="a-pop" style="--dl:2.05s"/>
       <text x="60" y="152" font-family="IBM Plex Mono" font-weight="500" font-size="13"
-            fill="var(--ink-muted)">$9</text>
-      <circle cx="510" cy="40" r="5.5" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2.5"/>
+            fill="var(--ink-muted)" class="a-fadein" style="--dl:2.35s">$9</text>
+      <circle cx="510" cy="40" r="5.5" fill="var(--chart-1)" stroke="var(--bg-2)" stroke-width="2.5"
+              class="a-pop" style="--dl:3.1s"/>
       <text x="522" y="45" font-family="IBM Plex Mono" font-weight="500" font-size="15"
-            fill="var(--ink)">$18</text>
+            fill="var(--ink)" class="a-fadein" style="--dl:3.25s">$18</text>
       <text x="444.6" y="34" text-anchor="end" font-family="Albert Sans" font-weight="700"
-            font-size="14" fill="var(--ink)">2× the 2019 price</text>
+            font-size="14" fill="var(--ink)" class="a-rise" style="--dl:3.35s">2× the 2019 price</text>
     </svg>
   </div>
 
   <!-- ============ ad-tier panel (waffle) ============ -->
-  <div class="panel" style="left:1220px; top:460px; width:636px; height:300px;">
+  <div class="panel a-rise" style="--dl:.6s; left:1220px; top:460px; width:636px; height:300px;">
     <div class="kicker">ad-supported tiers</div>
     <div style="display:flex; gap:44px; margin-top:18px; align-items:flex-start;">
       <div style="width:250px;">
-        <div class="display" style="font-size:82px;">41%</div>
-        <p style="font:400 16px/1.45 var(--font-body); color:var(--ink-muted); margin-top:14px;">
+        <div class="display a-bloom" style="--dl:3.9s; font-size:82px;">41%</div>
+        <p class="a-fadein" style="--dl:4.15s; font:400 16px/1.45 var(--font-body); color:var(--ink-muted); margin-top:14px;">
           of subscribers now watch with ads — the ad-free promise is
           quietly expiring.</p>
       </div>
@@ -234,12 +270,12 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
             <use href="#wr" y="60"/><use href="#wr" y="80"/><use href="#wr" y="100"/>
           </g>
           <g fill="var(--chart-1)" style="filter:drop-shadow(0 0 10px rgb(43 140 196 / 0.45));">
-            <rect x="0" y="100" width="16" height="16" rx="3"/>
-            <use href="#wr" y="120"/><use href="#wr" y="140"/>
-            <use href="#wr" y="160"/><use href="#wr" y="180"/>
+            <rect x="0" y="100" width="16" height="16" rx="3" class="a-wipe" style="--dl:3.78s"/>
+            <use href="#wr" y="120" class="a-wipe" style="--dl:3.66s"/><use href="#wr" y="140" class="a-wipe" style="--dl:3.54s"/>
+            <use href="#wr" y="160" class="a-wipe" style="--dl:3.42s"/><use href="#wr" y="180" class="a-wipe" style="--dl:3.3s"/>
           </g>
         </svg>
-        <div class="value" style="font-size:11px; letter-spacing:0.14em; color:var(--ink-muted); margin-top:12px;">
+        <div class="value a-fadein" style="--dl:6.4s; font-size:11px; letter-spacing:0.14em; color:var(--ink-muted); margin-top:12px;">
           1 SQUARE = 1% OF SUBSCRIBERS</div>
       </div>
     </div>
@@ -247,18 +283,18 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
 
   <!-- ============ stacking block (pictogram, no panel) ============ -->
   <div class="abs" style="left:1220px; top:794px; width:636px; z-index:3;">
-    <div class="kicker">subscription stacking</div>
+    <div class="kicker a-rise" style="--dl:.7s">subscription stacking</div>
     <div style="display:flex; gap:26px; align-items:flex-end; margin-top:16px;">
-      <div class="display" style="font-size:82px;">3.4</div>
-      <p style="font:400 16px/1.4 var(--font-body); color:var(--ink-muted); padding-bottom:12px; max-width:300px;">
+      <div class="display a-bloom" style="--dl:4.35s; font-size:82px;">3.4</div>
+      <p class="a-fadein" style="--dl:4.6s; font:400 16px/1.4 var(--font-body); color:var(--ink-muted); padding-bottom:12px; max-width:300px;">
         services per household,<br>on average</p>
     </div>
     <!-- 4 screens, 3 full + 40% of the 4th (clip at 3·114 + 0.4·90 = 378) -->
-    <svg viewBox="0 0 440 66" width="440" height="66" style="margin-top:14px;">
+    <svg viewBox="0 0 440 66" width="440" height="66" class="a-fadein" style="--dl:.75s; margin-top:14px;">
       <defs>
         <rect id="scr" width="90" height="60" rx="9" y="3"/>
         <path id="ply" d="M37 22 L59 33 L37 44 Z"/>
-        <clipPath id="svcClip"><rect x="0" y="0" width="378" height="66"/></clipPath>
+        <clipPath id="svcClip"><rect x="0" y="0" width="378" height="66" class="a-wipe" style="--dl:3.9s; --d:.9s"/></clipPath>
       </defs>
       <g fill="none" stroke="var(--de-emphasis)" stroke-width="2">
         <use href="#scr" x="0"/><use href="#scr" x="114"/><use href="#scr" x="228"/><use href="#scr" x="342"/>
@@ -278,7 +314,7 @@ body { width:1920px; font-family:var(--font-body); color:var(--ink); }
   </div>
 
   <!-- ============ terminal footer ============ -->
-  <div class="abs value" style="right:64px; bottom:28px; z-index:3; font-size:13px; color:var(--ink-muted);">
+  <div class="abs value a-fadein" style="--dl:6.5s; right:64px; bottom:28px; z-index:3; font-size:13px; color:var(--ink-muted);">
     // figures: fictional market — illustrative demo data · made with epic-infographics</div>
 
 </div>

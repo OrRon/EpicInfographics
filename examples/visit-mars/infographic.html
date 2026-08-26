@@ -54,6 +54,35 @@ body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
           background: var(--ink); color: var(--surface-2); display: flex;
           align-items: center; justify-content: center;
           font: 400 12px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md · park-poster: a WPA vista assembling as
+   SCREEN-PRINT PASSES, back to front — decisive flat arrivals, no bounce).
+   Frame 0: the stock is ready — cream ground, banded sky, grain, poster
+   frame already printed. Sun rings print 0.2–0.95s. Landscape planes pull
+   back to front 0.65–2.7s: far haze, the Olympus red pass with its caldera
+   shadow, the mid ridge (off-register echo first, true pass on top), the
+   ink foreground, the canyon rift. The title band prints 2.55s, its
+   lettering 2.95–4.1s. Data marks and lettering arrive late 3.8–5.55s:
+   Earth + label, the dashed transfer arc, moons, the ship, the astronaut,
+   the canyon label, the stat row. The HERO comparison lands last, alone:
+   Olympus elevation label 5.65s, the Everest plane 5.95s, its label, the
+   benchmark line wiping across the vista 6.6s, the payoff caption 7.0s.
+   Footer fades 7.3s. Total build ~7.8s.
+   All keyframes are from-only, so fill-mode is "backwards": frame-identical
+   to "both", but no active animation on the finished frame (render.mjs
+   pauses at end state — an active fill would layerize and cost PSNR).
+   Elements with SVG transform ATTRIBUTES (ship, astronaut, mid-ridge echo)
+   and pre-dashed strokes (transfer arc) take pure fades only. */
+.a-print  { animation: print .55s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-fadein { animation: fadein .5s ease-out var(--dl,0s) backwards; }
+.a-rise   { animation: rise .55s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe .8s cubic-bezier(.2,.8,.2,1) var(--dl,0s) backwards; }
+@keyframes print  { from { opacity:0; transform: translateY(-12px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes rise   { from { opacity:0; transform: translateY(12px); } }
+@keyframes wipe   { from { transform: scaleX(0); } }
 </style>
 </head>
 <body>
@@ -68,28 +97,29 @@ body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
     <!-- cream band continues via canvas bg -->
 
     <!-- sun disc with concentric tint rings -->
-    <circle cx="790" cy="300" r="128" fill="#DDC489"/>
-    <circle cx="790" cy="300" r="98"  fill="#CBAC55"/>
-    <circle cx="790" cy="300" r="66"  fill="#9E750F"/>
+    <circle cx="790" cy="300" r="128" fill="#DDC489" class="a-fadein" style="--dl:.2s"/>
+    <circle cx="790" cy="300" r="98"  fill="#CBAC55" class="a-fadein" style="--dl:.32s"/>
+    <circle cx="790" cy="300" r="66"  fill="#9E750F" class="a-fadein" style="--dl:.44s"/>
 
     <!-- Earth, far away -->
-    <circle cx="196" cy="210" r="9" fill="#177A5B"/>
+    <circle cx="196" cy="210" r="9" fill="#177A5B" class="a-fadein" style="--dl:3.8s"/>
     <!-- transfer trajectory: dashed arc from Earth, descending behind Olympus -->
     <path d="M 205,214 C 420,330 700,600 980,1000" fill="none"
-          stroke="#262E22" stroke-width="2.5" stroke-dasharray="2 11" stroke-linecap="round"/>
+          stroke="#262E22" stroke-width="2.5" stroke-dasharray="2 11" stroke-linecap="round"
+          class="a-fadein" style="--dl:3.95s"/>
     <!-- tiny transfer ship on the arc -->
-    <g transform="translate(516,448) rotate(42)">
+    <g transform="translate(516,448) rotate(42)" class="a-fadein" style="--dl:4.35s">
       <path d="M 0,0 L 26,6 L 0,12 L 5,6 Z" fill="#262E22"/>
     </g>
 
     <!-- the two moons -->
-    <circle cx="352" cy="332" r="11" fill="#5C6353"/>
-    <circle cx="442" cy="276" r="6.5" fill="#5C6353"/>
+    <circle cx="352" cy="332" r="11" fill="#5C6353" class="a-fadein" style="--dl:4.1s"/>
+    <circle cx="442" cy="276" r="6.5" fill="#5C6353" class="a-fadein" style="--dl:4.2s"/>
 
     <!-- far atmospheric haze range (lake tint, farthest plane);
          base runs down behind the mid ridge so the planes stack -->
     <path d="M 0,1440 L 0,1150 L 130,1096 L 300,1168 L 470,1110 L 640,1176 L 830,1122 L 1080,1180 L 1080,1440 Z"
-          fill="#B7C2B9"/>
+          fill="#B7C2B9" class="a-print" style="--dl:.65s"/>
 
     <!-- HERO: comparative skyline — Olympus Mons at true 2.5x Everest.
          Baseline y=1250 · 1 km = 31 px  →  Olympus 21.9 km = 679 px (peak 571)
@@ -99,30 +129,32 @@ body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
            the right edge; slopes continue down behind the mid ridge -->
       <path d="M 5,1440
                L 470,660 L 545,584 L 596,571 L 618,584 L 634,571 L 700,592 L 800,668
-               L 1080,1052 L 1080,1440 Z" fill="#BF4F26"/>
+               L 1080,1052 L 1080,1440 Z" fill="#BF4F26" class="a-print" style="--dl:1s"/>
       <!-- caldera notch shadow -->
-      <path d="M 596,571 L 618,584 L 634,571 L 626,590 L 604,590 Z" fill="#96401E"/>
+      <path d="M 596,571 L 618,584 L 634,571 L 626,590 L 604,590 Z" fill="#96401E"
+            class="a-print" style="--dl:1.15s"/>
       <!-- Everest, for scale, nearer plane (lake ink, paper gap stroke);
            same hidden baseline as Olympus so the height ratio stays true -->
       <path d="M 150,1440 L 300,1064 L 332,1108 L 372,977 L 416,1084 L 448,1052 L 573,1440 Z"
-            fill="#1D6396" stroke="#F2E4C0" stroke-width="3"/>
+            fill="#1D6396" stroke="#F2E4C0" stroke-width="3" class="a-print" style="--dl:5.95s"/>
       <!-- dashed line: where Everest tops out on Olympus's slope -->
-      <line x1="372" y1="977" x2="880" y2="977" stroke="#262E22" stroke-width="2" stroke-dasharray="7 7"/>
+      <line x1="372" y1="977" x2="880" y2="977" stroke="#262E22" stroke-width="2" stroke-dasharray="7 7"
+            class="a-wipe" style="--dl:6.6s"/>
     </g>
 
     <!-- mid ridge (clay tint) with off-register print copy -->
     <path d="M 0,1466 L 0,1372 L 170,1322 L 358,1388 L 540,1330 L 736,1398 L 900,1344 L 1080,1400 L 1080,1466 Z"
-          fill="#D89B77" transform="translate(4,3)" opacity=".55"/>
+          fill="#D89B77" transform="translate(4,3)" opacity=".55" class="a-fadein" style="--dl:1.45s"/>
     <path d="M 0,1466 L 0,1372 L 170,1322 L 358,1388 L 540,1330 L 736,1398 L 900,1344 L 1080,1400 L 1080,1466 Z"
-          fill="#CE8158"/>
+          fill="#CE8158" class="a-print" style="--dl:1.55s"/>
 
     <!-- foreground overlook: solid ink silhouette down to the band -->
     <path d="M 0,1920 L 0,1430 L 120,1408 L 250,1444 L 330,1418 L 470,1462
              L 620,1436 L 780,1472 L 900,1450 L 1010,1478 L 1080,1460 L 1080,1920 Z"
-          fill="#262E22"/>
+          fill="#262E22" class="a-print" style="--dl:1.9s"/>
 
     <!-- the scale figure: an astronaut on the overlook rim, gazing at Olympus -->
-    <g transform="translate(118,1360)" fill="#262E22">
+    <g transform="translate(118,1360)" fill="#262E22" class="a-fadein" style="--dl:4.5s">
       <circle cx="15" cy="9" r="9"/>
       <rect x="0" y="10" width="9" height="16" rx="3"/>          <!-- backpack -->
       <path d="M 7,17 L 24,17 L 26,34 L 22,34 L 22,26 L 10,26 L 10,34 L 6,34 Z"/>
@@ -139,7 +171,7 @@ body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
   </svg>
 
   <!-- Valles Marineris: a rift in the dark overlook, running off the right frame -->
-  <svg style="position:absolute; left:460px; top:1560px; z-index:26;" width="588" height="74" viewBox="0 0 588 74">
+  <svg class="a-fadein" style="position:absolute; left:460px; top:1560px; z-index:26; --dl:2.2s" width="588" height="74" viewBox="0 0 588 74">
     <polygon points="0,30 96,14 210,34 322,10 432,30 522,16 588,26 588,52 508,62 398,44 286,66 172,42 84,58 0,48"
              fill="#96401E"/>
     <polygon points="60,34 160,26 280,42 396,26 500,40 588,34 588,44 480,50 360,38 240,54 130,38 60,42"
@@ -147,50 +179,50 @@ body { width: 1080px; font-family: var(--font-body); color: var(--ink); }
   </svg>
 
   <!-- ============ labels ============ -->
-  <div class="label" style="left:224px; top:170px; width:240px;">
+  <div class="label a-rise" style="left:224px; top:170px; width:240px; --dl:3.85s">
     <div class="kicker" style="color:#177A5B;">Earth</div>
     <div class="caption">225M km behind you —<br>about 7 months out</div>
   </div>
 
-  <div class="label caption" style="left:318px; top:356px;">Phobos</div>
-  <div class="label caption" style="left:462px; top:262px;">Deimos</div>
+  <div class="label caption a-rise" style="left:318px; top:356px; --dl:4.2s">Phobos</div>
+  <div class="label caption a-rise" style="left:462px; top:262px; --dl:4.3s">Deimos</div>
 
   <!-- Olympus label, pinned near the summit -->
-  <div class="label" style="left:660px; top:470px; width:330px;">
+  <div class="label a-rise" style="left:660px; top:470px; width:330px; --dl:5.65s">
     <div class="elev">OLYMPUS MONS · 21.9 KM</div>
     <div class="elev-sub">the tallest mountain in the solar system —
       a shield so wide its slopes cross the horizon</div>
   </div>
 
   <!-- Everest label + the comparison line caption -->
-  <div class="label" style="left:96px; top:886px; width:220px;">
+  <div class="label a-rise" style="left:96px; top:886px; width:220px; --dl:6.45s">
     <div class="elev" style="color:#1D6396;">EVEREST · 8.8 KM</div>
     <div class="elev-sub">the tallest back home</div>
   </div>
-  <div class="label caption" style="left:560px; top:944px; color:#F8EFD8;">
+  <div class="label caption a-rise" style="left:560px; top:944px; color:#F8EFD8; --dl:7s">
     Everest tops out barely a third of the way up
   </div>
 
   <!-- Valles Marineris label, over the canyon crack -->
-  <div class="label" style="left:528px; top:1588px; z-index:33;">
+  <div class="label a-rise" style="left:528px; top:1588px; z-index:33; --dl:4.6s">
     <div class="kicker" style="color:#F8EFD8;">Valles Marineris · 4,000 km long · 7 km deep</div>
   </div>
 
   <!-- visitor conditions -->
   <div class="stats">
-    <div class="stat"><div class="num">0.38 g</div><div class="lbl">Gravity — pack light legs</div></div>
-    <div class="stat"><div class="num">24 h 39 m</div><div class="lbl">One sol — longer sunsets</div></div>
-    <div class="stat"><div class="num">−63 °C</div><div class="lbl">Average — bring the parka</div></div>
+    <div class="stat a-rise" style="--dl:4.75s"><div class="num">0.38 g</div><div class="lbl">Gravity — pack light legs</div></div>
+    <div class="stat a-rise" style="--dl:4.9s"><div class="num">24 h 39 m</div><div class="lbl">One sol — longer sunsets</div></div>
+    <div class="stat a-rise" style="--dl:5.05s"><div class="num">−63 °C</div><div class="lbl">Average — bring the parka</div></div>
   </div>
 
   <!-- ============ title band + ranger footer ============ -->
-  <div class="band">
-    <div class="kicker">National parks of the solar system · District No. 4</div>
-    <h1>Mars</h1>
-    <div class="rule"></div>
-    <div class="sub">Home of the tallest mountain in the solar system</div>
+  <div class="band a-print" style="--dl:2.55s">
+    <div class="kicker a-rise" style="--dl:2.95s">National parks of the solar system · District No. 4</div>
+    <h1 class="a-rise" style="--dl:3.1s">Mars</h1>
+    <div class="rule a-wipe" style="--dl:3.4s; transform-origin:center;"></div>
+    <div class="sub a-rise" style="--dl:3.55s">Home of the tallest mountain in the solar system</div>
   </div>
-  <div class="footer">Mars Ranger Service · figures: NASA Mars fact sheet · made with epic-infographics</div>
+  <div class="footer a-fadein" style="--dl:7.3s">Mars Ranger Service · figures: NASA Mars fact sheet · made with epic-infographics</div>
 
   <div class="poster-frame"></div>
 </div>

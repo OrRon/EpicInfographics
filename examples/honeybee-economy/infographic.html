@@ -41,6 +41,34 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
 .display { font-family:var(--font-display); font-weight:400; line-height:1; }
 .kicker { font:700 17px/1 var(--font-body); text-transform:uppercase; letter-spacing:.06em; }
 .caption { font:italic 400 15px/1.45 var(--font-body); color:var(--ink-muted); }
+
+/* ============ motion layer ============
+   Storyboard (references/motion.md · retro-print = successive ink passes
+   coming off the press): the cream stock, grain and ghost hexagons pre-exist
+   at frame 0. Type pass first: arc kicker + title (0.2–0.5s). Yellow pass:
+   sunburst, then the skep's flat coil fills (0.55–0.8s); the black ink pass
+   lays outlines, entrance and bees on top (1.05–1.5s); 50,000 rises (1.65s).
+   The section rule, the dashed flight path (fades in whole — a pre-dashed
+   stroke can't be draw-animated additively) and the flower's color-then-ink
+   passes carry the per-pound stats (2.05–3.05s); the cast prints specimen by
+   specimen and the seal stamps down (3.4–5.25s). The HERO lands last and
+   alone: spoon fill pass, ink pass, the honey drop, then the giant 1/12 tsp
+   blooms (5.3–7.0s); support copy and footer fade in last (~7.5s total).
+   Comparable marks (the three stat blocks; the cast specimens) share one
+   duration + easing — only delays stagger. Zero bounce: screen-print
+   arrivals are decisive. check.mjs and render.mjs read the end state. */
+.a-rise   { animation: rise .6s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-fadein { animation: fadein .5s ease-out var(--dl,0s) both; }
+.a-wipe   { transform-box: fill-box; transform-origin: left;
+            animation: wipe .5s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-pop    { transform-box: fill-box; transform-origin: center;
+            animation: pop .45s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+.a-bloom  { animation: bloom .9s cubic-bezier(.2,.8,.2,1) var(--dl,0s) both; }
+@keyframes rise   { from { opacity:0; transform: translateY(14px); } }
+@keyframes fadein { from { opacity:0; } }
+@keyframes wipe   { from { transform: scaleX(0); } }
+@keyframes pop    { from { opacity:0; transform: scale(1.26); } }
+@keyframes bloom  { from { opacity:0; transform: translateY(16px) scale(.97); } }
 </style>
 </head>
 <body>
@@ -76,7 +104,7 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
   </svg>
 
   <!-- arched kicker -->
-  <svg class="abs" style="left:0; top:30px;" width="1240" height="130" viewBox="0 0 1240 130">
+  <svg class="abs a-fadein" style="left:0; top:30px; --dl:.2s;" width="1240" height="130" viewBox="0 0 1240 130">
     <path id="arc" d="M 230 112 Q 620 20 1010 112" fill="none"/>
     <text font-family="Karla" font-weight="700" font-size="26" letter-spacing="8" fill="var(--ink)">
       <textPath href="#arc" startOffset="50%" text-anchor="middle">★ THE HONEYBEE ECONOMY ★</textPath>
@@ -85,12 +113,12 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
 
   <!-- title -->
   <div class="abs" style="left:0; top:150px; width:1240px; text-align:center;">
-    <div class="display" style="font-size:76px; text-shadow:var(--misprint);">WHAT ONE HIVE<br>ACTUALLY PRODUCES</div>
-    <p class="caption" style="margin-top:16px; font-size:18px;">a season inside the colony — counted in bees, flowers and kilometres</p>
+    <div class="display a-rise" style="font-size:76px; text-shadow:var(--misprint); --dl:.35s;">WHAT ONE HIVE<br>ACTUALLY PRODUCES</div>
+    <p class="caption a-rise" style="margin-top:16px; font-size:18px; --dl:.5s;">a season inside the colony — counted in bees, flowers and kilometres</p>
   </div>
 
   <!-- sunburst rays behind the hive -->
-  <svg class="abs" style="left:-190px; top:230px;" width="1040" height="1040" viewBox="0 0 1040 1040">
+  <svg class="abs a-fadein" style="left:-190px; top:230px; --dl:.55s;" width="1040" height="1040" viewBox="0 0 1040 1040">
     <g transform="translate(520 520)" fill="var(--chart-3)" opacity="0.14">
       <g id="ray"><polygon points="0,0 -28,-520 28,-520"/></g>
       <use href="#ray" transform="rotate(18)"/><use href="#ray" transform="rotate(36)"/>
@@ -111,65 +139,65 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
     <!-- halftone cast shadow -->
     <defs><pattern id="dots" width="9" height="9" patternUnits="userSpaceOnUse">
       <circle cx="2.5" cy="2.5" r="1.7" fill="var(--ink)"/></pattern></defs>
-    <ellipse cx="316" cy="626" rx="272" ry="26" fill="url(#dots)" opacity=".4"/>
+    <ellipse cx="316" cy="626" rx="272" ry="26" fill="url(#dots)" opacity=".4" class="a-fadein" style="--dl:.8s;"/>
     <!-- coils, top first so lower coils sit in front; fills offset (5,4) -->
     <g>
-      <g transform="translate(5 4)"><rect x="204" y="128" width="212" height="98" rx="49" fill="var(--chart-3)"/></g>
-      <rect x="204" y="128" width="212" height="98" rx="49" fill="none" stroke="var(--ink)" stroke-width="6"/>
-      <g transform="translate(5 4)"><rect x="152" y="192" width="316" height="84" rx="42" fill="var(--chart-3)"/></g>
-      <rect x="152" y="192" width="316" height="84" rx="42" fill="none" stroke="var(--ink)" stroke-width="6"/>
-      <g transform="translate(5 4)"><rect x="112" y="272" width="396" height="88" rx="44" fill="var(--chart-3)"/></g>
-      <rect x="112" y="272" width="396" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6"/>
-      <g transform="translate(5 4)"><rect x="82" y="356" width="456" height="88" rx="44" fill="var(--chart-3)"/></g>
-      <rect x="82" y="356" width="456" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6"/>
-      <g transform="translate(5 4)"><rect x="62" y="440" width="496" height="86" rx="43" fill="var(--chart-3)"/></g>
-      <rect x="62" y="440" width="496" height="86" rx="43" fill="none" stroke="var(--ink)" stroke-width="6"/>
-      <g transform="translate(5 4)"><rect x="50" y="520" width="520" height="88" rx="44" fill="var(--chart-3)"/></g>
-      <rect x="50" y="520" width="520" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="204" y="128" width="212" height="98" rx="49" fill="var(--chart-3)"/></g>
+      <rect x="204" y="128" width="212" height="98" rx="49" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="152" y="192" width="316" height="84" rx="42" fill="var(--chart-3)"/></g>
+      <rect x="152" y="192" width="316" height="84" rx="42" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="112" y="272" width="396" height="88" rx="44" fill="var(--chart-3)"/></g>
+      <rect x="112" y="272" width="396" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="82" y="356" width="456" height="88" rx="44" fill="var(--chart-3)"/></g>
+      <rect x="82" y="356" width="456" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="62" y="440" width="496" height="86" rx="43" fill="var(--chart-3)"/></g>
+      <rect x="62" y="440" width="496" height="86" rx="43" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
+      <g transform="translate(5 4)" class="a-fadein" style="--dl:.8s;"><rect x="50" y="520" width="520" height="88" rx="44" fill="var(--chart-3)"/></g>
+      <rect x="50" y="520" width="520" height="88" rx="44" fill="none" stroke="var(--ink)" stroke-width="6" class="a-fadein" style="--dl:1.05s;"/>
     </g>
     <!-- entrance arch -->
-    <path d="M270 604 v-30 a40 40 0 0 1 80 0 v30 z" fill="var(--ink)"/>
+    <path d="M270 604 v-30 a40 40 0 0 1 80 0 v30 z" fill="var(--ink)" class="a-fadein" style="--dl:1.05s;"/>
     <!-- highlight slivers on left of two coils -->
-    <path d="M96 480 q -8 20 0 22" stroke="var(--surface)" stroke-width="12" stroke-linecap="round" fill="none" opacity=".85"/>
-    <path d="M132 300 q -8 20 0 22" stroke="var(--surface)" stroke-width="10" stroke-linecap="round" fill="none" opacity=".85"/>
+    <path d="M96 480 q -8 20 0 22" stroke="var(--surface)" stroke-width="12" stroke-linecap="round" fill="none" opacity=".85" class="a-fadein" style="--dl:1.15s;"/>
+    <path d="M132 300 q -8 20 0 22" stroke="var(--surface)" stroke-width="10" stroke-linecap="round" fill="none" opacity=".85" class="a-fadein" style="--dl:1.15s;"/>
     <!-- two bees leaving the top of the hive -->
-    <use href="#beeS" transform="translate(520 150) rotate(-18)"/>
-    <use href="#beeS" transform="translate(470 70) rotate(-8) scale(0.8)"/>
+    <use href="#beeS" transform="translate(520 150) rotate(-18)" class="a-fadein" style="--dl:1.4s;"/>
+    <use href="#beeS" transform="translate(470 70) rotate(-8) scale(0.8)" class="a-fadein" style="--dl:1.5s;"/>
     <path d="M430 190 q 40 -34 74 -30" stroke="var(--ink)" stroke-width="2.5" fill="none"
-          stroke-dasharray="1 9" stroke-linecap="round" opacity=".7"/>
+          stroke-dasharray="1 9" stroke-linecap="round" opacity=".7" class="a-fadein" style="--dl:1.45s;"/>
   </svg>
 
   <!-- 50,000 annotation, leader line back to the hive -->
-  <div class="abs" style="left:690px; top:412px; width:520px;">
+  <div class="abs a-rise" style="left:690px; top:412px; width:520px; --dl:1.65s;">
     <div class="display" style="font-size:96px; text-shadow:var(--misprint);">50,000</div>
     <div style="font:700 26px/1.25 var(--font-body); margin-top:10px;">bees strong at the summer peak</div>
     <p class="caption" style="margin-top:6px;">one colony, one address</p>
   </div>
-  <svg class="abs" style="left:596px; top:470px;" width="86" height="8" viewBox="0 0 86 8">
+  <svg class="abs a-fadein" style="left:596px; top:470px; --dl:1.6s;" width="86" height="8" viewBox="0 0 86 8">
     <line x1="0" y1="4" x2="86" y2="4" stroke="var(--ink)" stroke-width="3" stroke-dasharray="10 7"/>
   </svg>
 
   <!-- HERO: the teaspoon. Drop size is illustrative; the number carries the fact. -->
   <svg class="abs" style="left:646px; top:610px;" width="560" height="200" viewBox="0 0 560 200">
     <!-- misregistered fills offset (5,4), ink outlines at true position -->
-    <g transform="translate(5 4)">
+    <g transform="translate(5 4)" class="a-fadein" style="--dl:5.3s;">
       <ellipse cx="122" cy="102" rx="64" ry="38" fill="var(--surface)"/>
       <rect x="178" y="94" width="364" height="16" rx="8" fill="var(--surface)"/>
     </g>
-    <rect x="178" y="94" width="364" height="16" rx="8" fill="none" stroke="var(--ink)" stroke-width="5"/>
-    <ellipse cx="122" cy="102" rx="64" ry="38" fill="none" stroke="var(--ink)" stroke-width="5"/>
-    <ellipse cx="122" cy="105" rx="48" ry="26" fill="none" stroke="var(--ink)" stroke-width="3" opacity=".55"/>
+    <rect x="178" y="94" width="364" height="16" rx="8" fill="none" stroke="var(--ink)" stroke-width="5" class="a-fadein" style="--dl:5.55s;"/>
+    <ellipse cx="122" cy="102" rx="64" ry="38" fill="none" stroke="var(--ink)" stroke-width="5" class="a-fadein" style="--dl:5.55s;"/>
+    <ellipse cx="122" cy="105" rx="48" ry="26" fill="none" stroke="var(--ink)" stroke-width="3" opacity=".55" class="a-fadein" style="--dl:5.6s;"/>
     <!-- the lifetime of one bee: a small honey pool -->
-    <ellipse cx="122" cy="110" rx="34" ry="14" fill="var(--chart-1)"/>
-    <path d="M108 103 q 10 -6 24 0" stroke="var(--surface)" stroke-width="3" fill="none" opacity=".8"/>
+    <ellipse cx="122" cy="110" rx="34" ry="14" fill="var(--chart-1)" class="a-pop" style="--dl:5.85s;"/>
+    <path d="M108 103 q 10 -6 24 0" stroke="var(--surface)" stroke-width="3" fill="none" opacity=".8" class="a-fadein" style="--dl:6s;"/>
   </svg>
   <div class="abs" style="left:660px; top:806px; width:560px;">
-    <div style="display:flex; align-items:baseline; gap:18px;">
+    <div class="a-bloom" style="display:flex; align-items:baseline; gap:18px; --dl:6.1s;">
       <div class="display" style="font-size:168px; text-shadow:var(--misprint);">1⁄12</div>
       <div class="display" style="font-size:44px;">tsp</div>
     </div>
-    <div style="font:700 27px/1.3 var(--font-body); margin-top:12px;">all the honey ONE bee makes<br>in her entire lifetime</div>
-    <p class="caption" style="margin-top:8px;">the colony's answer: do it fifty thousand at a time</p>
+    <div class="a-rise" style="font:700 27px/1.3 var(--font-body); margin-top:12px; --dl:6.7s;">all the honey ONE bee makes<br>in her entire lifetime</div>
+    <p class="caption a-rise" style="margin-top:8px; --dl:6.8s;">the colony's answer: do it fifty thousand at a time</p>
   </div>
 
   <!-- dashed flight path: leaves the hive entrance, crosses the section rule,
@@ -182,23 +210,23 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
              c -14 44, -74 28, -46 -22
              C 700 168, 930 148, 1128 208"
           fill="none" stroke="var(--ink)" stroke-width="3" stroke-dasharray="11 9"
-          stroke-linecap="round" opacity=".65"/>
-    <use href="#beeS" transform="translate(1152 212) rotate(10)"/>
+          stroke-linecap="round" opacity=".65" class="a-fadein" style="--dl:2.25s;"/>
+    <use href="#beeS" transform="translate(1152 212) rotate(10)" class="a-fadein" style="--dl:2.5s;"/>
   </svg>
 
   <!-- section rule: the price of one pound -->
-  <div class="abs kicker" style="left:70px; top:1108px; width:1100px; border-bottom:2px solid var(--ink); padding-bottom:12px; font-size:22px;">
+  <div class="abs kicker a-rise" style="left:70px; top:1108px; width:1100px; border-bottom:2px solid var(--ink); padding-bottom:12px; font-size:22px; --dl:2.05s;">
     The price of one pound of honey
   </div>
 
   <!-- flower + 2 million visits -->
   <svg class="abs" style="left:84px; top:1180px;" width="170" height="190" viewBox="0 0 170 190">
     <!-- stem + leaves -->
-    <path d="M85 100 q -6 50 2 86" stroke="var(--chart-2)" stroke-width="7" fill="none"/>
-    <path d="M85 152 q -34 -6 -44 -30 q 30 -4 44 18 z" fill="var(--chart-2)"/>
-    <path d="M87 168 q 32 -4 40 -26 q -28 -4 -40 16 z" fill="var(--chart-2)"/>
+    <path d="M85 100 q -6 50 2 86" stroke="var(--chart-2)" stroke-width="7" fill="none" class="a-fadein" style="--dl:2.5s;"/>
+    <path d="M85 152 q -34 -6 -44 -30 q 30 -4 44 18 z" fill="var(--chart-2)" class="a-fadein" style="--dl:2.5s;"/>
+    <path d="M87 168 q 32 -4 40 -26 q -28 -4 -40 16 z" fill="var(--chart-2)" class="a-fadein" style="--dl:2.5s;"/>
     <!-- petals: 6 around center (85,62) r=34, misregistered fills -->
-    <g transform="translate(4 3)" fill="var(--chart-4)">
+    <g transform="translate(4 3)" fill="var(--chart-4)" class="a-fadein" style="--dl:2.5s;">
       <ellipse cx="85" cy="24" rx="15" ry="24"/>
       <ellipse cx="118" cy="43" rx="15" ry="24" transform="rotate(60 118 43)"/>
       <ellipse cx="118" cy="81" rx="15" ry="24" transform="rotate(120 118 81)"/>
@@ -206,7 +234,7 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
       <ellipse cx="52" cy="81" rx="15" ry="24" transform="rotate(60 52 81)"/>
       <ellipse cx="52" cy="43" rx="15" ry="24" transform="rotate(120 52 43)"/>
     </g>
-    <g fill="none" stroke="var(--ink)" stroke-width="4">
+    <g fill="none" stroke="var(--ink)" stroke-width="4" class="a-fadein" style="--dl:2.75s;">
       <ellipse cx="85" cy="24" rx="15" ry="24"/>
       <ellipse cx="118" cy="43" rx="15" ry="24" transform="rotate(60 118 43)"/>
       <ellipse cx="118" cy="81" rx="15" ry="24" transform="rotate(120 118 81)"/>
@@ -214,32 +242,32 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
       <ellipse cx="52" cy="81" rx="15" ry="24" transform="rotate(60 52 81)"/>
       <ellipse cx="52" cy="43" rx="15" ry="24" transform="rotate(120 52 43)"/>
     </g>
-    <g transform="translate(4 3)"><circle cx="85" cy="62" r="21" fill="var(--chart-3)"/></g>
-    <circle cx="85" cy="62" r="21" fill="none" stroke="var(--ink)" stroke-width="4"/>
+    <g transform="translate(4 3)" class="a-fadein" style="--dl:2.5s;"><circle cx="85" cy="62" r="21" fill="var(--chart-3)"/></g>
+    <circle cx="85" cy="62" r="21" fill="none" stroke="var(--ink)" stroke-width="4" class="a-fadein" style="--dl:2.75s;"/>
   </svg>
-  <div class="abs" style="left:286px; top:1196px; width:400px;">
+  <div class="abs a-rise" style="left:286px; top:1196px; width:400px; --dl:2.9s;">
     <div class="display" style="font-size:54px; text-shadow:var(--misprint); white-space:nowrap;">≈ 2 million</div>
     <div style="font:700 24px/1.3 var(--font-body); margin-top:10px;">flower visits, petal by petal</div>
     <p class="caption" style="margin-top:6px;">for that one pound</p>
   </div>
 
   <!-- 88,000 km flown -->
-  <div class="abs" style="left:700px; top:1196px; width:470px;">
+  <div class="abs a-rise" style="left:700px; top:1196px; width:470px; --dl:3.05s;">
     <div class="display" style="font-size:54px; text-shadow:var(--misprint); white-space:nowrap;">≈ 88,000 km</div>
     <div style="font:700 24px/1.3 var(--font-body); margin-top:10px;">flown by the hive, all together</div>
     <p class="caption" style="margin-top:6px;">for that same single pound</p>
   </div>
 
   <!-- the cast strip -->
-  <div class="abs kicker" style="left:70px; top:1404px; width:1100px; border-bottom:2px solid var(--ink); padding-bottom:12px; font-size:22px;">
+  <div class="abs kicker a-rise" style="left:70px; top:1404px; width:1100px; border-bottom:2px solid var(--ink); padding-bottom:12px; font-size:22px; --dl:3.4s;">
     The cast of the colony
   </div>
   <!-- specimens stand on a shared baseline; drawn front-facing, head up -->
   <svg class="abs" style="left:70px; top:1448px;" width="820" height="220" viewBox="0 0 820 220">
     <!-- baseline -->
-    <line x1="0" y1="164" x2="820" y2="164" stroke="var(--ink)" stroke-width="2"/>
+    <line x1="0" y1="164" x2="820" y2="164" stroke="var(--ink)" stroke-width="2" class="a-wipe" style="--dl:3.55s;"/>
     <!-- QUEEN: long tapered abdomen -->
-    <g transform="translate(120 0)">
+    <g transform="translate(120 0)" class="a-fadein" style="--dl:3.7s;">
       <g transform="translate(4 3)">
         <path d="M0 70 q 16 8 16 40 q 0 36 -16 52 q -16 -16 -16 -52 q 0 -32 16 -40 z" fill="var(--chart-3)"/>
         <circle cx="0" cy="58" r="16" fill="var(--chart-3)"/>
@@ -253,7 +281,7 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
       <path d="M-6 22 q -8 -10 -14 -12 M6 22 q 8 -10 14 -12" stroke="var(--ink)" stroke-width="3" fill="none" stroke-linecap="round"/>
     </g>
     <!-- DRONE: stocky, huge eyes -->
-    <g transform="translate(420 24)">
+    <g transform="translate(420 24)" class="a-fadein" style="--dl:3.85s;">
       <g transform="translate(4 3)">
         <ellipse cx="0" cy="106" rx="24" ry="32" fill="var(--chart-3)"/>
         <circle cx="0" cy="62" r="18" fill="var(--chart-3)"/>
@@ -269,32 +297,32 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
     </g>
     <!-- WORKERS: a small crowd of the flying bee -->
     <g>
-      <use href="#beeS" transform="translate(650 46) scale(0.9)"/>
-      <use href="#beeS" transform="translate(706 78)"/>
-      <use href="#beeS" transform="translate(760 40) scale(0.85)"/>
-      <use href="#beeS" transform="translate(640 108) scale(0.95)"/>
-      <use href="#beeS" transform="translate(702 138)"/>
-      <use href="#beeS" transform="translate(762 106) scale(0.9)"/>
-      <use href="#beeS" transform="translate(668 150) scale(0.8)"/>
-      <use href="#beeS" transform="translate(788 146) scale(0.95)"/>
+      <use href="#beeS" transform="translate(650 46) scale(0.9)" class="a-fadein" style="--dl:4s;"/>
+      <use href="#beeS" transform="translate(706 78)" class="a-fadein" style="--dl:4.05s;"/>
+      <use href="#beeS" transform="translate(760 40) scale(0.85)" class="a-fadein" style="--dl:4.1s;"/>
+      <use href="#beeS" transform="translate(640 108) scale(0.95)" class="a-fadein" style="--dl:4.15s;"/>
+      <use href="#beeS" transform="translate(702 138)" class="a-fadein" style="--dl:4.2s;"/>
+      <use href="#beeS" transform="translate(762 106) scale(0.9)" class="a-fadein" style="--dl:4.25s;"/>
+      <use href="#beeS" transform="translate(668 150) scale(0.8)" class="a-fadein" style="--dl:4.3s;"/>
+      <use href="#beeS" transform="translate(788 146) scale(0.95)" class="a-fadein" style="--dl:4.35s;"/>
     </g>
   </svg>
-  <div class="abs" style="left:120px; top:1636px; width:240px;">
+  <div class="abs a-rise" style="left:120px; top:1636px; width:240px; --dl:4.3s;">
     <div class="display" style="font-size:32px; white-space:nowrap;">1 queen</div>
     <p class="caption" style="margin-top:4px;">the only mother</p>
   </div>
-  <div class="abs" style="left:400px; top:1636px; width:280px;">
+  <div class="abs a-rise" style="left:400px; top:1636px; width:280px; --dl:4.4s;">
     <div class="display" style="font-size:32px; white-space:nowrap;">≈ 300 drones</div>
     <p class="caption" style="margin-top:4px;">the gentlemen</p>
   </div>
-  <div class="abs" style="left:706px; top:1636px; width:280px;">
+  <div class="abs a-rise" style="left:706px; top:1636px; width:280px; --dl:4.5s;">
     <div class="display" style="font-size:32px; white-space:nowrap;">workers</div>
     <p class="caption" style="margin-top:4px;">every last one of the rest</p>
   </div>
 
   <!-- the seal: 1/3 of food crops — overlaps the cast rule, only rotated element -->
   <div class="abs" style="left:952px; top:1382px; transform:rotate(-8deg);">
-    <svg width="260" height="260" viewBox="0 0 260 260">
+    <svg width="260" height="260" viewBox="0 0 260 260" class="a-pop" style="--dl:4.8s;">
       <circle cx="130" cy="130" r="102" fill="var(--chart-2)"/>
       <circle cx="130" cy="130" r="107" fill="none" stroke="var(--chart-2)"
               stroke-width="20" stroke-dasharray="0.1 24" stroke-linecap="round"/>
@@ -308,7 +336,7 @@ body { width:1240px; font-family:var(--font-body); color:var(--ink); }
   </div>
 
   <!-- footer -->
-  <p class="abs caption" style="right:44px; bottom:20px; text-align:right;">
+  <p class="abs caption a-fadein" style="right:44px; bottom:20px; text-align:right; --dl:6.9s;">
     commonly cited beekeeping figures — illustrative · made with epic-infographics</p>
 
   <div class="grain"></div>
