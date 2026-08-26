@@ -39,6 +39,8 @@ jobs:
         run: |
           node scripts/check.mjs templates/skeleton.html --preset square
           node scripts/check.mjs ../../examples/streaming-wars/infographic.html --preset wide
+      - name: Animate a shipped example (frame scrub + ffmpeg)
+        run: node scripts/animate.mjs ../../examples/launch-funnel/infographic.html /tmp/example.mp4 --preset square --fps 10 --hold 0
       - name: Assert non-trivial output
         run: |
           # The skeleton is near-empty boilerplate (~18KB locally); the example is a full scene.
@@ -49,3 +51,4 @@ jobs:
           }
           check /tmp/skeleton.png 5000
           check /tmp/example.png 100000
+          check /tmp/example.mp4 50000

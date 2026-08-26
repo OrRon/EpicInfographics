@@ -84,6 +84,15 @@ try {
   await page.goto(pathToFileURL(resolve(args.input)).href, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(150); // settle layout after font swap
+  // Animated files are checked at their END state — mid-build opacity/offsets
+  // would hide text from every geometry check below.
+  await page.evaluate(() => {
+    for (const a of document.getAnimations()) {
+      a.pause();
+      const t = a.effect?.getComputedTiming();
+      if (t && Number.isFinite(t.endTime)) a.currentTime = t.endTime;
+    }
+  });
 
   report = await page.evaluate(({ width, height, FONT_MIN, FONT_COMFORT }) => {
     const boundsH = height === 'auto' ? document.documentElement.scrollHeight : height;

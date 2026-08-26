@@ -1,6 +1,6 @@
 ---
 name: epic-infographics
-description: Create polished, professional infographic images from data, facts, or a topic. Builds a self-contained HTML/CSS+SVG page in one of several fully-specified design languages, renders it to PNG with a bundled script, then reviews and fixes its own output. Use when the user asks for an infographic, a visual summary, a stats poster, a social graphic, a one-pager image, or "turn this data into an image."
+description: Create polished, professional infographic images from data, facts, or a topic. Builds a self-contained HTML/CSS+SVG page in one of several fully-specified design languages, renders it to PNG with a bundled script, then reviews and fixes its own output. Can also choreograph the same file with CSS animation and render it to MP4/GIF. Use when the user asks for an infographic, a visual summary, a stats poster, a social graphic, a one-pager image, an animated infographic or short data video, or "turn this data into an image."
 license: MIT
 ---
 
@@ -28,6 +28,10 @@ data, pin down three things:
   drive one action? The goal decides what kind of fact can be the hero.
 - **Context** — where will it live (feed, slide deck, print, link preview)?
   This feeds the canvas choice in step 5 and sets how loud the design can be.
+- **Still or animated** — offer an animated MP4/GIF version alongside the
+  still (step 12). Motion earns its keep where the graphic will autoplay
+  (social feeds, stories, slides, landing pages); for print or a link
+  preview the still alone is the right answer, so say so in the offer.
 
 If the request already answers these, restate them in one line and move on.
 If not, ask the user before proceeding — one round of questions, as
@@ -178,6 +182,25 @@ Fix, re-run the preflight (a fix can introduce a new collision), and
 re-render. Minimum one loop; repeat until the list is clean. Deliver the PNG
 and offer the HTML source.
 
+### 12. Animate — when the user opted in
+You offered animation in step 1; do this step if they said yes there, or
+ask for it later (MP4/GIF, social video, "make it move"). Animate the
+**approved static file** — never animate around an unreviewed still. Read `references/motion.md` and follow it: storyboard the
+build order (place → structure → data → hero → support), add CSS keyframes
+to the same HTML file with the fill mode motion.md prescribes, then render:
+
+```bash
+node scripts/animate.mjs infographic.html infographic.mp4 --preset square --sheet sheet.png
+```
+
+Requires ffmpeg on PATH (`brew install ffmpeg` / `apt install ffmpeg`).
+The preflight and still render are unaffected — both evaluate the
+animation's end state, so step 9's guarantees still hold. Review the
+contact sheet against the checklist in motion.md (frame 1 has a scene, the
+stagger is visible, the last frame matches the approved PNG), fix, re-run.
+Deliver the MP4 (plus a GIF via a second run with a `.gif` output when the
+destination wants one) alongside the still.
+
 ## Hard rules
 
 - **No invented data.** Use what the user gave, what you researched, or label
@@ -218,3 +241,5 @@ and offer the HTML source.
 | `templates/skeleton.html` | Step 8, as your starting file |
 | `scripts/check.mjs` | Step 9 — run it, fix errors, rerun |
 | `scripts/render.mjs` | Run it; read only if debugging |
+| `references/motion.md` | Step 12, before writing any keyframe |
+| `scripts/animate.mjs` | Step 12 — run it; read only if debugging |

@@ -66,6 +66,15 @@ try {
   // Fonts arriving after the screenshot is the classic blank/fallback-text bug.
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(150); // settle layout after font swap
+  // If the file is animated (see animate.mjs), the still is its END state —
+  // scrub every finite animation to its final frame before shooting.
+  await page.evaluate(() => {
+    for (const a of document.getAnimations()) {
+      a.pause();
+      const t = a.effect?.getComputedTiming();
+      if (t && Number.isFinite(t.endTime)) a.currentTime = t.endTime;
+    }
+  });
 
   const out = resolve(args.output);
   if (height === 'auto') {
