@@ -6,8 +6,8 @@
 
 **An open-source skill that teaches AI agents to design infographics the way a studio would.**
 
-No stock templates, no rounded card grids, no Tailwind blue, no emoji icons.
-Every image below came straight out of the skill: brief in, PNG out, unedited.
+It skips the stock templates, the rounded card grids, the Tailwind blue, and the emoji icons.
+Every image below came straight out of the skill, brief to PNG, with nothing touched up by hand.
 
 [![CI](https://github.com/OrRon/EpicInfographics/actions/workflows/ci.yml/badge.svg)](https://github.com/OrRon/EpicInfographics/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -39,10 +39,10 @@ can follow without needing taste of its own:
   sheet, a dark theatre, a naturalist's folio, a miniature world) and the
   data lives inside that scene. Flat graphic minimalism counts as a failure
   here, even when it's tidy.
-- The drawn object carries the data. A cup filled to two thirds because 2 in
-  3 adults drink coffee. A rocket whose hatched section is exactly the 90%
-  propellant fraction. A funnel of stage light drawn at 1px per 140 users.
-- Charts are computed, never eyeballed. Bar ratios, donut arcs and areas
+- The drawn object carries the data: a cup filled to two thirds because 2 in
+  3 adults drink coffee, a rocket whose hatched section is exactly the 90%
+  propellant fraction, a funnel of stage light drawn at 1px per 140 users.
+- Charts are computed rather than eyeballed. Bar ratios, donut arcs and areas
   come from arithmetic written into the file, and every palette goes through
   a color-blindness checker before it ships.
 - The agent reviews its own render. Every graphic gets screenshotted, read
@@ -91,8 +91,8 @@ should move, storyboards the build (the scene is already on stage, the
 data arrives in order, the hero lands last), and choreographs it in the
 design language's own motion character: the blueprint rocket is drafted
 line by line, the honeybee poster arrives as screen-print ink passes,
-the theatre runs its lighting cues, the Mars vista pulls layer by layer
-off the screen. A bundled script scrubs the page's CSS animations frame
+the theatre runs its lighting cues, and the Mars vista pulls layer by
+layer off the screen. A bundled script scrubs the page's CSS animations frame
 by frame in headless Chromium and assembles the MP4 and GIF with ffmpeg,
 so every render is deterministic and the layout checks still hold on the
 finished frame.
@@ -204,11 +204,11 @@ never see.
 
 - Rule zero: where is the reader standing? If the answer is "looking at a
   well-designed page", the agent starts over.
-- Geometry is truthful. No eyeballed proportions, no dual axes, bars start
-  at zero, area scales with value.
-- No invented data. Figures are supplied or researched, and illustrative
-  values are labeled as such in the footer of every example.
-- Color is validated. Every palette, light and dark, passes lightness,
+- Geometry is truthful: bars start at zero, area scales with value, and
+  there are no eyeballed proportions or dual axes.
+- The skill does not invent data. Figures are supplied or researched, and
+  illustrative values are labeled as such in the footer of every example.
+- Color is validated: every palette, light and dark, passes lightness,
   chroma, contrast and colorblind-separation checks before it ships.
 - Layout is verified by machine before any render. A preflight script loads
   the page headless, measures the real glyph geometry, and refuses to
@@ -260,4 +260,4 @@ validation commands are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT. Use it, fork it, ship it.
+MIT. Do what you like with it.
