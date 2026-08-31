@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>fixture: shape-crosses-text</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1080px; background: #fff; font-family: system-ui, sans-serif; color: #111; }
+  .canvas { width: 1080px; height: 1080px; overflow: hidden; padding: 64px; }
+  svg { display: block; margin-top: 48px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1 data-hero style="font-size:120px; width:900px;">Shape cross fixture</h1>
+
+  <!-- MUST FIRE shape-crosses-text: a leader line straight through the label's glyphs. -->
+  <svg width="500" height="100" viewBox="0 0 500 100">
+    <g><text x="120" y="55" font-size="18">crossed label</text></g>
+    <g><line x1="20" y1="49" x2="420" y2="49" stroke="#111" stroke-width="2"/></g>
+  </svg>
+
+  <!-- MUST NOT FIRE: same label, leader routed 24px below the ink. -->
+  <svg width="500" height="100" viewBox="0 0 500 100">
+    <g><text x="120" y="40" font-size="18">routed label</text></g>
+    <g><line x1="20" y1="70" x2="420" y2="70" stroke="#111" stroke-width="2"/></g>
+  </svg>
+
+  <!-- MUST BE WAIVED (counted, no finding): a deliberate strike-through device. -->
+  <svg width="500" height="100" viewBox="0 0 500 100">
+    <g><text x="120" y="55" font-size="28" font-weight="700">BURNING</text></g>
+    <g><line data-cross-ok x1="100" y1="46" x2="300" y2="46" stroke="#b8860b" stroke-width="6"/></g>
+  </svg>
+
+  <!-- MUST NOT FIRE (knockout): the line geometrically crosses, but an opaque
+       bg rect breaks it under the label — the blueprint dimension-label device. -->
+  <svg width="500" height="100" viewBox="0 0 500 100">
+    <g><line x1="20" y1="49" x2="420" y2="49" stroke="#111" stroke-width="2"/></g>
+    <g><rect x="105" y="30" width="140" height="30" fill="#fff"/><text x="120" y="52" font-size="16">42 mm</text></g>
+  </svg>
+</div>
+</body>
+</html>
