@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>fixture: safe-area</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1080px; background: #fff; font-family: system-ui, sans-serif; color: #111; }
+  .canvas { width: 1080px; height: 1080px; overflow: hidden; position: relative; }
+  .abs { position: absolute; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1 data-hero class="abs" style="font-size:120px; left:200px; top:400px; width:700px;">Safe area fixture</h1>
+
+  <!-- MUST FIRE safe-area with --safe-margin 96: sits 20px from the left edge
+       (inside the canvas, so not text-offcanvas). -->
+  <div class="abs" style="left:20px; top:520px; font-size:16px;">label hugging the edge</div>
+
+  <!-- MUST FIRE: 30px from the bottom edge. -->
+  <div class="abs" style="left:400px; top:1030px; font-size:16px;">footer in the crop zone</div>
+
+  <!-- MUST NOT FIRE: 200px in from every edge. -->
+  <div class="abs" style="left:200px; top:200px; font-size:16px;">comfortably inside</div>
+</div>
+</body>
+</html>

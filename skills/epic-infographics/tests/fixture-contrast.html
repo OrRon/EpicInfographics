@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>fixture: text-contrast</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1080px; background: #fff; font-family: system-ui, sans-serif; }
+  .canvas { width: 1080px; height: 1080px; overflow: hidden; padding: 64px; background: #fff; }
+  .row { margin-top: 40px; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1 data-hero style="font-size:110px; color:#111; width:900px;">Contrast fixture</h1>
+
+  <!-- MUST FIRE text-contrast: #CFCFCF on #FFF ≈ 1.6:1 (needs 4.5:1). -->
+  <div class="row" style="color:#CFCFCF;">light gray body text on white paper</div>
+
+  <!-- MUST FIRE: large text at 3:1 rule — #BBB on #FFF ≈ 2:1. -->
+  <div class="row" style="color:#BBBBBB; font-size:32px;">big pale display line</div>
+
+  <!-- MUST FIRE: ink on a near-ink panel. -->
+  <div class="row" style="background:#20242C; padding:24px; width:500px;">
+    <span style="color:#3A4157;">dark slate label on near-black panel</span>
+  </div>
+
+  <!-- MUST NOT FIRE: 46% gray on white ≈ 4.7:1. -->
+  <div class="row" style="color:#6E6E6E;">muted but legal secondary text</div>
+
+  <!-- MUST NOT FIRE: white on saturated blue ≈ 5.9:1. -->
+  <div class="row" style="background:#1A63A3; color:#FFFFFF; padding:24px; width:500px;">white label on instrument blue</div>
+
+  <!-- MUST NOT FIRE (skipped, counted): gradient knockout text. -->
+  <div class="row" style="font-size:60px; font-weight:800; background:linear-gradient(90deg,#2B8CC4,#8B6CF0); -webkit-background-clip:text; background-clip:text; color:transparent;">$30.5K</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>fixture: svg-text-clipped</title>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1080px; background: #fff; font-family: system-ui, sans-serif; }
+  .canvas { width: 1080px; height: 1080px; overflow: hidden; padding: 64px; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <h1 data-hero style="font-size:120px; width:900px;">SVG clip fixture</h1>
+
+  <!-- MUST FIRE svg-text-clipped: the label starts at x=340 in a 400px-wide
+       viewBox and runs well past the right edge; <svg> clips by default. -->
+  <svg width="400" height="120" viewBox="0 0 400 120" style="margin-top:40px">
+    <rect x="0" y="40" width="360" height="24" fill="#888"/>
+    <text x="340" y="58" font-size="16" fill="#111">$7.0K automated label runs off</text>
+  </svg>
+
+  <!-- MUST NOT FIRE: same geometry but overflow: visible is declared. -->
+  <svg width="400" height="120" viewBox="0 0 400 120" style="overflow:visible; margin-top:40px">
+    <text x="340" y="58" font-size="16" fill="#111">visible overflow is exempt</text>
+  </svg>
+
+  <!-- MUST NOT FIRE: label comfortably inside the viewport. -->
+  <svg width="400" height="120" viewBox="0 0 400 120" style="margin-top:40px">
+    <text x="20" y="58" font-size="16" fill="#111">safely inside</text>
+  </svg>
+</div>
+</body>
+</html>
